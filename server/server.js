@@ -14,6 +14,8 @@ const URI =
 
 //Set the express
 const app = express();
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
 const http = require('http');
 const server = http.createServer(app);
 const io = require('socket.io')(server, {
@@ -35,6 +37,24 @@ app.use(
         extended: true,
     }),
 );
+const options = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'BePitta API with Swagger',
+            version: '1.0.0',
+        },
+        servers: [
+            {
+                url: 'http://localhost:3000/commercials',
+            },
+        ],
+    },
+    apis: ['./routes/commercial.js'],
+};
+
+const specs = swaggerJsdoc(options);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 app.use('/commercials', commercial);
 app.use('/admins', admin);

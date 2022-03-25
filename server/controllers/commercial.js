@@ -68,7 +68,7 @@ const deleteCommercial = (req, res) => {
 
 const resetCommercials = async () => {
     console.log('Reseting DB...');
-    await Commercial.deleteMany();
+    // await Commercial.deleteMany();
 };
 
 module.exports = {
