@@ -1,0 +1,17 @@
+.admin-profile-edit {
+    display: grid;
+    grid-auto-flow: row;
+    grid-gap: 1rem;
+    width: 40%;
+
+    .MuiButton-root.edit-button {
+        font-weight: 800;
+        font-size: 1.25rem;
+    }
+
+    span {
+        display: grid;
+        grid-auto-flow: column;
+        grid-gap: 1rem;
+    }
+}

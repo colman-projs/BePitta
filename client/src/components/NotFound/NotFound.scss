@@ -1,0 +1,24 @@
+.not-found {
+    display: flex;
+    flex-direction: column;
+
+    .msg-1 {
+        font-size: 4.5rem;
+        font-weight: 500;
+        margin-bottom: 1rem;
+    }
+
+    .msg-2 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .msg-404 {
+        margin-bottom: 1rem;
+        font-weight: 500;
+    }
+
+    button {
+        font-weight: bold;
+    }
+}

@@ -1,0 +1,15 @@
+.admin-avatar {
+    position: fixed;
+    top: 2%;
+    right: 2%;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.logout-item.MuiMenuItem-root {
+    color: var(--alerting-red);
+
+    svg {
+        color: var(--alerting-red);
+    }
+}
