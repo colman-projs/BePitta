@@ -6,11 +6,11 @@
 body,
 html {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 16px;
     height: 100%;
     overflow: hidden;
+    font-size: 20px;
     margin: 0;
-    background-color: #15202b;
+    background-color: #033047;
     color: white;
 }
 
@@ -27,29 +27,6 @@ a {
     transform: translate(-50%, -50%);
 }
 
-@media screen and(max-width: 1275px) {
-    #root,
-    body,
-    html {
-        font-size: 14px;
-    }
-}
-
-@media screen and(max-width: 1000px) {
-    #root,
-    body,
-    html {
-        font-size: 12px;
-    }
-}
-
-@media screen and(max-width: 650px) {
-    #root,
-    body,
-    html {
-        font-size: 10px;
-    }
-}
 ::-webkit-calendar-picker-indicator {
     filter: invert(1);
 }
