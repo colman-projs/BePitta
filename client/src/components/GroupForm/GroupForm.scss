@@ -1,0 +1,16 @@
+.group-form {
+    display: flex;
+    flex-direction: column;
+
+    .logo {
+        align-self: center;
+        width: 15rem;
+        height: auto;
+    }
+
+    .create-group-button {
+        margin-top: 1rem;
+        font-weight: bold;
+        padding: 1.5rem;
+    }
+}

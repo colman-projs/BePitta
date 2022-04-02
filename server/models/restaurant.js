@@ -10,7 +10,7 @@ const Restaurant = new Schema({
         type: String,
         required: true,
     },
-    image: {
+    imageUrl: {
         type: String,
         required: true,
         validate: m => m.length <= 5,
@@ -18,7 +18,7 @@ const Restaurant = new Schema({
     dishes: {
         type: [String],
         required: true,
-    }
+    },
 });
 
 module.exports = mongoose.model('restaurant', Restaurant);
