@@ -45,7 +45,7 @@ function GroupLobby() {
                 <Typography variant="h5">Group {groupId}</Typography>
                 <Typography variant="h5">
                     Participants:
-                    <i className="amount">{3}</i>
+                    <i className="amount">{0}</i>
                 </Typography>
                 <Button onClick={handleShareLink} endIcon={<ShareIcon />}>
                     <Typography variant="h6">Invite Friends </Typography>
@@ -56,12 +56,10 @@ function GroupLobby() {
                     variant="contained"
                     color="primary"
                     onClick={handleStart}
-                    startIcon={<PreferencesIcon />}
-                    loadingPosition="start"
+                    endIcon={<PreferencesIcon />}
+                    loadingPosition="end"
                 >
-                    <Typography variant="h6">
-                        Start Picking Preferences
-                    </Typography>
+                    <Typography variant="h6">Preferences</Typography>
                 </LoadingButton>
             </div>
         </>

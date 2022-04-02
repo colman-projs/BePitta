@@ -62,8 +62,8 @@ function GroupForm() {
                 className="create-group-button"
                 variant="contained"
                 color="primary"
-                startIcon={<GroupIcon />}
-                loadingPosition="start"
+                endIcon={<GroupIcon />}
+                loadingPosition="end"
             >
                 <Typography variant="h6">Create A Group</Typography>
             </LoadingButton>
