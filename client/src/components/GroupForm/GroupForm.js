@@ -12,7 +12,7 @@ import './GroupForm.scss';
 
 function GroupForm() {
     const [loadingGroup, setLoadingGroup] = useState(false);
-    const [restaurant, setRestaurant] = useState(null);
+    const [restaurant, setRestaurant] = useState('');
     const navigate = useNavigate();
     const alert = useAlert();
 
@@ -21,6 +21,8 @@ function GroupForm() {
     };
 
     const handleCreateGroup = e => {
+        e.preventDefault();
+
         setLoadingGroup(true);
 
         const groupId = 123;
