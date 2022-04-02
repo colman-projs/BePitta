@@ -7,17 +7,17 @@ router.get('/', groupController.getGroups);
 
 
 router.get(
-    '/:restaurantId',
+    '/:groupId',
     authJwt.verifyToken,
-    restaurantController.getresturantById,
+    groupController.getgroupById,
 );
 
-router.post('/', authJwt.verifyToken, restaurantController.upsertRestaurant);
+router.post('/', authJwt.verifyToken, groupController.upsertGroup);
 
 router.delete(
-    '/:restaurantId',
+    '/:groupId',
     authJwt.verifyToken,
-    restaurantController.deleteResturant,
+    groupController.deleteGroup,
 );
 
 module.exports = router;

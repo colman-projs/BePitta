@@ -1,13 +1,14 @@
-const Restaurant = require('../models/restaurant');
+const Group = require('../models/group');
 const errorHandler = require('../globals').errorHandler;
 
 const { getIo } = require('../globals');
+const group = require('../models/group');
 
-const upsertRestaurant = async (req, res) => {
+const upsertGroup = async (req, res) => {
     if (req.body._id) {
         const filter = { _id: req.body._id };
 
-        Restaurant.findOneAndUpdate(filter, req.body, {
+        Group.findOneAndUpdate(filter, req.body, {
             new: true,
             upsert: true,
         })
@@ -18,54 +19,54 @@ const upsertRestaurant = async (req, res) => {
             })
             .catch(errorHandler(res));
     } else {
-        const comm = new Restaurant(req.body);
+        const group = new Group(req.body);
 
-        comm.save()
+        group.save()
             .then(() => {
                 const io = getIo();
-                io.sockets.emit('updateRestaurant');
+                io.sockets.emit('updateRestaurants');
                 res.send(true);
             })
             .catch(errorHandler(res));
     }
 };
 
-const getRestaurants = (_req, res) => {
-    Restaurant.find()
-        .then(restaurants => {
-            res.json(restaurants);
+const getGroups = (_req, res) => {
+    Group.find()
+        .then(groups => {
+            res.json(groups);
         })
         .catch(errorHandler(res));
 };
 
-const getresturantById = (req, res) => {
-    Resturant.findById(req.params.resturantID)
-        .then(Resturant => {
-            res.json(Resturant);
+const getgroupById = (req, res) => {
+    Group.findById(req.params.groupID)
+        .then(Group => {
+            res.json(Group);
         })
         .catch(errorHandler(res));
 };
 
-const deleteResturant = (req, res) => {
-    Restaurant.deleteOne({ _id: req.params.resturantlId })
-        .then(deleteRes => {
+const deleteGroup = (req, res) => {
+    Group.deleteOne({ _id: req.params.groupId })
+        .then(deletedgroup => {
             const io = getIo();
-            io.sockets.emit('updateCommerical');
-            res.json(deleteRes);
+            io.sockets.emit('updateGroups');
+            res.json(deletedgroup);
         })
         .catch(errorHandler(res));
 };
 
-const resetResturants = async () => {
+const resetGroups = async () => {
     console.log('Reseting DB...');
     // await Commercial.deleteMany();
 };
 
 
 module.exports = {
-    getRestaurants,
-    upsertRestaurant,
-    getresturantById,
-    deleteResturant,
-    resetResturants,
+    getGroups,
+    upsertGroup,
+    getgroupById,
+    deleteGroup,
+    resetGroups,
 };
