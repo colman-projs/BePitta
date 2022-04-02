@@ -1,0 +1,12 @@
+.group-lobby {
+    display: flex;
+    flex-direction: column;
+
+    .amount {
+        color: var(--primary-color);
+    }
+
+    .restaurant-logo {
+        align-self: center;
+    }
+}

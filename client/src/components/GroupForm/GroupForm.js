@@ -1,4 +1,4 @@
-import { MenuItem, TextField } from '@mui/material';
+import { MenuItem, TextField, Typography } from '@mui/material';
 import { Group as GroupIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
@@ -25,24 +25,28 @@ function GroupForm() {
 
         const groupId = 123;
 
-        if (!groupId) alert.error('Error while creating a group');
+        if (!groupId || !restaurant) {
+            alert.error('Error while creating a group');
+            return setLoadingGroup(false);
+        }
 
-        navigate(`/group/${groupId}`);
+        navigate(`/groups/${groupId}/${restaurant}`);
 
         setLoadingGroup(false);
     };
 
     return (
-        <div className="group-form center">
+        <form className="group-form center" onSubmit={handleCreateGroup}>
             <img className="logo" src={LogoWithText} alt="Logo" />
-            <h1>Pick A Restaurant: </h1>
             <TextField
                 id="restaurant-select"
                 select
                 autoFocus
-                label="Restaurant"
                 value={restaurant}
                 onChange={handleChangeRestaurant}
+                label="Pick a Restaurant"
+                disabled={loadingGroup}
+                required
             >
                 {restaurants.map(option => (
                     <MenuItem key={option.value} value={option.value}>
@@ -51,17 +55,17 @@ function GroupForm() {
                 ))}
             </TextField>
             <LoadingButton
+                type="submit"
                 loading={loadingGroup}
                 className="create-group-button"
                 variant="contained"
                 color="primary"
-                onClick={handleCreateGroup}
                 startIcon={<GroupIcon />}
-                loadingPosition="end"
+                loadingPosition="start"
             >
-                Create A Group
+                <Typography variant="h6">Create A Group</Typography>
             </LoadingButton>
-        </div>
+        </form>
     );
 }
 

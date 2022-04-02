@@ -1,4 +1,5 @@
 import React from 'react';
+import { Typography } from '@mui/material';
 
 import './ErrorBoundary.scss';
 
@@ -20,7 +21,9 @@ class ErrorBoundary extends React.Component {
         if (this.state.hasError) {
             return (
                 <div className="error-page center">
-                    <h1>Oops! Something went wrong.</h1>
+                    <Typography variant="h4">
+                        Oops! Something went wrong.
+                    </Typography>
                 </div>
             );
         }

@@ -1,21 +1,22 @@
 import React from 'react';
-import { Back as BackIcon } from '@mui/icons-material';
-import { useHistory } from 'react-router-dom';
+import { IconButton } from '@mui/material';
+import { ArrowBack as BackIcon } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
-import Logo from '../../assets/images/Logo';
+import Logo from '../../assets/images/Logo.png';
 
 import './Header.scss';
 
 function Header() {
-    const history = useHistory();
+    const navigate = useNavigate();
 
     return (
-        <div className="header">
-            <img src={Logo} alt="logo" />
-            <IconButton onClick={history.goBack()}>
+        <header className="header">
+            <IconButton onClick={() => navigate(-1)}>
                 <BackIcon />
             </IconButton>
-        </div>
+            <img className="logo" src={Logo} alt="logo" />
+        </header>
     );
 }
 

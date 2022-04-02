@@ -12,6 +12,7 @@ export const darkTheme = createTheme({
         },
     },
     typography: {
+        fontSize: 16,
         button: {
             textTransform: 'none',
         },
