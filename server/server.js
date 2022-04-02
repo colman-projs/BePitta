@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const commercial = require('./routes/commercial');
 const admin = require('./routes/admin');
+const restaurant = require('./routes/restaurant');
 const clientDb = require('./controllers/client');
 const connectDB = require('./db/connect');
 const cors = require('./middleware/cors');
@@ -55,8 +56,9 @@ const options = {
 const specs = swaggerJsdoc(options);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-app.use('/commercials', commercial);
-app.use('/admins', admin);
+// app.use('/commercials', commercial);
+// app.use('/admins', admin);
+app.use('/resturants', restaurant);
 
 const onStartup = async () => {
     connectDB(URI);
