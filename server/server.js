@@ -9,8 +9,7 @@ const { resetCommercials } = require('./controllers/commercial');
 const { setIo } = require('./globals');
 
 //Set the DATABASE URI
-const URI =
-    'mongodb+srv://MafTech:Aa123456@advprog.uynif.mongodb.net/AdvPRog?retryWrites=true&w=majority';
+const URI = 'mongodb+srv://BePitta:Aa123456@bepitta.cki1z.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
 //Set the express
 const app = express();
@@ -90,8 +89,6 @@ const onStartup = async () => {
             io.sockets.emit('updateClients');
         });
     });
-
-    await resetCommercials();
 };
 
 onStartup();
