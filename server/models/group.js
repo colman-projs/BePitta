@@ -7,7 +7,7 @@ const Group = new Schema({
         required: true,
     },
     resturantid: {
-        type: string,
+        type: String,
         required: true,
     },
     users: {
@@ -20,4 +20,4 @@ const Group = new Schema({
     }
 });
 
-module.exports = mongoose.model('restaurant', Restaurant);
+module.exports = mongoose.model('group', Group);

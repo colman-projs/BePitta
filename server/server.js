@@ -4,6 +4,7 @@ const commercial = require('./routes/commercial');
 const admin = require('./routes/admin');
 const restaurant = require('./routes/restaurant');
 const clientDb = require('./controllers/client');
+const group = require('./routes/group');
 const connectDB = require('./db/connect');
 const cors = require('./middleware/cors');
 const { resetCommercials } = require('./controllers/commercial');
@@ -59,6 +60,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 // app.use('/commercials', commercial);
 // app.use('/admins', admin);
 app.use('/resturants', restaurant);
+app.use('/groups', group);
 
 const onStartup = async () => {
     connectDB(URI);
