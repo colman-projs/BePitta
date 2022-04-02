@@ -6,7 +6,7 @@ const Group = new Schema({
         type: String,
         required: true,
     },
-    resturantid: {
+    restaurantId: {
         type: String,
         required: true,
     },
@@ -17,7 +17,7 @@ const Group = new Schema({
     state: {
         type: String,
         required: true,
-    }
+    },
 });
 
 module.exports = mongoose.model('group', Group);

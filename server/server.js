@@ -58,9 +58,7 @@ const options = {
 const specs = swaggerJsdoc(options);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-// app.use('/commercials', commercial);
-// app.use('/admins', admin);
-app.use('/resturants', restaurant);
+app.use('/restaurants', restaurant);
 app.use('/groups', group);
 
 const onStartup = async () => {

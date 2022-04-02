@@ -1,20 +1,40 @@
 import { MenuItem, TextField, Typography } from '@mui/material';
 import { Group as GroupIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useAlert } from 'react-alert';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import LogoWithText from '../../assets/images/LogoWithText.png';
-import { restaurants } from '../../MockData/mockData';
+import { getRestaurants } from '../../actions/restaurantActions';
+import { GlobalContext } from '../../context/GlobalContext';
 
 import './GroupForm.scss';
 
 function GroupForm() {
     const [loadingGroup, setLoadingGroup] = useState(false);
     const [restaurant, setRestaurant] = useState('');
+    const [restaurants, setRestaurants] = useState([]);
+    const { setIsLoadingApp } = useContext(GlobalContext);
     const navigate = useNavigate();
     const alert = useAlert();
+
+    useEffect(() => {
+        const fetchRestaurants = async () => {
+            setIsLoadingApp(true);
+            const res = await getRestaurants();
+
+            if (!res) {
+                alert.error('Error loading restaurants');
+                return setIsLoadingApp(false);
+            }
+
+            setRestaurants(res);
+            setIsLoadingApp(false);
+        };
+
+        fetchRestaurants();
+    }, [alert, setIsLoadingApp]);
 
     const handleChangeRestaurant = e => {
         setRestaurant(e.target.value);
@@ -51,8 +71,8 @@ function GroupForm() {
                 required
             >
                 {restaurants.map(option => (
-                    <MenuItem key={option.value} value={option.value}>
-                        {option.label}
+                    <MenuItem key={option._id} value={option._id}>
+                        {option.name}
                     </MenuItem>
                 ))}
             </TextField>

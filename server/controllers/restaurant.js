@@ -38,16 +38,16 @@ const getRestaurants = (_req, res) => {
         .catch(errorHandler(res));
 };
 
-const getresturantById = (req, res) => {
-    Resturant.findById(req.params.resturantID)
-        .then(Resturant => {
-            res.json(Resturant);
+const getRestaurantById = (req, res) => {
+    Restaurant.findById(req.params.restaurantId)
+        .then(Restaurant => {
+            res.json(Restaurant);
         })
         .catch(errorHandler(res));
 };
 
-const deleteResturant = (req, res) => {
-    Restaurant.deleteOne({ _id: req.params.resturantlId })
+const deleteRestaurant = (req, res) => {
+    Restaurant.deleteOne({ _id: req.params.restaurantId })
         .then(deleteRes => {
             const io = getIo();
             io.sockets.emit('updateCommerical');
@@ -56,16 +56,15 @@ const deleteResturant = (req, res) => {
         .catch(errorHandler(res));
 };
 
-const resetResturants = async () => {
+const resetRestaurants = async () => {
     console.log('Reseting DB...');
     // await Commercial.deleteMany();
 };
 
-
 module.exports = {
     getRestaurants,
     upsertRestaurant,
-    getresturantById,
-    deleteResturant,
-    resetResturants,
+    getRestaurantById,
+    deleteRestaurant,
+    resetRestaurants,
 };
