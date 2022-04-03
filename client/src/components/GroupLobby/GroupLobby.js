@@ -57,7 +57,15 @@ function GroupLobby() {
         setLoadingPreferences(false);
     };
 
-    const handleShareLink = () => {};
+    const handleShareLink = () => {
+        if (navigator.share) {
+            navigator.share({
+                title: 'BePitta',
+                text: 'You are invited to BePitta App :)',
+                url: window.location,
+            });
+        }
+    };
 
     return (
         <>
