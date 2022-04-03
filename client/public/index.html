@@ -4,12 +4,12 @@
         <meta charset="utf-8" />
         <link rel="icon" href="%PUBLIC_URL%/favicon.png" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
+        <meta name="theme-color" content="#033047" />
         <meta
             name="BePitta"
             content="Web site created using create-react-app"
         />
-        <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+        <link rel="apple-touch-icon" href="%PUBLIC_URL%/Logo.png" />
         <!--
       manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
@@ -27,6 +27,28 @@
         <title>BePitta</title>
     </head>
     <body>
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function () {
+                    navigator.serviceWorker.register('serviceWorker.js').then(
+                        function (registration) {
+                            // Registration was successful
+                            console.log(
+                                'ServiceWorker registration successful with scope: ',
+                                registration.scope,
+                            );
+                        },
+                        function (err) {
+                            // registration failed :(
+                            console.log(
+                                'ServiceWorker registration failed: ',
+                                err,
+                            );
+                        },
+                    );
+                });
+            }
+        </script>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root"></div>
         <!--
