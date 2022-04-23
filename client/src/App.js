@@ -8,6 +8,7 @@ import { GlobalContext } from './context/GlobalContext';
 import Loader from './components/Loader/Loader';
 
 import './App.scss';
+import PreferencesPhotoForm from './components/PreferencesPhotoForm';
 
 function App() {
     const [isLoadingApp, setIsLoadingApp] = useState(false);
@@ -26,6 +27,11 @@ function App() {
                     exact
                     path="/groups/:groupId/:restaurantId/preferences"
                     element={<PreferencesForm />}
+                />
+                 <Route
+                    exact
+                    path="/groups/:groupId/:restaurantId/likes"
+                    element={<PreferencesPhotoForm />}
                 />
                 <Route path="*" element={<NotFound />} />
             </Routes>
