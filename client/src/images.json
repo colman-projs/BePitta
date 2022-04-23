@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "src": "https://www.guidingtech.com/wp-content/uploads/HD-Mouth-Watering-Food-Wallpapers-for-Desktop-12_4d470f76dc99e18ad75087b1b8410ea9.jpg",
+        "name": "Pizza 1"
+    },
+    {
+        "id": 2,
+        "src": "https://images.all-free-download.com/images/graphiclarge/food_picture_01_hd_pictures_167558.jpg",
+        "name": "Pizza 2"
+    },
+    {
+        "id": 3,
+        "src": "https://thumbs.dreamstime.com/b/fast-food-concept-greasy-fried-restaurant-take-out-as-onion-rings-burger-hot-dogs-fried-chicken-french-fries-31114163.jpg",
+        "name": "Pizza 3"
+    },
+    {
+        "id": 4,
+        "src": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStp3cPIecW4M3ewZbZotKYg7QQRo60ZQ2kUA&usqp=CAU",
+        "name": "Pizza 4"
+    }
+]

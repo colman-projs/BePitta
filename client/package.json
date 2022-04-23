@@ -18,10 +18,12 @@
     "react-alert": "^7.0.3",
     "react-alert-template-basic": "^1.0.2",
     "react-dom": "^17.0.2",
+    "react-responsive-carousel": "^3.2.23",
     "react-router": "^6.2.1",
     "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
     "react-swipeable-views": "^0.14.0",
+    "react-tinder-card": "^1.4.5",
     "socket.io": "^4.4.1",
     "socket.io-client": "^4.4.1",
     "web-vitals": "^2.1.4"
