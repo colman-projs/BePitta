@@ -1,0 +1,50 @@
+.preferences-form {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+
+    .restaurant-logo {
+        width: 7rem;
+        height: auto;
+        place-self: center;
+    }
+
+    .GridContainer {
+        width : 1rem;
+        height : auto;
+        place-self: center;
+    }
+
+    .Grid{
+        width: 10rem;
+        place-self: center;
+    }
+
+    .ButtonContainer {
+        width : 4rem;
+        display: inline-block;
+        border-radius: 1rem;
+        opacity: 0.3;
+        :hover{
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 12px 20px 0 rgba(0,0,0,0.19);
+        }
+      
+    }
+
+    .ButtonContaineractive{
+           opacity: 1;
+           width : 4rem;
+           display: inline-block;
+           border-radius: 1rem;
+       }
+
+       .next-button {
+        margin-top: 1rem;
+        font-weight: bold;
+        padding: 1rem;
+        height: 1.5rem;
+        width: 5rem;
+        align-self: center;
+    }
+}
+

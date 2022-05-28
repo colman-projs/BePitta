@@ -8,7 +8,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useAlert } from 'react-alert';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import Header from '../Header';
 import { getRestaurantById } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
 
@@ -57,38 +56,43 @@ function GroupLobby() {
         setLoadingPreferences(false);
     };
 
-    const handleShareLink = () => {};
+    const handleShareLink = () => {
+        if (navigator.share) {
+            navigator.share({
+                title: 'BePitta',
+                text: 'You are invited to BePitta App :)',
+                url: window.location,
+            });
+        }
+    };
 
     return (
-        <>
-            <Header />
-            <div className="group-lobby center">
-                <img
-                    className="restaurant-logo"
-                    src={restaurant?.imageurl}
-                    alt="Restaurant Logo"
-                />
-                <Typography variant="h5">Group {groupId}</Typography>
-                <Typography variant="h5">
-                    Participants:
-                    <i className="amount">{0}</i>
-                </Typography>
-                <Button onClick={handleShareLink} endIcon={<ShareIcon />}>
-                    <Typography variant="h6">Invite Friends </Typography>
-                </Button>
-                <LoadingButton
-                    loading={loadingPreferences}
-                    className="create-group-button"
-                    variant="contained"
-                    color="primary"
-                    onClick={handleStart}
-                    endIcon={<PreferencesIcon />}
-                    loadingPosition="end"
-                >
-                    <Typography variant="h6">Preferences</Typography>
-                </LoadingButton>
-            </div>
-        </>
+        <div className="group-lobby center">
+            <img
+                className="restaurant-logo"
+                src={restaurant?.imageurl}
+                alt="Restaurant Logo"
+            />
+            <Typography variant="h5">Group {groupId}</Typography>
+            <Typography variant="h5">
+                Participants:
+                <i className="amount">{0}</i>
+            </Typography>
+            <Button onClick={handleShareLink} endIcon={<ShareIcon />}>
+                <Typography variant="h6">Invite Friends </Typography>
+            </Button>
+            <LoadingButton
+                loading={loadingPreferences}
+                className="create-group-button"
+                variant="contained"
+                color="primary"
+                onClick={handleStart}
+                endIcon={<PreferencesIcon />}
+                loadingPosition="end"
+            >
+                <Typography variant="h6">Preferences</Typography>
+            </LoadingButton>
+        </div>
     );
 }
 
