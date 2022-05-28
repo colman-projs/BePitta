@@ -11,6 +11,7 @@ import NotFound from './pages/NotFound/NotFound';
 import PreferencesPhotoForm from './pages/PreferencesPhotoForm';
 import Header from './components/Header';
 import ResultsPage from './pages/ResultsPage';
+import Login from './pages/Login/Login';
 
 import './App.scss';
 
@@ -23,6 +24,7 @@ function App() {
             <Header />
             <Routes>
                 <Route exact path="/" element={<GroupForm />} />
+                <Route exact path="/login" element={<Login />} />
                 <Route
                     exact
                     path="/groups/:groupId/:restaurantId"

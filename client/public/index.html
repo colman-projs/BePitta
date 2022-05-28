@@ -3,6 +3,23 @@
     <head>
         <meta charset="utf-8" />
         <link rel="icon" href="%PUBLIC_URL%/favicon.png" />
+        <script
+            src="https://apis.google.com/js/platform.js"
+            async
+            defer
+        ></script>
+        <meta
+            name="google-signin-client_id"
+            content="831921766631-cjg5mvj7julvtur2dfvs04693q48rc4j.apps.googleusercontent.com"
+        />
+        <script>
+            function handleSignIn(data) {
+                console.log(data);
+            }
+            function handleFailure(res) {
+                console.log(res);
+            }
+        </script>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#033047" />
         <meta

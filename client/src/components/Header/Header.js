@@ -1,6 +1,6 @@
 import React from 'react';
-import { IconButton } from '@mui/material';
-import { ArrowBack as BackIcon } from '@mui/icons-material';
+import { IconButton, Button } from '@mui/material';
+import { ArrowBack as BackIcon, Login } from '@mui/icons-material';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 
 import Logo from '../../assets/images/Logo.png';
@@ -11,6 +11,7 @@ function Header() {
     const navigate = useNavigate();
     const location = useLocation();
     const HOME_PATH = '/';
+    const LOGIN_PATH = '/login';
 
     return (
         <header className="header">
@@ -19,6 +20,11 @@ function Header() {
                     <BackIcon />
                 </IconButton>
             )}
+            <Link to={LOGIN_PATH} className="">
+                <Button startIcon={<Login />} variant="contained" color="primary">
+                    Login
+                </Button>
+            </Link>
             <Link to={HOME_PATH} className="logo">
                 <img src={Logo} alt="logo" />
             </Link>
