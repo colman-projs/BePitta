@@ -10,6 +10,7 @@ import PreferencesForm from './pages/PreferencesForm';
 import NotFound from './pages/NotFound/NotFound';
 import PreferencesPhotoForm from './pages/PreferencesPhotoForm';
 import Header from './components/Header';
+import ResultsPage from './pages/ResultsPage';
 
 import './App.scss';
 
@@ -36,6 +37,11 @@ function App() {
                     exact
                     path="/groups/:groupId/:restaurantId/likes"
                     element={<PreferencesPhotoForm />}
+                />
+                <Route
+                    exact
+                    path="/groups/:groupId/:restaurantId/results"
+                    element={<ResultsPage />}
                 />
                 <Route path="*" element={<NotFound />} />
             </Routes>

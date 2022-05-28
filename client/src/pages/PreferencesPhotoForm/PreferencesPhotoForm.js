@@ -1,8 +1,8 @@
 import { Typography } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import { useAlert } from 'react-alert';
-import { useParams } from 'react-router-dom';
-import LoadingButton from '@mui/lab/LoadingButton';
+import { useParams, useNavigate } from 'react-router-dom';
+import { LoadingButton } from '@mui/lab';
 import TinderCard from 'react-tinder-card';
 
 import { getRestaurantById } from '../../actions/restaurantActions';
@@ -12,16 +12,16 @@ import { GlobalContext } from '../../context/GlobalContext';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import './PreferencesPhotoForm.scss';
 
-export const favi = [];
 function PreferencesFormPhoto() {
     const { setIsLoadingApp } = useContext(GlobalContext);
     const [restaurant, setRestaurant] = useState(null);
     const [images, setImages] = useState(null);
-    const alert = useAlert();
     let { groupId, restaurantId } = useParams();
+    const navigate = useNavigate();
+    const alert = useAlert();
 
     useEffect(() => {
-        //Fetch restaurant IMAGES
+        // Fetch restaurant IMAGES
         const fetchRestaurantImages = async () => {
             setIsLoadingApp(true);
             const images = await getImagesByRestaurantId(restaurantId);
@@ -35,7 +35,7 @@ function PreferencesFormPhoto() {
             setIsLoadingApp(false);
         };
 
-        //Fetch restaurant details
+        // Fetch restaurant details
         const fetchRestaurant = async () => {
             setIsLoadingApp(true);
             const res = await getRestaurantById(restaurantId);
@@ -55,22 +55,22 @@ function PreferencesFormPhoto() {
         fetchRestaurant();
     }, [restaurantId, alert, setIsLoadingApp]);
 
-    const handleFinish = e => {
-        // setLoadingPreferencesPhoto(true);
+    const handleNext = () => {
+        setIsLoadingApp(true);
 
-        if (!groupId) {
-            alert.error('Error while loading Like/Dislike page');
-            // return setLoadingPreferencesPhoto(false);
+        if (!groupId || !restaurantId) {
+            alert.error('Error while loading Results page');
+            return;
         }
 
-        window.alert('Favorite length : ' + favi.length);
+        navigate(`/groups/${groupId}/${restaurantId}/results`);
 
-        // setLoadingPreferencesPhoto(false);
+        setIsLoadingApp(false);
     };
 
     const Swiped = (direction, index, id, url) => {
         if (direction === 'right') {
-            favi.push({ id, url });
+            console.log('swiped right');
         }
     };
 
@@ -105,12 +105,10 @@ function PreferencesFormPhoto() {
             </div>
             <div className="footer">
                 <LoadingButton
-                    //loading={loadingPreferencesPhoto}
                     className="finish-button"
                     variant="contained"
                     color="primary"
-                    onClick={handleFinish}
-                    // loadingPosition="end"
+                    onClick={handleNext}
                 >
                     <Typography variant="h7">Finish</Typography>
                 </LoadingButton>
