@@ -56,15 +56,9 @@ const deleteRestaurant = (req, res) => {
         .catch(errorHandler(res));
 };
 
-const resetRestaurants = async () => {
-    console.log('Reseting DB...');
-    // await Commercial.deleteMany();
-};
-
 module.exports = {
     getRestaurants,
     upsertRestaurant,
     getRestaurantById,
     deleteRestaurant,
-    resetRestaurants,
 };
