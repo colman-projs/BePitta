@@ -1,0 +1,26 @@
+const express = require('express');
+const dishController = require('../controllers/dish');
+const authJwt = require('../middleware/authJwt');
+const router = express.Router();
+
+router.get('/', dishController.getDishes);
+
+router.get(
+    '/:dishId',
+    //  authJwt.verifyToken,
+    dishController.getdishById,
+);
+
+router.post(
+    '/',
+    //  authJwt.verifyToken,
+    dishController.upsertDish,
+);
+
+router.delete(
+    '/:dishId',
+    //  authJwt.verifyToken,
+    dishController.deleteDish,
+);
+
+module.exports = router;

@@ -13,7 +13,11 @@ router.get(
     restaurantController.getRestaurantById,
 );
 
-router.post('/', authJwt.verifyToken, restaurantController.upsertRestaurant);
+router.post(
+    '/',
+    //  authJwt.verifyToken,
+    restaurantController.upsertRestaurant,
+);
 
 router.delete(
     '/:restaurantId',
