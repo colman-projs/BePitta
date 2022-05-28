@@ -1,20 +1,19 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-const Client = new mongoose.Schema({
+const Dish = new Schema({
     name: {
         type: String,
         required: true,
     },
-    email: {
+    description: {
         type: String,
+        required: true,
     },
     tags: {
         type: [String],
         required: true,
     },
-    favoriteresturants: {
-        type: [String],
-    },
 });
 
-module.exports = mongoose.model('client', Client);
+module.exports = mongoose.model('dish', Dish);
