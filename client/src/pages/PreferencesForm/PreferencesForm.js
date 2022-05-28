@@ -5,7 +5,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { ArrowForwardIos as ArrowForwardIosIcon } from '@mui/icons-material';
 
-import Header from '../Header';
 import { getRestaurantTagsById } from '../../actions/preferencesActions';
 import { getRestaurantById } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
@@ -86,62 +85,59 @@ function PreferencesForm() {
     };
 
     return (
-        <>
-            <Header />
-            <div className="preferences-form center">
-                <img
-                    className="restaurant-logo"
-                    src={restaurant?.imageurl}
-                    alt="Restaurant Logo"
-                />
-                <Typography variant="h5">Preferences:</Typography>
+        <div className="preferences-form center">
+            <img
+                className="restaurant-logo"
+                src={restaurant?.imageurl}
+                alt="Restaurant Logo"
+            />
+            <Typography variant="h5">Preferences:</Typography>
 
-                <Grid
-                    container
-                    spacing={{ xs: 1, md: 1 }}
-                    columns={{ xs: 4, sm: 4, md: 4 }}
-                    className="Grid"
-                >
-                    {tags?.map(tag => (
-                        <Grid
-                            item
-                            xs={2}
-                            sm={2}
-                            md={2}
-                            key={tag.id}
-                            className="GridContainer"
+            <Grid
+                container
+                spacing={{ xs: 1, md: 1 }}
+                columns={{ xs: 4, sm: 4, md: 4 }}
+                className="Grid"
+            >
+                {tags?.map(tag => (
+                    <Grid
+                        item
+                        xs={2}
+                        sm={2}
+                        md={2}
+                        key={tag.id}
+                        className="GridContainer"
+                    >
+                        <Button
+                            id={tag.id}
+                            type="button"
+                            variant="outlined"
+                            onClick={() => {
+                                handleButtonClick(tag.id);
+                            }}
+                            className={
+                                tag.Active === true
+                                    ? 'ButtonContaineractive'
+                                    : 'ButtonContainer'
+                            }
                         >
-                            <Button
-                                id={tag.id}
-                                type="button"
-                                variant="outlined"
-                                onClick={() => {
-                                    handleButtonClick(tag.id);
-                                }}
-                                className={
-                                    tag.Active === true
-                                        ? 'ButtonContaineractive'
-                                        : 'ButtonContainer'
-                                }
-                            >
-                                {tag.value}
-                            </Button>{' '}
-                        </Grid>
-                    ))}
-                </Grid>
-                <LoadingButton
-                    loading={loadingPreferencesPhoto}
-                    className="next-button"
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext}
-                    endIcon={<ArrowForwardIosIcon />}
-                    loadingPosition="end"
-                >
-                    <Typography variant="h7">Next</Typography>
-                </LoadingButton>
-            </div>
-        </>
+                            {tag.value}
+                        </Button>{' '}
+                    </Grid>
+                ))}
+            </Grid>
+            <LoadingButton
+                loading={loadingPreferencesPhoto}
+                className="next-button"
+                variant="contained"
+                color="primary"
+                onClick={handleNext}
+                endIcon={<ArrowForwardIosIcon />}
+                loadingPosition="end"
+            >
+                <Typography variant="h7">Next</Typography>
+            </LoadingButton>
+        </div>
     );
 }
 

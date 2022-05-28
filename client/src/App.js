@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import GroupForm from './components/GroupForm';
-import GroupLobby from './components/GroupLobby';
-import PreferencesForm from './components/PreferencesForm';
-import NotFound from './components/NotFound/NotFound';
+
 import { GlobalContext } from './context/GlobalContext';
 import Loader from './components/Loader/Loader';
 
+import GroupForm from './pages/GroupForm';
+import GroupLobby from './pages/GroupLobby';
+import PreferencesForm from './pages/PreferencesForm';
+import NotFound from './pages/NotFound/NotFound';
+import PreferencesPhotoForm from './pages/PreferencesPhotoForm';
+import Header from './components/Header';
+
 import './App.scss';
-import PreferencesPhotoForm from './components/PreferencesPhotoForm';
 
 function App() {
     const [isLoadingApp, setIsLoadingApp] = useState(false);
@@ -16,6 +19,7 @@ function App() {
     return (
         <GlobalContext.Provider value={{ isLoadingApp, setIsLoadingApp }}>
             {isLoadingApp && <Loader />}
+            <Header />
             <Routes>
                 <Route exact path="/" element={<GroupForm />} />
                 <Route
@@ -28,7 +32,7 @@ function App() {
                     path="/groups/:groupId/:restaurantId/preferences"
                     element={<PreferencesForm />}
                 />
-                 <Route
+                <Route
                     exact
                     path="/groups/:groupId/:restaurantId/likes"
                     element={<PreferencesPhotoForm />}

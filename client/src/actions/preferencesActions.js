@@ -1,14 +1,13 @@
-import authHeader from '../api/auth-header';
+// import authHeader from '../api/auth-header';
 import tags from '../api/preferences';
-import DataModel  from '../Data.json'
+import DataModel from '../Data.json';
 
 export const getRestaurantTagsById = async restaurantId => {
     try {
         // const { data } = await tags.get(`/${restaurantId}`, {
         //     headers: authHeader(),
         // });
-        const  data  = DataModel; 
-
+        const data = DataModel;
 
         return data;
     } catch (e) {
