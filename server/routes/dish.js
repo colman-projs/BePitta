@@ -1,24 +1,24 @@
 const express = require('express');
-const restaurantController = require('../controllers/restaurant');
+const dishController = require('../controllers/dish');
 const authJwt = require('../middleware/authJwt');
 const router = express.Router();
 
 /**
 * @swagger
-* /restaurants/:
+* /dishes/:
 *   get:
-*       summary: Get restaurants
+*       summary: Get dishes
 *       description: need to provide the refresh token in the auth header
 *       tags:
-*       - restaurants
+*       - dishes
 *       responses:
 *           200:
-*               description: Get restaurants completed successfully
+*               description: Get dishes completed successfully
 *   post:
-*       summary: Create a restaurant
+*       summary: Create a dish
 *       description: need to provide the required json
 *       tags:
-*       - restaurants
+*       - dishes
 *       requestBody:
 *           required: true
 *           content:
@@ -27,44 +27,44 @@ const router = express.Router();
 *                       $ref: '#\models\schemas\restaurant.js'
 *       responses:
 *           200:
-*               description: Restaurant created successfully
-* /restaurants/restaurantId:
+*               description: Dish created successfully
+* /dishes/dishId:
 *   get:
-*       summary: Get restaurants by restaurant ID
+*       summary: Get dish by ID
 *       description: need to provide the required restaurant ID
 *       tags:
-*       - restaurants
+*       - dishes
 *       responses:
 *           200:
-*               description: Get restaurants completed successfully
+*               description: Get dishes completed successfully
 *   delete:
-*       summary: Delete restaurants by restaurant ID
+*       summary: Delete dish by ID
 *       description: need to provide the required restaurant ID
 *       tags:
-*       - restaurants
+*       - dishes
 *       responses:
 *           200:
-*               description: Delete restaurant completed successfully
+*               description: Delete dish completed successfully
 */
-router.get('/', restaurantController.getRestaurants);
+
+router.get('/', dishController.getDishes);
 
 router.get(
-    '/:restaurantId',
+    '/:dishId',
     //  authJwt.verifyToken,
-    restaurantController.getRestaurantById,
+    dishController.getdishById,
 );
-
 
 router.post(
     '/',
     //  authJwt.verifyToken,
-    restaurantController.upsertRestaurant,
+    dishController.upsertDish,
 );
 
 router.delete(
-    '/:restaurantId',
+    '/:dishId',
     //  authJwt.verifyToken,
-    restaurantController.deleteRestaurant,
+    dishController.deleteDish,
 );
 
 module.exports = router;

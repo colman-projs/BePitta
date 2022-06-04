@@ -6,6 +6,9 @@ const connectDB = require('./db/connect');
 const cors = require('./middleware/cors');
 const { setIo } = require('./globals');
 
+const swaggerUI = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
+
 //Set the DATABASE URI
 const URI =
     'mongodb+srv://BePitta:Aa123456@bepitta.cki1z.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
@@ -35,8 +38,37 @@ app.use(
     }),
 );
 
-//Set routes
+
+
+//SWAGGER
+const options = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'BePitta API with Swagger',
+            version: '1.0.0',
+            description: 'BePitta Library API'
+        },
+        servers: [
+            {
+                url: 'http://localhost:3000',
+            },
+        ],
+    },
+    apis: ["./routes/*.js"],
+    
+};
+
+const specs = swaggerJsDoc(options);
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
+
+ //Set routes
+
 app.use(routes);
+
+
+
+
 
 const onStartup = async () => {
     connectDB(URI);
