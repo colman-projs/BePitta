@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './Login.scss';
+import { GoogleLogin, googleLogout } from '@react-oauth/google'
+import * as jose from 'jose'
+import { GlobalContext } from '../../context/GlobalContext';
 
 const Login = () => {
 	const handleFailure = (result) => {
@@ -7,17 +10,23 @@ const Login = () => {
 		console.log(result);
 	};
 
-	const handleSignIn = (googleUser) => {
-		var profile = googleUser.getBasicProfile();
-		console.clear();
-		console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-		console.log('Name: ' + profile.getName());
-		console.log('Image URL: ' + profile.getImageUrl());
-		console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+	const handleSignIn = (response) => {
+		const responsePayload = jose.decodeJwt(response.credential);
+
+		console.group("User data");
+		console.log("ID: " + responsePayload.sub);
+		console.log('Full Name: ' + responsePayload.name);
+		console.log('Given Name: ' + responsePayload.given_name);
+		console.log('Family Name: ' + responsePayload.family_name);
+		console.log("Image URL: " + responsePayload.picture);
+		console.log("Email: " + responsePayload.email);
+		console.groupEnd();
 	};
 
 	return (
-		<div className="g-signin2 center" data-onsuccess="handleSignIn" data-onfailure="handleFailure"></div>
+		<div className='center'>
+			<GoogleLogin onSuccess={handleSignIn} onError={handleFailure} shape="pill" text="continue_with" useOneTap />
+		</div>
 	);
 }
 
