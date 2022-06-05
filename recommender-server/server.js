@@ -1,14 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const commercial = require('./routes/commercial');
-const admin = require('./routes/admin');
-const restaurant = require('./routes/restaurant');
 const clientDb = require('./controllers/client');
-const group = require('./routes/group');
+const routes = require('./routes');
 const connectDB = require('./db/connect');
 const cors = require('./middleware/cors');
-const { resetCommercials } = require('./controllers/commercial');
 const { setIo } = require('./globals');
+
+const swaggerUI = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
 
 //Set the DATABASE URI
 const URI =
@@ -16,8 +15,7 @@ const URI =
 
 //Set the express
 const app = express();
-const swaggerUi = require('swagger-ui-express');
-const swaggerJsdoc = require('swagger-jsdoc');
+
 const http = require('http');
 const server = http.createServer(app);
 const io = require('socket.io')(server, {
@@ -39,32 +37,43 @@ app.use(
         extended: true,
     }),
 );
+
+
+
+//SWAGGER
 const options = {
     definition: {
         openapi: '3.0.0',
         info: {
             title: 'BePitta API with Swagger',
             version: '1.0.0',
+            description: 'BePitta Library API'
         },
         servers: [
             {
-                url: 'http://localhost:3000/commercials',
+                url: 'http://localhost:3000',
             },
         ],
     },
-    apis: ['./routes/commercial.js'],
+    apis: ["./routes/*.js"],
+    
 };
 
-const specs = swaggerJsdoc(options);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+const specs = swaggerJsDoc(options);
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 
-app.use('/restaurants', restaurant);
-app.use('/groups', group);
+ //Set routes
+
+app.use(routes);
+
+
+
+
 
 const onStartup = async () => {
     connectDB(URI);
 
-    clientDb.deleteClients();
+    // clientDb.deleteClients();
 
     server.listen(port, () =>
         console.log(`Server is listening on port ${port}...`),
