@@ -63,11 +63,21 @@ const resetGroups = async () => {
     // await Commercial.deleteMany();
 };
 */
-const getRecommendations = async (req, res) => {
-    const recGroup = await Group.findById(req.params.groupID);
 
-    console.log(recGroup);
-    res.json(recGroup);
+const recommendation = {
+    dishes: [
+        {
+            id: '629202c76a579f0257f7aadb',
+            match: 0.9,
+            users: [1, 3],
+        },
+    ],
+};
+
+const getRecommendations = async (req, res) => {
+    const recGroup = await Group.findById(req.params.groupId);
+
+    res.json(recommendation);
 };
 
 module.exports = {
