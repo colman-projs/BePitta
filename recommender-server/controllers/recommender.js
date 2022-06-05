@@ -3,7 +3,7 @@ const errorHandler = require('../globals').errorHandler;
 
 const { getIo } = require('../globals');
 const group = require('../models/group');
-
+/*
 const upsertGroup = async (req, res) => {
     if (req.body._id) {
         const filter = { _id: req.body._id };
@@ -21,7 +21,8 @@ const upsertGroup = async (req, res) => {
     } else {
         const group = new Group(req.body);
 
-        group.save()
+        group
+            .save()
             .then(() => {
                 const io = getIo();
                 io.sockets.emit('updateRestaurants');
@@ -61,12 +62,14 @@ const resetGroups = async () => {
     console.log('Reseting DB...');
     // await Commercial.deleteMany();
 };
+*/
+const getRecommendations = async (req, res) => {
+    const recGroup = await Group.findById(req.params.groupID);
 
+    console.log(recGroup);
+    res.json(recGroup);
+};
 
 module.exports = {
-    getGroups,
-    upsertGroup,
-    getgroupById,
-    deleteGroup,
-    resetGroups,
+    getRecommendations,
 };

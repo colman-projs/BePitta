@@ -1,13 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const clientDb = require('./controllers/client');
 const routes = require('./routes');
 const connectDB = require('./db/connect');
 const cors = require('./middleware/cors');
-const { setIo } = require('./globals');
 
-const swaggerUI = require("swagger-ui-express");
-const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUI = require('swagger-ui-express');
+const swaggerJsDoc = require('swagger-jsdoc');
 
 //Set the DATABASE URI
 const URI =
@@ -18,16 +16,9 @@ const app = express();
 
 const http = require('http');
 const server = http.createServer(app);
-const io = require('socket.io')(server, {
-    cors: {
-        origin: '*',
-    },
-});
-
-setIo(io);
 
 //Set the port
-const port = 3000;
+const port = 3002;
 
 app.use(cors);
 
@@ -38,37 +29,30 @@ app.use(
     }),
 );
 
-
-
 //SWAGGER
 const options = {
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'BePitta API with Swagger',
+            title: 'BePitta recommender server API with Swagger',
             version: '1.0.0',
-            description: 'BePitta Library API'
+            description: 'BePitta Library API',
         },
         servers: [
             {
-                url: 'http://localhost:3000',
+                url: 'http://localhost:3002',
             },
         ],
     },
-    apis: ["./routes/*.js"],
-    
+    apis: ['./routes/*.js'],
 };
 
 const specs = swaggerJsDoc(options);
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
 
- //Set routes
+//Set routes
 
 app.use(routes);
-
-
-
-
 
 const onStartup = async () => {
     connectDB(URI);
@@ -76,31 +60,8 @@ const onStartup = async () => {
     // clientDb.deleteClients();
 
     server.listen(port, () =>
-        console.log(`Server is listening on port ${port}...`),
+        console.log(`Recommender server is listening on port ${port}...`),
     );
-
-    io.on('connect', function (socket) {
-        let clientId = null;
-        clientDb.createClient(Date.now()).then(result => {
-            clientId = result;
-            socket.emit('id', clientId);
-            io.sockets.emit('updateClients');
-        });
-
-        socket.on('screen', function (screen) {
-            clientDb.updateClient(clientId, {
-                screenId: screen,
-            });
-            io.sockets.emit('updateClients');
-        });
-
-        socket.on('disconnect', function () {
-            clientDb.updateClient(clientId, {
-                disconnected: Date.now(),
-            });
-            io.sockets.emit('updateClients');
-        });
-    });
 };
 
 onStartup();

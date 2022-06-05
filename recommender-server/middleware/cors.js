@@ -1,9 +1,6 @@
 const cors = function (req, res, next) {
-    const allowedOrigins = [
-        'http://localhost:3002',
-        'http://localhost:3001',
-        'http://localhost:3000',
-    ];
+    // Allow access only from server
+    const allowedOrigins = ['http://localhost:3000'];
     const origin = req.headers.origin;
 
     if (allowedOrigins.includes(origin)) {
