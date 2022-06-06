@@ -1,8 +1,10 @@
-const Group = require('../models/group');
 const errorHandler = require('../globals').errorHandler;
 
-const { getIo } = require('../globals');
-const group = require('../models/group');
+const Group = require('../models/group');
+const Tag = require('../models/tag');
+const Dish = require('../models/dish');
+const Restaurant = require('../models/restaurant');
+const Client = require('../models/client');
 /*
 const upsertGroup = async (req, res) => {
     if (req.body._id) {
@@ -75,9 +77,20 @@ const recommendation = {
 };
 
 const getRecommendations = async (req, res) => {
-    const recGroup = await Group.findById(req.params.groupId);
+    // Get required data
+    const group = await Group.findById(req.params.groupId).exec();
+    const clients = await Client.find({ _id: group.users }).exec();
+    const dishes = await Restaurant.find(group.restaurantId).exec();
 
-    res.json(recommendation);
+    const usersTags = clients.flatMap(c => c.tags); //await Tag.find({_id:})
+    const dishesTags = dishes.flatMap(d => d.tags);
+
+    const allTagIds = new Set([...usersTags, ...dishesTags]);
+    const allTags = await Tag.find({ _id: [...allTagIds] }).exec();
+
+    res.json(allTags);
+
+    //res.json(recommendation);
 };
 
 module.exports = {
