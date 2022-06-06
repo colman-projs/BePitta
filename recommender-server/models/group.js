@@ -7,7 +7,8 @@ const Group = new Schema({
         required: true,
     },
     restaurantId: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'restaurant',
         required: true,
     },
     users: {

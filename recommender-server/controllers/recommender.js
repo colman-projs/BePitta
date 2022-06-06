@@ -78,9 +78,16 @@ const recommendation = {
 
 const getRecommendations = async (req, res) => {
     // Get required data
-    const group = await Group.findById(req.params.groupId).exec();
-    const clients = await Client.find({ _id: group.users }).exec();
-    const dishes = await Restaurant.find(group.restaurantId).exec();
+    const group = await Group.findById(req.params.groupId)
+        .populate('users')
+        .populate('restaurantId')
+        .exec();
+    const restaurant = await Restaurant.find(group.restaurantId)
+        .populate('dishes')
+        .exec();
+
+    const clients = group.users;
+    const dishes = restaurant.dishes;
 
     const usersTags = clients.flatMap(c => c.tags); //await Tag.find({_id:})
     const dishesTags = dishes.flatMap(d => d.tags);

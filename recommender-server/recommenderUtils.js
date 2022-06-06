@@ -8,7 +8,7 @@ const defaultRec = {
     ],
 };
 
-const calculateScores = (users, dishes) => {
+const calculateScores = (users, dishes, tags) => {
     return defaultRec; // todo
 };
 
