@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const Client = new mongoose.Schema({
     name: {
@@ -9,11 +10,11 @@ const Client = new mongoose.Schema({
         type: String,
     },
     tags: {
-        type: [String],
+        type: [{ type: Schema.Types.ObjectId, ref: 'tag' }],
         required: true,
     },
     favoriteresturants: {
-        type: [String],
+        type: [{ type: Schema.Types.ObjectId, ref: 'restaurant' }],
     },
 });
 

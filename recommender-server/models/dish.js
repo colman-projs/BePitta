@@ -11,7 +11,7 @@ const Dish = new Schema({
         required: true,
     },
     tags: {
-        type: [String],
+        type: [{ type: Schema.Types.ObjectId, ref: 'tag' }],
         required: true,
     },
 });

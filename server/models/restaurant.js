@@ -16,7 +16,7 @@ const Restaurant = new Schema({
         validate: m => m.length <= 5,
     },
     dishes: {
-        type: [String],
+        type: [{ type: Schema.Types.ObjectId, ref: 'dish' }],
         required: true,
     },
 });
