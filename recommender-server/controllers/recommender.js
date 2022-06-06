@@ -68,7 +68,7 @@ const recommendation = {
     dishes: [
         {
             id: '629202c76a579f0257f7aadb',
-            match: 0.9,
+            match: 0.92,
             users: [1, 3],
         },
     ],
