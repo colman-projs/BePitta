@@ -5,6 +5,7 @@ import { decodeJwt } from 'jose'
 import { User } from '../../context/GlobalContext';
 import { Button } from '@mui/material';
 import { Logout } from '@mui/icons-material';
+import { cookie } from '../../actions/cookieActions'
 
 const Login = () => {
 	const { user, setUser } = useContext(User);
@@ -15,9 +16,7 @@ const Login = () => {
 	};
 
 	const handleSignIn = (response) => {
-		console.log(response);
 		const responsePayload = decodeJwt(response.credential);
-		console.log(responsePayload);
 
 		console.group("User data");
 		console.log("ID: " + responsePayload.sub);
@@ -29,7 +28,7 @@ const Login = () => {
 		console.groupEnd();
 
 		setUser(responsePayload);
-		console.log(user);
+		cookie.setCookie(cookie.siteCookies.userCradentials, response.credential);
 	};
 
 	const handleLogout = () => {
@@ -37,6 +36,7 @@ const Login = () => {
 		googleLogout();
 
 		setUser(null);
+		cookie.clearCookie(cookie.siteCookies.userCradentials);
 		console.log(user);
 	};
 

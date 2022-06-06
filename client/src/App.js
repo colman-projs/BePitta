@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import { GlobalContext, User } from './context/GlobalContext';
@@ -16,10 +16,22 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import './App.scss';
 import { clientId } from './globals';
+import { cookie } from './actions/cookieActions';
+import { decodeJwt } from 'jose';
 
 function App() {
     const [isLoadingApp, setIsLoadingApp] = useState(false);
     const [user, setUser] = useState(null);
+
+    useEffect(() => {
+
+        const userCradentials = cookie.getCookie(cookie.siteCookies.userCradentials);
+        if (userCradentials !== "") {
+            const responsePayload = decodeJwt(userCradentials);
+            setUser(responsePayload);
+        }
+
+    }, []);
 
     return (
         <GoogleOAuthProvider clientId={clientId}>
