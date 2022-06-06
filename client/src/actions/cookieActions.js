@@ -10,7 +10,7 @@ export const cookie = {
      * @param {*} cvalue cookie value
      * @param {number} exdays expiration days
      */
-    setCookie: (cname, cvalue, exdays) => {
+    setCookie: (cname, cvalue, exdays = 10) => {
         const d = new Date();
         let expires = "";
         if (exdays) {
