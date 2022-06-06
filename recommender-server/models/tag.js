@@ -6,6 +6,10 @@ const Tag = new Schema({
         type: String,
         required: true,
     },
+    weight: {
+        type: Number,
+        required: true,
+    },
 });
 
 module.exports = mongoose.model('tag', Tag);
