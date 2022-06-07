@@ -1,0 +1,13 @@
+.user-avatar {
+    cursor: pointer;
+    margin-left: auto;
+    align-self: center;
+}
+
+.logout-item.MuiMenuItem-root {
+    color: var(--alerting-red);
+
+    svg {
+        color: var(--alerting-red);
+    }
+}
