@@ -1,2 +1,9 @@
-.single-result {
+.dish-avatar {
+    cursor: pointer;
+    border: 2px white solid;
+    opacity: 0.8;
+
+    &:hover {
+        opacity: 1;
+    }
 }

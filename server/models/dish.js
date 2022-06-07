@@ -14,6 +14,10 @@ const Dish = new Schema({
         type: [{ type: Schema.Types.ObjectId, ref: 'tag' }],
         required: true,
     },
+    imageUrl: {
+        type: String,
+        required: true,
+    },
 });
 
 module.exports = mongoose.model('dish', Dish);
