@@ -79,28 +79,46 @@ const onStartup = async () => {
         console.log(`Server is listening on port ${port}...`),
     );
 
-    // io.on('connect', function (socket) {
-    //     let clientId = null;
-    //     clientDb.createClient(Date.now()).then(result => {
-    //         clientId = result;
-    //         socket.emit('id', clientId);
-    //         io.sockets.emit('updateClients');
-    //     });
+    let groups = {};
 
-    //     socket.on('screen', function (screen) {
-    //         clientDb.updateClient(clientId, {
-    //             screenId: screen,
-    //         });
-    //         io.sockets.emit('updateClients');
-    //     });
+    io.on('connect', function (socket) {
+        let _groupId = null;
 
-    //     socket.on('disconnect', function () {
-    //         clientDb.updateClient(clientId, {
-    //             disconnected: Date.now(),
-    //         });
-    //         io.sockets.emit('updateClients');
-    //     });
-    // });
+        socket.on('group-connect', function (groupId) {
+
+            _groupId = groupId;
+
+            if (!groups[groupId]) {
+                groups[groupId] = {
+                    members: 1
+                }
+            } else {
+                groups[groupId].members++;
+            }
+
+            socket.join(groupId);
+            io.to(groupId).emit("participants-updated", groups[groupId].members);
+        });
+
+        //     clientDb.createClient(Date.now()).then(result => {
+        //         clientId = result;
+        //         socket.emit('id', clientId);
+        //         io.sockets.emit('updateClients');
+        //     });
+
+        //     socket.on('screen', function (screen) {
+        //         clientDb.updateClient(clientId, {
+        //             screenId: screen,
+        //         });
+        //         io.sockets.emit('updateClients');
+        //     });
+
+        socket.on('disconnect', function () {
+            if (groups[_groupId]) {
+                io.to(_groupId).emit("participants-updated", --groups[_groupId].members);
+            }
+        });
+    });
 };
 
 onStartup();

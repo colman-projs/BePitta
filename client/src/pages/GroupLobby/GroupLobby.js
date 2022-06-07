@@ -12,6 +12,7 @@ import { getRestaurantById } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
 
 import './GroupLobby.scss';
+import { socket } from '../../socket/index';
 
 function GroupLobby() {
     const [loadingPreferences, setLoadingPreferences] = useState(false);
@@ -24,6 +25,14 @@ function GroupLobby() {
     let { groupId, restaurantId } = useParams();
 
     useEffect(() => {
+
+        socket.on('participants-updated', (userCount) => {
+            setParticipants(userCount);
+        })
+
+    }, [])
+
+    useEffect(() => {
         const fetchRestaurant = async () => {
             setIsLoadingApp(true);
             const res = await getRestaurantById(restaurantId);
@@ -33,6 +42,8 @@ function GroupLobby() {
                 return setIsLoadingApp(false);
             }
 
+            socket.emit('group-connect', groupId);
+
             setParticipants(1);
             setRestaurant(res);
             setIsLoadingApp(false);
@@ -41,12 +52,12 @@ function GroupLobby() {
         if (!restaurantId) return;
 
         fetchRestaurant();
-    }, [restaurantId, alert, setIsLoadingApp]);
+    }, [groupId, restaurantId, alert, setIsLoadingApp]);
 
     const handleStart = e => {
         setLoadingPreferences(true);
 
-        const groupId = 123;
+        // const groupId = 123;
 
         if (!groupId) {
             alert.error('Error while loading prefernces page');
