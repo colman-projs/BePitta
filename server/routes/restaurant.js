@@ -50,20 +50,20 @@ router.get('/', restaurantController.getRestaurants);
 
 router.get(
     '/:restaurantId',
-    //  authJwt.verifyToken,
+     authJwt.verifyToken,
     restaurantController.getRestaurantById,
 );
 
 
 router.post(
     '/',
-    //  authJwt.verifyToken,
+     authJwt.verifyToken,
     restaurantController.upsertRestaurant,
 );
 
 router.delete(
     '/:restaurantId',
-    //  authJwt.verifyToken,
+     authJwt.verifyToken,
     restaurantController.deleteRestaurant,
 );
 
