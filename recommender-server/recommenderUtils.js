@@ -54,9 +54,16 @@ const getMatchDishesToUsers = (dishes, users) => {
 };
 
 /**
- * Get a final dishes percentages
+ * Get a final dishes normalized percentages
  */
-const getDishesPercentages = match => {};
+const getDishesPercentages = match => {
+    const maxPossibleScore = Math.max(...match.map(m => m.maxPossibleScore));
+
+    return match.map(m => ({
+        ...m,
+        percent: m.score / maxPossibleScore,
+    }));
+};
 
 /**
  * Get a final recommendation of what dish to take, specifying match
@@ -64,6 +71,7 @@ const getDishesPercentages = match => {};
  */
 const calculateScores = (users, dishes /*, tags*/) => {
     const matches = getMatchDishesToUsers(dishes, users);
+    const percentages = getDishesPercentages(matches);
 
     //return defaultRec; // todo
 };
