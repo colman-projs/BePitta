@@ -1,6 +1,5 @@
 const Group = require('../models/group');
 const errorHandler = require('../globals').errorHandler;
-
 const { getIo } = require('../globals');
 const dish = require('../models/dish');
 
@@ -19,9 +18,9 @@ const upsertDish = async (req, res) => {
             })
             .catch(errorHandler(res));
     } else {
-        const dish = new dish(req.body);
+        const Dish = new dish(req.body);
 
-        dish.save()
+        Dish.save()
             .then(() => {
                 const io = getIo();
                 io.sockets.emit('updateDishes');
@@ -47,6 +46,15 @@ const getdishById = (req, res) => {
         .catch(errorHandler(res));
 };
 
+const getDishesByIds = async (req, res) => {
+    try {
+        const allDishes = await dish.find({ _id: [...req.body.ids] }).exec();
+        res.json(allDishes);
+    } catch (e) {
+        errorHandler(e);
+    }
+};
+
 const deleteDish = (req, res) => {
     dish.deleteOne({ _id: req.params.dishId })
         .then(deletedDish => {
@@ -62,4 +70,5 @@ module.exports = {
     upsertDish,
     getdishById,
     deleteDish,
+    getDishesByIds,
 };
