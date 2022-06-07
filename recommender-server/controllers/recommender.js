@@ -5,6 +5,7 @@ const Tag = require('../models/tag');
 const Dish = require('../models/dish');
 const Restaurant = require('../models/restaurant');
 const Client = require('../models/client');
+const { calculateScores } = require('../recommenderUtils');
 /*
 const upsertGroup = async (req, res) => {
     if (req.body._id) {
@@ -80,7 +81,6 @@ const getRecommendations = async (req, res) => {
     // Get required data
     const group = await Group.findById(req.params.groupId)
         .populate('users')
-        .populate('restaurantId')
         .exec();
     const restaurant = await Restaurant.find(group.restaurantId)
         .populate('dishes')
@@ -89,13 +89,15 @@ const getRecommendations = async (req, res) => {
     const clients = group.users;
     const dishes = restaurant.dishes;
 
-    const usersTags = clients.flatMap(c => c.tags); //await Tag.find({_id:})
+    const usersTags = clients.flatMap(c => c.tags);
     const dishesTags = dishes.flatMap(d => d.tags);
 
     const allTagIds = new Set([...usersTags, ...dishesTags]);
     const allTags = await Tag.find({ _id: [...allTagIds] }).exec();
 
-    res.json(allTags);
+    const scores = calculateScores(group.users, dishes, allTags);
+
+    res.json(scores);
 
     //res.json(recommendation);
 };
