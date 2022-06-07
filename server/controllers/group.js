@@ -2,7 +2,6 @@ const Group = require('../models/group');
 const errorHandler = require('../globals').errorHandler;
 
 const { getIo } = require('../globals');
-const group = require('../models/group');
 
 const upsertGroup = async (req, res) => {
     if (req.body._id) {
@@ -25,7 +24,7 @@ const upsertGroup = async (req, res) => {
             .then(() => {
                 const io = getIo();
                 io.sockets.emit('updateRestaurants');
-                res.send(true);
+                res.json(group);
             })
             .catch(errorHandler(res));
     }

@@ -56,13 +56,13 @@ const options = {
         ],
     },
     apis: ["./routes/*.js"],
-    
+
 };
 
 const specs = swaggerJsDoc(options);
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
 
- //Set routes
+//Set routes
 
 app.use(routes);
 
@@ -79,28 +79,28 @@ const onStartup = async () => {
         console.log(`Server is listening on port ${port}...`),
     );
 
-    io.on('connect', function (socket) {
-        let clientId = null;
-        clientDb.createClient(Date.now()).then(result => {
-            clientId = result;
-            socket.emit('id', clientId);
-            io.sockets.emit('updateClients');
-        });
+    // io.on('connect', function (socket) {
+    //     let clientId = null;
+    //     clientDb.createClient(Date.now()).then(result => {
+    //         clientId = result;
+    //         socket.emit('id', clientId);
+    //         io.sockets.emit('updateClients');
+    //     });
 
-        socket.on('screen', function (screen) {
-            clientDb.updateClient(clientId, {
-                screenId: screen,
-            });
-            io.sockets.emit('updateClients');
-        });
+    //     socket.on('screen', function (screen) {
+    //         clientDb.updateClient(clientId, {
+    //             screenId: screen,
+    //         });
+    //         io.sockets.emit('updateClients');
+    //     });
 
-        socket.on('disconnect', function () {
-            clientDb.updateClient(clientId, {
-                disconnected: Date.now(),
-            });
-            io.sockets.emit('updateClients');
-        });
-    });
+    //     socket.on('disconnect', function () {
+    //         clientDb.updateClient(clientId, {
+    //             disconnected: Date.now(),
+    //         });
+    //         io.sockets.emit('updateClients');
+    //     });
+    // });
 };
 
 onStartup();

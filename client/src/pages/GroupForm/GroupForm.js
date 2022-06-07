@@ -10,6 +10,7 @@ import { getRestaurants } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
 
 import './GroupForm.scss';
+import { createGroup } from '../../actions/groupActions';
 
 function GroupForm() {
     const [loadingGroup, setLoadingGroup] = useState(false);
@@ -40,12 +41,14 @@ function GroupForm() {
         setRestaurant(e.target.value);
     };
 
-    const handleCreateGroup = e => {
+    const handleCreateGroup = async e => {
         e.preventDefault();
 
         setLoadingGroup(true);
 
-        const groupId = 123;
+        const group = await createGroup(restaurant);
+        console.log(group);
+        const groupId = group?._id;
 
         if (!groupId || !restaurant) {
             alert.error('Error while creating a group');

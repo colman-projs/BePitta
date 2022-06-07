@@ -57,7 +57,10 @@ router.get(
 );
 
 
-router.post('/', authJwt.verifyToken, groupController.upsertGroup);
+router.post('/',
+    // authJwt.verifyToken,
+    groupController.upsertGroup
+);
 
 router.delete(
     '/:groupId',

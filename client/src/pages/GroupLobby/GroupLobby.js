@@ -16,6 +16,7 @@ import './GroupLobby.scss';
 function GroupLobby() {
     const [loadingPreferences, setLoadingPreferences] = useState(false);
     const [restaurant, setRestaurant] = useState(null);
+    const [participants, setParticipants] = useState(0);
     const { setIsLoadingApp } = useContext(GlobalContext);
     const navigate = useNavigate();
     const alert = useAlert();
@@ -32,6 +33,7 @@ function GroupLobby() {
                 return setIsLoadingApp(false);
             }
 
+            setParticipants(1);
             setRestaurant(res);
             setIsLoadingApp(false);
         };
@@ -76,7 +78,7 @@ function GroupLobby() {
             <Typography variant="h5">Group {groupId}</Typography>
             <Typography variant="h5">
                 Participants:
-                <i className="amount">{0}</i>
+                <i className="amount">{participants}</i>
             </Typography>
             <Button onClick={handleShareLink} endIcon={<ShareIcon />}>
                 <Typography variant="h6">Invite Friends </Typography>
