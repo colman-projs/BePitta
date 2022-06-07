@@ -1,7 +1,8 @@
 export const cookie = {
 
     siteCookies: {
-        userCradentials: "userCradentials"
+        userCradentials: "userCradentials",
+        userId: "userId"
     },
 
     /**

@@ -18,6 +18,7 @@ import './App.scss';
 import { clientId } from './globals';
 import { cookie } from './actions/cookieActions';
 import { decodeJwt } from 'jose';
+import { createUser } from './actions/userActions';
 
 function App() {
     const [isLoadingApp, setIsLoadingApp] = useState(false);
@@ -29,6 +30,13 @@ function App() {
         if (userCradentials !== "") {
             const responsePayload = decodeJwt(userCradentials);
             setUser(responsePayload);
+        }
+
+        const userId = cookie.getCookie(cookie.siteCookies.userId);
+        if (userId === "") {
+            createUser().then(userId => {
+                cookie.setCookie(cookie.siteCookies.userId, userId);
+            });
         }
 
     }, []);
