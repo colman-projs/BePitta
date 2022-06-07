@@ -80,22 +80,36 @@ const recommendation = {
 const getRecommendations = async (req, res) => {
     // Get required data
     const group = await Group.findById(req.params.groupId)
-        .populate('users')
+        //.populate('users')
+        .populate({
+            path: 'users',
+            populate: {
+                path: 'tags',
+                //model: 'Component',
+            },
+        })
         .exec();
     const restaurant = await Restaurant.find(group.restaurantId)
-        .populate('dishes')
+        //.populate('dishes')
+        .populate({
+            path: 'dishes',
+            populate: {
+                path: 'tags',
+                //model: 'Component',
+            },
+        })
         .exec();
 
     const clients = group.users;
     const dishes = restaurant.dishes;
 
-    const usersTags = clients.flatMap(c => c.tags);
+    /*const usersTags = clients.flatMap(c => c.tags);
     const dishesTags = dishes.flatMap(d => d.tags);
 
     const allTagIds = new Set([...usersTags, ...dishesTags]);
-    const allTags = await Tag.find({ _id: [...allTagIds] }).exec();
+    const allTags = await Tag.find({ _id: [...allTagIds] }).exec();*/
 
-    const scores = calculateScores(group.users, dishes, allTags);
+    const scores = calculateScores(clients, dishes /*, allTags*/);
 
     res.json(scores);
 

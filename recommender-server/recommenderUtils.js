@@ -8,10 +8,16 @@ const defaultRec = {
     ],
 };
 
+/**
+ * Get the number of common tags between two lists
+ */
 const getIntersectingTags = (tags1, tags2) => {
     return tags1.filter(t1 => tags2.some(t2 => t1.value === t2.value));
 };
 
+/**
+ * Get the match score of a dish to a user
+ */
 const getMatchDishToUser = (dish, user) => {
     const intersection = getIntersectingTags(dish, user);
 
@@ -20,21 +26,44 @@ const getMatchDishToUser = (dish, user) => {
         count: intersection,
     };
 };
-
+/**
+ * Get the match score of a dish to a list of users
+ */
 const getMatchDishToUsers = (dish, users) => {
-    const scores = users.map(u => getMatchDishToUser(dish, u));
+    const scores = users.map(u => ({
+        user: u,
+        ...getMatchDishToUser(dish, u),
+    }));
 
     return {
         score: scores.reduce((sum, match) => sum + match.score),
         tagCount: scores.reduce((sum, match) => sum + match.count),
-        userCount: scores.filter(match => match > 0),
+        maxPossibleScore: dish.tags.reduce((sum, t) => sum + t.weight),
+        users: scores,
     };
 };
 
-const calculateScores = (users, dishes, tags) => {
-    const dishesMatch = dishes.map(d => {
-        return;
-    });
+/**
+ * Get the calculated match score for every dish
+ */
+const getMatchDishesToUsers = (dishes, users) => {
+    return dishes.map(d => ({
+        dish: d,
+        ...getMatchDishToUsers(d, users),
+    }));
+};
+
+/**
+ * Get a final dishes percentages
+ */
+const getDishesPercentages = match => {};
+
+/**
+ * Get a final recommendation of what dish to take, specifying match
+ * percentage and matching users
+ */
+const calculateScores = (users, dishes /*, tags*/) => {
+    const matches = getMatchDishesToUsers(dishes, users);
 
     //return defaultRec; // todo
 };
