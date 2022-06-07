@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { decodeJwt } from 'jose';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
-import { GlobalContext, User } from './context/GlobalContext';
+import { GlobalContext } from './context/GlobalContext';
 import Loader from './components/Loader/Loader';
-
 import GroupForm from './pages/GroupForm';
 import GroupLobby from './pages/GroupLobby';
 import PreferencesForm from './pages/PreferencesForm';
@@ -11,37 +12,43 @@ import NotFound from './pages/NotFound/NotFound';
 import PreferencesPhotoForm from './pages/PreferencesPhotoForm';
 import Header from './components/Header';
 import ResultsPage from './pages/ResultsPage';
-import Login from './pages/Login/Login';
-import { GoogleOAuthProvider } from '@react-oauth/google';
-
-import './App.scss';
 import { clientId } from './globals';
 import { cookie } from './actions/cookieActions';
-import { decodeJwt } from 'jose';
+import { UserContext } from './context/UserContext';
+import UserPreferences from './pages/UserPreferences';
+
+import './App.scss';
 
 function App() {
     const [isLoadingApp, setIsLoadingApp] = useState(false);
     const [user, setUser] = useState(null);
 
     useEffect(() => {
+        const userCradentials = cookie.getCookie(
+            cookie.siteCookies.userCradentials,
+        );
 
-        const userCradentials = cookie.getCookie(cookie.siteCookies.userCradentials);
-        if (userCradentials !== "") {
-            const responsePayload = decodeJwt(userCradentials);
-            setUser(responsePayload);
-        }
+        if (!userCradentials) return;
 
+        const responsePayload = decodeJwt(userCradentials);
+        setUser(responsePayload);
     }, []);
 
     return (
         <GoogleOAuthProvider clientId={clientId}>
-            <User.Provider value={{ user, setUser }}>
-                <GlobalContext.Provider value={{ isLoadingApp, setIsLoadingApp }}>
+            <UserContext.Provider value={{ user, setUser }}>
+                <GlobalContext.Provider
+                    value={{ isLoadingApp, setIsLoadingApp }}
+                >
                     {isLoadingApp && <Loader />}
                     <Header />
                     <Routes>
                         <Route exact path="/" element={<GroupForm />} />
-                        <Route exact path="/login" element={<Login />} />
+                        <Route
+                            exact
+                            path="/user/preferences"
+                            element={<UserPreferences />}
+                        />
                         <Route
                             exact
                             path="/groups/:groupId/:restaurantId"
@@ -65,7 +72,7 @@ function App() {
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </GlobalContext.Provider>
-            </User.Provider>
+            </UserContext.Provider>
         </GoogleOAuthProvider>
     );
 }

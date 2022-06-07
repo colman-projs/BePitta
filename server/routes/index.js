@@ -6,11 +6,9 @@ const admin = require('./admin');
 const restaurant = require('./restaurant');
 const routes = express.Router();
 
-
 routes.use('/restaurants', restaurant);
 routes.use('/groups', group);
 routes.use('/tags', tag);
 routes.use('/dishes', dish);
-
 
 module.exports = routes;
