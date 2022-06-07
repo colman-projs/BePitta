@@ -30,7 +30,11 @@ function GroupLobby() {
             setParticipants(userCount);
         })
 
-    }, [])
+        return () => {
+            socket.emit('user-leave-group');
+        }
+
+    }, []);
 
     useEffect(() => {
         const fetchRestaurant = async () => {
@@ -63,6 +67,8 @@ function GroupLobby() {
             alert.error('Error while loading prefernces page');
             return setLoadingPreferences(false);
         }
+
+        socket.emit('user-start-prefernces');
 
         navigate(`/groups/${groupId}/${restaurantId}/preferences`);
 

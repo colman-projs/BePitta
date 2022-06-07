@@ -83,35 +83,40 @@ const onStartup = async () => {
 
     io.on('connect', function (socket) {
         let _groupId = null;
+        let userStartPrefernces = false;
 
         socket.on('group-connect', function (groupId) {
 
             _groupId = groupId;
 
-            if (!groups[groupId]) {
-                groups[groupId] = {
-                    members: 1
-                }
+            if (userStartPrefernces) {
+                userStartPrefernces = false;
             } else {
-                groups[groupId].members++;
+
+                if (!groups[groupId]) {
+                    groups[groupId] = {
+                        members: 1
+                    }
+                } else {
+                    groups[groupId].members++;
+                }
+
+                socket.join(groupId);
+
             }
 
-            socket.join(groupId);
             io.to(groupId).emit("participants-updated", groups[groupId].members);
         });
 
-        //     clientDb.createClient(Date.now()).then(result => {
-        //         clientId = result;
-        //         socket.emit('id', clientId);
-        //         io.sockets.emit('updateClients');
-        //     });
+        socket.on('user-leave-group', function () {
+            if (groups[_groupId] && !userStartPrefernces) {
+                io.to(_groupId).emit("participants-updated", --groups[_groupId].members);
+            }
+        });
 
-        //     socket.on('screen', function (screen) {
-        //         clientDb.updateClient(clientId, {
-        //             screenId: screen,
-        //         });
-        //         io.sockets.emit('updateClients');
-        //     });
+        socket.on('user-start-prefernces', function () {
+            userStartPrefernces = true;
+        });
 
         socket.on('disconnect', function () {
             if (groups[_groupId]) {
