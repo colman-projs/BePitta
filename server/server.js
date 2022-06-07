@@ -5,6 +5,7 @@ const routes = require('./routes');
 const connectDB = require('./db/connect');
 const cors = require('./middleware/cors');
 const { setIo } = require('./globals');
+const cookieParser = require('cookie-parser');
 
 const swaggerUI = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
@@ -28,7 +29,7 @@ setIo(io);
 
 //Set the port
 const port = 3000;
-
+app.use(cookieParser());
 app.use(cors);
 
 app.use(bodyParser.json());

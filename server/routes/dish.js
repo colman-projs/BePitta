@@ -51,19 +51,19 @@ router.get('/', dishController.getDishes);
 
 router.get(
     '/:dishId',
-    //  authJwt.verifyToken,
+      authJwt.verifyToken,
     dishController.getdishById,
 );
 
 router.post(
     '/',
-    //  authJwt.verifyToken,
+      authJwt.verifyToken,
     dishController.upsertDish,
 );
 
 router.delete(
     '/:dishId',
-    //  authJwt.verifyToken,
+      authJwt.verifyToken,
     dishController.deleteDish,
 );
 
