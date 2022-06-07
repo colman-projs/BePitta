@@ -1,18 +1,28 @@
-import React from 'react';
-import { Avatar } from '@mui/material';
+import React, { useState } from 'react';
+import { Avatar, Dialog } from '@mui/material';
+import SingleResultDetails from '../SingleResultDetails/SingleResultDetails';
 
 import './SingleResult.scss';
 
-function SingleResult({ name, description, imageUrl }) {
+function SingleResult(result) {
+    const [showDetailsModal, setShowDetailsModal] = useState(false);
+
     return (
-        <div className="single-result">
+        <>
+            <Dialog
+                open={showDetailsModal}
+                onClose={() => setShowDetailsModal(false)}
+            >
+                <SingleResultDetails {...result} />
+            </Dialog>
             <Avatar
-                src={imageUrl}
-                alt={description}
-                sx={{ width: 100, height: 100 }}
+                className="dish-avatar"
+                onClick={() => setShowDetailsModal(true)}
+                src={result.imageUrl}
+                alt="dish"
+                sx={{ width: 120, height: 120 }}
             />
-            {name}
-        </div>
+        </>
     );
 }
 

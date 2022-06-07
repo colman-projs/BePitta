@@ -1,0 +1,12 @@
+.single-result-details {
+    display: grid;
+    grid-auto-flow: row;
+    grid-gap: 1rem;
+    padding: 1rem;
+    place-items: center;
+
+    .dish-img {
+        width: 8rem;
+        height: 8rem;
+    }
+}

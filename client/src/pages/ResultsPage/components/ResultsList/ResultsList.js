@@ -35,9 +35,17 @@ function ResultsList() {
     }, [setIsLoadingApp]);
 
     return (
-        <div className="results-list center">
+        <div className="results-list">
             {results.map(result => (
-                <SingleResult key={result._id} {...result} />
+                <>
+                    <SingleResult key={result._id} {...result} />
+                    <SingleResult key={result._id} {...result} />
+                    <SingleResult key={result._id} {...result} />
+                    <SingleResult key={result._id} {...result} />
+                    <SingleResult key={result._id} {...result} />
+                    <SingleResult key={result._id} {...result} />
+                    <SingleResult key={result._id} {...result} />
+                </>
             ))}
         </div>
     );
