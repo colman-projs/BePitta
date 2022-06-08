@@ -98,7 +98,9 @@ const onStartup = async () => {
 
             }
 
-            io.to(groupId).emit("participants-updated", groups[groupId].members);
+            if (groups[groupId]) {
+                io.to(groupId).emit("participants-updated", groups[groupId].members);
+            }
         });
 
         socket.on('user-leave-group', function () {
