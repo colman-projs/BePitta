@@ -7,6 +7,8 @@ import Logo from '../../assets/images/Logo.png';
 
 import './Header.scss';
 
+const routesWithNoBackButton = ['results', 'waiting'];
+
 function Header() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -15,7 +17,9 @@ function Header() {
     return (
         <header className="header">
             {location.pathname !== HOME_PATH &&
-                !location.pathname.includes('results') && (
+                !routesWithNoBackButton.some(route =>
+                    location.pathname.includes(route),
+                ) && (
                     <IconButton onClick={() => navigate(-1)}>
                         <BackIcon />
                     </IconButton>
