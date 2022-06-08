@@ -16,7 +16,7 @@ import { getRestaurantById } from '../../../../actions/restaurantActions';
 
 import './ResultsPage.scss';
 
-const dishes = [
+const dishesBenda = [
     {
         id: '629202c76a579f0257f7aadb',
         match: 0.92,
@@ -26,13 +26,20 @@ const dishes = [
 
 function ResultsPage() {
     const resultsRef = useRef();
+    const [dishes, setDishes] = useState([]);
     const [results, setResults] = useState([]);
     const [restaurant, setRestaurant] = useState(null);
     const [toggleFullResults, setToggleFullResults] = useState(false);
-    let { restaurantId } = useParams();
+    let { groupId, restaurantId } = useParams();
     const alert = useAlert();
 
     const { setIsLoadingApp } = useContext(GlobalContext);
+
+    useEffect(() => {
+        // TODO: Call calculating algorithem to calculate final results
+        // await getFinalResults(groupId)
+        setDishes(dishesBenda);
+    }, []);
 
     useEffect(() => {
         // Fetch restaurant details
@@ -85,7 +92,7 @@ function ResultsPage() {
         };
 
         fetchDishesByIds();
-    }, [setIsLoadingApp, alert]);
+    }, [setIsLoadingApp, alert, dishes]);
 
     const handleShareResults = async () => {
         if (!('share' in navigator)) {

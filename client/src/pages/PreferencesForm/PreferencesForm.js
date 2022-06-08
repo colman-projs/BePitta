@@ -73,6 +73,8 @@ function PreferencesForm() {
     const handleNext = e => {
         setIsLoadingApp(true);
 
+        // TODO: Save user preferences in DB
+
         if (!groupId) {
             alert.error('Error while loading Like/Dislike page');
             return setLoadingPreferencesPhoto(false);

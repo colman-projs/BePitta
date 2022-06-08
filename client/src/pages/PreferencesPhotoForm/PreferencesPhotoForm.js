@@ -63,6 +63,8 @@ function PreferencesFormPhoto() {
             return;
         }
 
+        // TODO: Save user dish preferences
+
         navigate(`/groups/${groupId}/${restaurantId}/waiting`);
 
         setIsLoadingApp(false);

@@ -4,16 +4,27 @@ import { useAlert } from 'react-alert';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getRestaurantById } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
+import { socket } from '../../socket';
 
 import './WaitingParticipants.scss';
 
 function WaitingParticipants() {
     const { setIsLoadingApp } = useContext(GlobalContext);
     const [restaurant, setRestaurant] = useState(null);
-    const [participants, setParticipants] = useState([]);
+    const [participants, setParticipants] = useState([1, 2, 3, 4]);
+    const [readyParticipants, setReadyParticipants] = useState([1, 2]);
     let { groupId, restaurantId } = useParams();
     const navigate = useNavigate();
     const alert = useAlert();
+
+    useEffect(() => {
+        // TODO: Update ready participants
+
+        // TODO: Update total participants
+        socket.on('participants-updated', userCount => {
+            setParticipants(userCount);
+        });
+    }, []);
 
     useEffect(() => {
         // Fetch restaurant details
@@ -51,11 +62,19 @@ function WaitingParticipants() {
 
         // TODO: Check if total participants equal to ready participants
         // If not all participants are ready
-        if (true) return;
+        if (participants.length !== readyParticipants.length) return;
 
         // Load results
         handleAllParticipantsReady();
-    }, [participants, groupId, restaurantId, alert, navigate, setIsLoadingApp]);
+    }, [
+        participants,
+        readyParticipants,
+        groupId,
+        restaurantId,
+        alert,
+        navigate,
+        setIsLoadingApp,
+    ]);
 
     return (
         <div className="waiting center">
@@ -70,7 +89,10 @@ function WaitingParticipants() {
             <Typography variant="h6">
                 Waiting for other participants:
                 <Typography variant="h5" className="participants">
-                    <span className="ready-participants"> 1</span>/5
+                    <span className="ready-participants">
+                        {readyParticipants.length}
+                    </span>
+                    /{participants.length}
                 </Typography>
             </Typography>
             <Typography variant="h6">
