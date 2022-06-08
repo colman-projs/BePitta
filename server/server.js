@@ -72,26 +72,49 @@ const onStartup = async () => {
         console.log(`Server is listening on port ${port}...`),
     );
 
+    let groups = {};
+
     io.on('connect', function (socket) {
-        let clientId = null;
-        clientDb.createClient(Date.now()).then(result => {
-            clientId = result;
-            socket.emit('id', clientId);
-            io.sockets.emit('updateClients');
+        let _groupId = null;
+        let userStartPrefernces = false;
+
+        socket.on('group-connect', function (groupId) {
+
+            _groupId = groupId;
+
+            if (userStartPrefernces) {
+                userStartPrefernces = false;
+            } else {
+
+                if (!groups[groupId]) {
+                    groups[groupId] = {
+                        members: 1
+                    }
+                } else {
+                    groups[groupId].members++;
+                }
+
+                socket.join(groupId);
+
+            }
+
+            io.to(groupId).emit("participants-updated", groups[groupId].members);
         });
 
-        socket.on('screen', function (screen) {
-            clientDb.updateClient(clientId, {
-                screenId: screen,
-            });
-            io.sockets.emit('updateClients');
+        socket.on('user-leave-group', function () {
+            if (groups[_groupId] && !userStartPrefernces) {
+                io.to(_groupId).emit("participants-updated", --groups[_groupId].members);
+            }
+        });
+
+        socket.on('user-start-prefernces', function () {
+            userStartPrefernces = true;
         });
 
         socket.on('disconnect', function () {
-            clientDb.updateClient(clientId, {
-                disconnected: Date.now(),
-            });
-            io.sockets.emit('updateClients');
+            if (groups[_groupId]) {
+                io.to(_groupId).emit("participants-updated", --groups[_groupId].members);
+            }
         });
     });
 };
