@@ -13,6 +13,9 @@ const Client = new mongoose.Schema({
     favoriteresturants: {
         type: [{ type: Schema.Types.ObjectId, ref: 'restaurant' }],
     },
+    isReady: {
+        type: Boolean,
+    },
 });
 
 module.exports = mongoose.model('client', Client);
