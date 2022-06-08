@@ -1,0 +1,12 @@
+.full-results-list {
+    display: flex;
+    flex-direction: column;
+    place-items: flex-end;
+    height: 70%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin-bottom: 2rem;
+    width: 95%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}

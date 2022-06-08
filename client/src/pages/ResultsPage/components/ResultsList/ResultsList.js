@@ -1,52 +1,17 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { getDishesByIds } from '../../../../actions/dishesActions';
+import React from 'react';
 import SingleResult from '../SingleResult/SingleResult';
-import { GlobalContext } from '../../../../context/GlobalContext';
 
 import './ResultsList.scss';
 
-const dishes = [
-    {
-        id: '629202c76a579f0257f7aadb',
-        match: 0.92,
-        users: [1, 3],
-    },
-];
-
-function ResultsList() {
-    const [results, setResults] = useState([]);
-    const { setIsLoadingApp } = useContext(GlobalContext);
-
-    useEffect(() => {
-        const fetchDishesByIds = async () => {
-            setIsLoadingApp(true);
-            const dishesRes = await getDishesByIds(dishes.map(dish => dish.id));
-
-            if (!dishesRes) {
-                alert.error('Error results');
-                return setIsLoadingApp(false);
-            }
-
-            setResults(dishesRes);
-            setIsLoadingApp(false);
-        };
-
-        fetchDishesByIds();
-    }, [setIsLoadingApp]);
-
+function ResultsList({ results }) {
     return (
         <div className="results-list">
-            {results.map(result => (
-                <>
+            {results
+                .sort((r1, r2) => r2.percentage - r1.percentage)
+                .slice(0, 3)
+                .map(result => (
                     <SingleResult key={result._id} {...result} />
-                    <SingleResult key={result._id} {...result} />
-                    <SingleResult key={result._id} {...result} />
-                    <SingleResult key={result._id} {...result} />
-                    <SingleResult key={result._id} {...result} />
-                    <SingleResult key={result._id} {...result} />
-                    <SingleResult key={result._id} {...result} />
-                </>
-            ))}
+                ))}
         </div>
     );
 }

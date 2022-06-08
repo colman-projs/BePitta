@@ -4,9 +4,15 @@
     grid-gap: 1rem;
     padding: 1rem;
     place-items: center;
+    background-color: #033047;
+
+    .percentage {
+        color: var(--yellow-500);
+    }
 
     .dish-img {
-        width: 8rem;
-        height: 8rem;
+        border-radius: 10px;
+        width: 10rem;
+        height: 10rem;
     }
 }

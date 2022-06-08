@@ -14,11 +14,12 @@ function Header() {
 
     return (
         <header className="header">
-            {location.pathname !== HOME_PATH && (
-                <IconButton onClick={() => navigate(-1)}>
-                    <BackIcon />
-                </IconButton>
-            )}
+            {location.pathname !== HOME_PATH &&
+                !location.pathname.includes('results') && (
+                    <IconButton onClick={() => navigate(-1)}>
+                        <BackIcon />
+                    </IconButton>
+                )}
             <UserAvatar />
             <Link to={HOME_PATH} className="logo">
                 <img src={Logo} alt="logo" />
