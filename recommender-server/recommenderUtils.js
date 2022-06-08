@@ -19,7 +19,7 @@ const getMatchDishToUser = (dish, user) => {
     const maxUserScore = user.tags.reduce((sum, tag) => sum + tag.weight, 0);
 
     return {
-        score: userLikedDish ? maxUserScore : Score,
+        score: userLikedDish ? maxUserScore : score,
         count,
         dishMatchPercent:
             score / dish.tags.reduce((sum, tag) => sum + tag.weight, 0),
@@ -152,7 +152,47 @@ const getLimitedMatchResultSet = (match, users) => {
         }
     });
 
+    recalculateMatchUserPercentages(finalMatch);
+
     return getSortedMatch([...finalMatch]);
+};
+
+/**
+ * Get the bias ratio for the percentages recalculation
+ */
+const getPercentageUserBias = userCount => {
+    return 1 / (userCount + 2);
+};
+
+/**
+ * Get the ratio between the final scoring of the dish user intersection
+ */
+const getDishUserMatchBias = () => {
+    return 0.8;
+};
+
+/**
+ * Bias the percentages to lean more towards the chosen users of each
+ * recommendation
+ */
+const recalculateMatchUserPercentages = match => {
+    const userBias = getDishUserMatchBias();
+    const dishBias = 1 - userBias;
+
+    match.forEach(m => {
+        const bias = getPercentageUserBias(m.users.size);
+        let userPercentage = m.percent * bias * 2;
+        let dishPercentage = m.percent * bias * 2;
+
+        m.users.forEach(u => {
+            const userScores = m.userScores.find(s => s.user._id + '' === u);
+            userPercentage += userScores.userMatchPercent * bias;
+            dishPercentage += userScores.dishMatchPercent * bias;
+        });
+
+        m.unbiasedPercent = m.percent;
+        m.percent = userBias * userPercentage + dishBias * dishPercentage;
+    });
 };
 
 /**
@@ -161,7 +201,8 @@ const getLimitedMatchResultSet = (match, users) => {
 const getFinalResultFromMatch = match => {
     return match.map(m => ({
         id: m.dish._id,
-        match: m.percent,
+        match: Math.ceil(100 * m.percent),
+        matchOld: Math.ceil(100 * m.unbiasedPercent),
         users: [...m.users],
     }));
 };
@@ -170,7 +211,7 @@ const getFinalResultFromMatch = match => {
  * Get a final recommendation of what dish to take, specifying match
  * percentage and matching users
  */
-const calculateScores = (users, dishes /*, tags*/) => {
+const calculateScores = (users, dishes) => {
     const perfStart = performance.now();
 
     const matches = getDishesPercentages(getMatchDishesToUsers(dishes, users));
