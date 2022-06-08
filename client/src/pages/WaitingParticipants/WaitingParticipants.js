@@ -49,8 +49,8 @@ function WaitingParticipants() {
             setIsLoadingApp(false);
         };
 
+        // TODO: Check if total participants equal to ready participants
         // If not all participants are ready
-        // TODO: Get participants
         if (true) return;
 
         // Load results
@@ -67,11 +67,13 @@ function WaitingParticipants() {
             <Typography variant="h5">
                 We have locked in your preferences!
             </Typography>
-            <Typography variant="h7">
+            <Typography variant="h6">
                 Waiting for other participants:
-                <span className="ready-participants"> 1</span>/5
+                <Typography variant="h5" className="participants">
+                    <span className="ready-participants"> 1</span>/5
+                </Typography>
             </Typography>
-            <Typography variant="h5">
+            <Typography variant="h6">
                 We'll pick the best dishes for you when everyone is ready!
             </Typography>
         </div>
