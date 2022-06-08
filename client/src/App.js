@@ -14,6 +14,7 @@ import Header from './components/Header';
 import ResultsPage from './pages/ResultsPage';
 import { clientId } from './globals';
 import { cookie } from './actions/cookieActions';
+import { createUser } from './actions/userActions';
 import { UserContext } from './context/UserContext';
 import UserPreferences from './pages/UserPreferences';
 
@@ -24,6 +25,13 @@ function App() {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
+        const userId = cookie.getCookie(cookie.siteCookies.userId);
+        if (!userId) {
+            createUser().then(userId => {
+                cookie.setCookie(cookie.siteCookies.userId, userId);
+            });
+        }
+
         const userCradentials = cookie.getCookie(
             cookie.siteCookies.userCradentials,
         );
@@ -32,6 +40,8 @@ function App() {
 
         const responsePayload = decodeJwt(userCradentials);
         setUser(responsePayload);
+
+
     }, []);
 
     return (

@@ -2,7 +2,6 @@ const Group = require('../models/group');
 const errorHandler = require('../globals').errorHandler;
 
 const { getIo } = require('../globals');
-const group = require('../models/group');
 
 const upsertGroup = async (req, res) => {
     if (req.body._id) {
@@ -25,7 +24,7 @@ const upsertGroup = async (req, res) => {
             .then(() => {
                 const io = getIo();
                 io.sockets.emit('updateRestaurants');
-                res.send(true);
+                res.json(group);
             })
             .catch(errorHandler(res));
     }
@@ -39,8 +38,8 @@ const getGroups = (_req, res) => {
         .catch(errorHandler(res));
 };
 
-const getgroupById = (req, res) => {
-    Group.findById(req.params.groupID)
+const getGroupById = (req, res) => {
+    Group.findById(req.params.groupId)
         .then(Group => {
             res.json(Group);
         })
@@ -66,7 +65,7 @@ const resetGroups = async () => {
 module.exports = {
     getGroups,
     upsertGroup,
-    getgroupById,
+    getgroupById: getGroupById,
     deleteGroup,
     resetGroups,
 };
