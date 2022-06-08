@@ -13,6 +13,9 @@ const Client = new mongoose.Schema({
         type: [{ type: Schema.Types.ObjectId, ref: 'tag' }],
         required: true,
     },
+    likedDishes: {
+        type: [{ type: Schema.Types.ObjectId, ref: 'dish' }],
+    },
     favoriteresturants: {
         type: [{ type: Schema.Types.ObjectId, ref: 'restaurant' }],
     },
