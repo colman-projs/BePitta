@@ -2,7 +2,7 @@ const express = require('express');
 const group = require('./group');
 const tag = require('./tag');
 const dish = require('./dish');
-const admin = require('./admin');
+// const admin = require('./admin');
 const restaurant = require('./restaurant');
 const routes = express.Router();
 
