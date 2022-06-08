@@ -9,18 +9,21 @@ const getIntersectingTags = (tags1, tags2) => {
  * Get the match score of a dish to a user
  */
 const getMatchDishToUser = (dish, user) => {
-    // TODO check if user liked the dish and return maximum score
+    const userLikedDish = user.likedDishes?.some(
+        d => d._id + '' === dish._id + '',
+    );
+
     const intersection = getIntersectingTags(dish.tags, user.tags);
     const score = intersection.reduce((sum, tag) => sum + tag.weight, 0);
     const count = intersection.length;
+    const maxUserScore = user.tags.reduce((sum, tag) => sum + tag.weight, 0);
 
     return {
-        score,
+        score: userLikedDish ? maxUserScore : Score,
         count,
         dishMatchPercent:
             score / dish.tags.reduce((sum, tag) => sum + tag.weight, 0),
-        userMatchPercent:
-            score / user.tags.reduce((sum, tag) => sum + tag.weight, 0),
+        userMatchPercent: userLikedDish ? 1 : score / maxUserScore,
     };
 };
 /**
