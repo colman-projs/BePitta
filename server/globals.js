@@ -22,7 +22,7 @@ const errorHandler = res => err => {
 };
 
 const config = {
-    recommenderServerUrl: 'localhost:3002',
+    recommenderServerUrl: 'http://localhost:3002',
 };
 
 module.exports = {
