@@ -18,7 +18,7 @@ const recommendation = {
 };
 
 const getRecommendations = async (req, res) => {
-    return res.json({ BEST: 'GOOD' });
+    //return res.json({ BEST: 'GOOD' });
     // Get required data
     const group = await Group.findById(req.params.groupId)
         //.populate('users')
@@ -30,7 +30,7 @@ const getRecommendations = async (req, res) => {
             },
         })
         .exec();
-    const restaurant = await Restaurant.find(group.restaurantId)
+    const restaurant = await Restaurant.findById(group.restaurantId)
         //.populate('dishes')
         .populate({
             path: 'dishes',
@@ -43,18 +43,19 @@ const getRecommendations = async (req, res) => {
 
     const clients = group.users;
     const dishes = restaurant.dishes;
-
+    /*return res.json({
+        group,
+        restaurant,
+    });*/
     /*const usersTags = clients.flatMap(c => c.tags);
     const dishesTags = dishes.flatMap(d => d.tags);
 
     const allTagIds = new Set([...usersTags, ...dishesTags]);
     const allTags = await Tag.find({ _id: [...allTagIds] }).exec();*/
 
-    const scores = calculateScores(clients, dishes /*, allTags*/);
+    const recommendation = calculateScores(clients, dishes /*, allTags*/);
 
-    res.json(scores);
-
-    //res.json(recommendation);
+    res.json(recommendation);
 };
 
 module.exports = {

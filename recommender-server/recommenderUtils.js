@@ -19,11 +19,17 @@ const getIntersectingTags = (tags1, tags2) => {
  * Get the match score of a dish to a user
  */
 const getMatchDishToUser = (dish, user) => {
-    const intersection = getIntersectingTags(dish, user);
+    const intersection = getIntersectingTags(dish.tags, user.tags);
+    const score = intersection.reduce((sum, tag) => sum + tag.weight, 0);
+    const count = intersection.length;
 
     return {
-        score: intersection.reduce((sum, tag) => sum + tag.weight, 0),
-        count: intersection,
+        score,
+        count,
+        dishMatchPercent:
+            score / dish.tags.reduce((sum, tag) => sum + tag.weight, 0),
+        userMatchPercent:
+            score / user.tags.reduce((sum, tag) => sum + tag.weight, 0),
     };
 };
 /**
@@ -36,9 +42,11 @@ const getMatchDishToUsers = (dish, users) => {
     }));
 
     return {
-        score: scores.reduce((sum, match) => sum + match.score),
-        tagCount: scores.reduce((sum, match) => sum + match.count),
-        maxPossibleScore: dish.tags.reduce((sum, t) => sum + t.weight),
+        score: scores.reduce((sum, match) => sum + match.score, 0),
+        tagCount: scores.reduce((sum, match) => sum + match.count, 0),
+        maxPossibleScore:
+            //dish.tags.reduce((sum, t) => sum + t.weight, 0) * users.length,
+            users.flatMap(u => u.tags).reduce((sum, t) => sum + t.weight, 0),
         userScores: scores,
         users: new Set(),
     };
@@ -79,6 +87,8 @@ const getDishesPercentages = match => {
  * Calculate how many dishes should we recommend to the group
  */
 const getOptimalDishCount = users => {
+    //return 999;
+    //return Math.ceil(users.length * 1.2 + 2);
     return users.length + 3;
 };
 
@@ -90,10 +100,20 @@ const getUserMinimumDishCount = user => {
 };
 
 /**
+ * Decide how forgiving the user assigning will be
+ */
+const getUserPassScoreTreshold = userScores => {
+    return (
+        userScores.userMatchPercent > 0.7 //|| userScores.dishMatchPercent > 0.9
+    );
+};
+
+/**
  * Get the matches in order of user match, while removing bad matches
  */
 const getUserTargetedMatch = (match, userId) => {
-    const findUser = m => m.userScores.find(u => u.user._id === userId);
+    const findUser = m => m.userScores.find(u => u.user._id + '' === userId);
+
     return match
         .filter(m => findUser(m).score > 0)
         .sort((a, b) => findUser(b).score - findUser(a).score);
@@ -104,19 +124,29 @@ const getUserTargetedMatch = (match, userId) => {
  * gets at least one dish
  */
 const getLimitedMatchResultSet = (match, users) => {
-    const userList = users.map(u => ({ ...u, dishCount: 0 }));
+    const userList = users.map(u => ({ user: u, dishCount: 0 }));
     const dishTarget = getOptimalDishCount(users);
     const dishPerUser = getUserMinimumDishCount();
     const finalMatch = new Set();
 
     // Make sure every user gets enough dishes
     userList.forEach(u => {
-        const userMatch = getUserTargetedMatch(match, u._id);
+        const userMatch = getUserTargetedMatch(match, u.user._id + '');
 
         userMatch.forEach(m => {
+            const userScores = m.userScores.find(
+                s => s.user._id + '' === u.user._id + '',
+            );
+
+            if (getUserPassScoreTreshold(userScores)) {
+                m.users.add(u.user._id + '');
+            }
+
             if (u.dishCount < dishPerUser) {
-                m.users.add(u._id);
+                m.users.add(u.user._id + '');
+
                 finalMatch.add(m);
+                console.log('ADDED DISH FOR USER: ' + m.dish._id);
                 u.dishCount++;
             }
         });
@@ -126,6 +156,7 @@ const getLimitedMatchResultSet = (match, users) => {
     match.forEach(m => {
         if (finalMatch.size < dishTarget) {
             finalMatch.add(m);
+            console.log('ADDED DISH: ' + m.dish._id);
         }
     });
 
@@ -148,10 +179,21 @@ const getFinalResultFromMatch = match => {
  * percentage and matching users
  */
 const calculateScores = (users, dishes /*, tags*/) => {
-    const matches = getDishesPercentages(getMatchDishesToUsers(dishes, users));
-    const finalMatches = getLimitedMatchResultSet(matches);
+    const perfStart = performance.now();
 
-    return getFinalResultFromMatch(finalMatches);
+    const matches = getDishesPercentages(getMatchDishesToUsers(dishes, users));
+
+    //return matches;
+
+    const finalMatches = getLimitedMatchResultSet(matches, users);
+
+    const duration = performance.now() - perfStart;
+
+    return {
+        dishes: getFinalResultFromMatch(finalMatches),
+        testData: matches,
+        algDuration: duration,
+    };
 };
 
 module.exports = {
