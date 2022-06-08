@@ -13,10 +13,12 @@ import { GlobalContext } from '../../context/GlobalContext';
 
 import './GroupLobby.scss';
 import { socket } from '../../socket/index';
+import { getGroupById } from '../../actions/groupActions';
 
 function GroupLobby() {
     const [loadingPreferences, setLoadingPreferences] = useState(false);
     const [restaurant, setRestaurant] = useState(null);
+    const [group, setGroup] = useState(null);
     const [participants, setParticipants] = useState(0);
     const { setIsLoadingApp } = useContext(GlobalContext);
     const navigate = useNavigate();
@@ -40,9 +42,15 @@ function GroupLobby() {
         const fetchRestaurant = async () => {
             setIsLoadingApp(true);
             const res = await getRestaurantById(restaurantId);
+            const grp = await getGroupById(groupId);
 
             if (!res) {
                 alert.error('Error loading restaurant details');
+                return setIsLoadingApp(false);
+            }
+
+            if (!grp) {
+                alert.error('Error loading group details');
                 return setIsLoadingApp(false);
             }
 
@@ -50,6 +58,7 @@ function GroupLobby() {
 
             setParticipants(1);
             setRestaurant(res);
+            setGroup(grp);
             setIsLoadingApp(false);
         };
 
@@ -92,7 +101,7 @@ function GroupLobby() {
                 src={restaurant?.imageurl}
                 alt="Restaurant Logo"
             />
-            <Typography variant="h5">Group {groupId}</Typography>
+            <Typography variant="h5">Group {group?.name}</Typography>
             <Typography variant="h5">
                 Participants:
                 <i className="amount">{participants}</i>

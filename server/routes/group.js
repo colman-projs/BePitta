@@ -52,7 +52,7 @@ router.get('/', groupController.getGroups);
 
 router.get(
     '/:groupId',
-    authJwt.verifyToken,
+    // authJwt.verifyToken,
     groupController.getgroupById,
 );
 

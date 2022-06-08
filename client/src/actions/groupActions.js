@@ -38,4 +38,4 @@ export const createGroup = async (restaurantId, groupName = "New Group") => {
     } catch (e) {
         console.error(e);
     }
-}
+};
