@@ -17,6 +17,7 @@ import { cookie } from './actions/cookieActions';
 import { createUser } from './actions/userActions';
 import { UserContext } from './context/UserContext';
 import UserPreferences from './pages/UserPreferences';
+import WaitingParticipants from './pages/WaitingParticipants/WaitingParticipants';
 
 import './App.scss';
 
@@ -40,8 +41,6 @@ function App() {
 
         const responsePayload = decodeJwt(userCradentials);
         setUser(responsePayload);
-
-
     }, []);
 
     return (
@@ -73,6 +72,11 @@ function App() {
                             exact
                             path="/groups/:groupId/:restaurantId/likes"
                             element={<PreferencesPhotoForm />}
+                        />
+                        <Route
+                            exact
+                            path="/groups/:groupId/:restaurantId/waiting"
+                            element={<WaitingParticipants />}
                         />
                         <Route
                             exact

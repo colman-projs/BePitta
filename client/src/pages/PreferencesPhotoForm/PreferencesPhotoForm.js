@@ -63,7 +63,7 @@ function PreferencesFormPhoto() {
             return;
         }
 
-        navigate(`/groups/${groupId}/${restaurantId}/results`);
+        navigate(`/groups/${groupId}/${restaurantId}/waiting`);
 
         setIsLoadingApp(false);
     };

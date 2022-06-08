@@ -1,11 +1,10 @@
-import authHeader from '../api/auth-header';
 import users from '../api/users';
 
 export const createUser = () => {
     return new Promise(async (res, rej) => {
         try {
             const { data } = await users.post('/', {
-                googleId: ""
+                googleId: '',
             });
 
             res(data);
@@ -13,13 +12,13 @@ export const createUser = () => {
             console.error(e);
             rej();
         }
-    })
+    });
 };
 
 export const updateUserGoogle = async (userId, googleId) => {
     try {
         const { data } = await users.put(`/${userId}`, {
-            googleId: googleId
+            googleId: googleId,
         });
 
         return data;

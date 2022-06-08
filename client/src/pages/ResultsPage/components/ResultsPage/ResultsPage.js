@@ -1,4 +1,6 @@
 import React, { useContext, useEffect, useState, useRef } from 'react';
+import { useParams } from 'react-router';
+import { useAlert } from 'react-alert';
 import { Button, Typography } from '@mui/material';
 import {
     Share as ShareIcon,
@@ -10,6 +12,7 @@ import ResultsList from '../ResultsList/ResultsList';
 import { getDishesByIds } from '../../../../actions/dishesActions';
 import { GlobalContext } from '../../../../context/GlobalContext';
 import FullResultsList from '../FullResultsList/FullResultsList';
+import { getRestaurantById } from '../../../../actions/restaurantActions';
 
 import './ResultsPage.scss';
 
@@ -24,9 +27,32 @@ const dishes = [
 function ResultsPage() {
     const resultsRef = useRef();
     const [results, setResults] = useState([]);
+    const [restaurant, setRestaurant] = useState(null);
     const [toggleFullResults, setToggleFullResults] = useState(false);
+    let { restaurantId } = useParams();
+    const alert = useAlert();
 
     const { setIsLoadingApp } = useContext(GlobalContext);
+
+    useEffect(() => {
+        // Fetch restaurant details
+        const fetchRestaurant = async () => {
+            setIsLoadingApp(true);
+            const res = await getRestaurantById(restaurantId);
+
+            if (!res) {
+                alert.error('Error loading restaurant details');
+                return setIsLoadingApp(false);
+            }
+
+            setRestaurant(res);
+            setIsLoadingApp(false);
+        };
+
+        if (!restaurantId) return;
+
+        fetchRestaurant();
+    }, [restaurantId, alert, setIsLoadingApp]);
 
     useEffect(() => {
         const fetchDishesByIds = async () => {
@@ -59,7 +85,7 @@ function ResultsPage() {
         };
 
         fetchDishesByIds();
-    }, [setIsLoadingApp]);
+    }, [setIsLoadingApp, alert]);
 
     const handleShareResults = async () => {
         if (!('share' in navigator)) {
@@ -95,6 +121,11 @@ function ResultsPage() {
 
     return (
         <div className="results-page">
+            <img
+                className="restaurant-logo"
+                src={restaurant?.imageurl}
+                alt="Restaurant Logo"
+            />
             {toggleFullResults ? (
                 <FullResultsList results={results} />
             ) : (
