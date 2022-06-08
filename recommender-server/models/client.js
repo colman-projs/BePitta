@@ -2,16 +2,13 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const Client = new mongoose.Schema({
-    name: {
+    googleId: {
         type: String,
-        required: true,
-    },
-    email: {
-        type: String,
+        // required: true,
     },
     tags: {
         type: [{ type: Schema.Types.ObjectId, ref: 'tag' }],
-        required: true,
+        // required: true,
     },
     likedDishes: {
         type: [{ type: Schema.Types.ObjectId, ref: 'dish' }],
