@@ -52,7 +52,7 @@ function UserPreferences() {
             'Liked Tags: ',
             tags.filter(tag => tag.isActive).map(tag => tag._id),
         );
-        // TODO: Call backend function to update preferences
+        // TODO: Call backend function to update user preferences
         // const success = await saveUserPreferences(tags.filter(tag=> tag.isActive).map(tag => tag._id));
         let success = false;
         if (!success) alert.error('Error Updating preferences');

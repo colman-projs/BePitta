@@ -27,15 +27,13 @@ function GroupLobby() {
     let { groupId, restaurantId } = useParams();
 
     useEffect(() => {
-
-        socket.on('participants-updated', (userCount) => {
+        socket.on('participants-updated', userCount => {
             setParticipants(userCount);
-        })
+        });
 
         return () => {
             socket.emit('user-leave-group');
-        }
-
+        };
     }, []);
 
     useEffect(() => {

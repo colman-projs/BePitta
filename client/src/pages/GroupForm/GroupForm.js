@@ -102,7 +102,7 @@ function GroupForm() {
                 endIcon={<GroupIcon />}
                 loadingPosition="end"
             >
-                <Typography variant="h6">Create A Group</Typography>
+                <Typography variant="h6">New Group</Typography>
             </LoadingButton>
         </form>
     );

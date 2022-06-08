@@ -20,7 +20,7 @@ function SingleResult(result) {
                 onClick={() => setShowDetailsModal(true)}
                 src={result.imageUrl}
                 alt="dish"
-                sx={{ width: 120, height: 120 }}
+                sx={{ width: 110, height: 110 }}
             />
         </>
     );
