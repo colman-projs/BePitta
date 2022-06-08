@@ -1,5 +1,5 @@
 const express = require('express');
-const groupController = require('../controllers/group');
+const clientController = require('../controllers/client');
 const authJwt = require('../middleware/authJwt');
 const router = express.Router();
 
@@ -48,24 +48,29 @@ const router = express.Router();
 *               description: Delete group completed successfully
 */
 
-router.get('/', groupController.getGroups);
+router.get('/', clientController.getClients);
 
-router.get(
-    '/:groupId',
-    // authJwt.verifyToken,
-    groupController.getgroupById,
-);
-
+// router.get(
+//     '/:clientId',
+//     authJwt.verifyToken,
+//     clientController.get,
+// );
 
 router.post('/',
     // authJwt.verifyToken,
-    groupController.upsertGroup
+    clientController.createClient
 );
 
-router.delete(
-    '/:groupId',
-    authJwt.verifyToken,
-    groupController.deleteGroup,
-);
+router.put(
+    '/:clientId',
+    // authJwt.verifyToken,
+    clientController.updateClient,
+)
+
+// router.delete(
+//     '/:groupId',
+//     authJwt.verifyToken,
+//     clientController.deleteGroup,
+// );
 
 module.exports = router;

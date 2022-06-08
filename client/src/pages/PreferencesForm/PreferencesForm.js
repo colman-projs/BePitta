@@ -59,20 +59,21 @@ function PreferencesForm() {
     }, [restaurantId, alert, setIsLoadingApp]);
 
     const handleButtonClick = tagId => {
-        const nextState = tags.map(tag => {
-            setIsLoadingApp(true);
-            if (tag.id === tagId) {
-                tag.Active = !tag.Active;
-                return tag;
-            }
-            return { ...tag, Active: tag.Active };
+        let tempTags = JSON.parse(JSON.stringify(tags));
+
+        tempTags.forEach(tag => {
+            if (tag.id === tagId) tag.Active = !tag.Active;
+
+            tag = { ...tag, Active: tag.Active };
         });
-        setTags(nextState);
-        setIsLoadingApp(false);
+
+        setTags(tempTags);
     };
 
     const handleNext = e => {
         setIsLoadingApp(true);
+
+        // TODO: Save user preferences in DB
 
         if (!groupId) {
             alert.error('Error while loading Like/Dislike page');
@@ -116,13 +117,13 @@ function PreferencesForm() {
                                 handleButtonClick(tag.id);
                             }}
                             className={
-                                tag.Active === true
+                                tag.Active
                                     ? 'ButtonContaineractive'
                                     : 'ButtonContainer'
                             }
                         >
                             {tag.value}
-                        </Button>{' '}
+                        </Button>
                     </Grid>
                 ))}
             </Grid>

@@ -1,0 +1,13 @@
+.single-result-full {
+    display: grid;
+    grid-gap: 1rem;
+    grid-auto-flow: column;
+    padding: 1rem;
+    place-items: center;
+    border-bottom: 1px solid #555;
+    width: 90%;
+
+    .avatar {
+        border: 2px var(--yellow-500) solid;
+    }
+}

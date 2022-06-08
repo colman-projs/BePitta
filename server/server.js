@@ -5,9 +5,10 @@ const routes = require('./routes');
 const connectDB = require('./db/connect');
 const cors = require('./middleware/cors');
 const { setIo } = require('./globals');
+const cookieParser = require('cookie-parser');
 
-const swaggerUI = require("swagger-ui-express");
-const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUI = require('swagger-ui-express');
+const swaggerJsDoc = require('swagger-jsdoc');
 
 //Set the DATABASE URI
 const URI =
@@ -28,7 +29,7 @@ setIo(io);
 
 //Set the port
 const port = 3000;
-
+app.use(cookieParser());
 app.use(cors);
 
 app.use(bodyParser.json());
@@ -38,8 +39,6 @@ app.use(
     }),
 );
 
-
-
 //SWAGGER
 const options = {
     definition: {
@@ -47,7 +46,7 @@ const options = {
         info: {
             title: 'BePitta API with Swagger',
             version: '1.0.0',
-            description: 'BePitta Library API'
+            description: 'BePitta Library API',
         },
         servers: [
             {
@@ -55,20 +54,14 @@ const options = {
             },
         ],
     },
-    apis: ["./routes/*.js"],
-    
+    apis: ['./routes/*.js'],
 };
 
 const specs = swaggerJsDoc(options);
-app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(specs));
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
 
- //Set routes
-
+//Set routes
 app.use(routes);
-
-
-
-
 
 const onStartup = async () => {
     connectDB(URI);
@@ -79,26 +72,51 @@ const onStartup = async () => {
         console.log(`Server is listening on port ${port}...`),
     );
 
+    let groups = {};
+
     io.on('connect', function (socket) {
-        let clientId = null;
-        clientDb.createClient(Date.now()).then(result => {
-            clientId = result;
-            socket.emit('id', clientId);
-            io.sockets.emit('updateClients');
+        let _groupId = null;
+        let userStartPrefernces = false;
+
+        socket.on('group-connect', function (groupId) {
+
+            _groupId = groupId;
+
+            if (userStartPrefernces) {
+                userStartPrefernces = false;
+            } else {
+
+                if (!groups[groupId]) {
+                    groups[groupId] = {
+                        members: 1
+                    }
+                } else {
+                    groups[groupId].members++;
+                }
+
+                socket.join(groupId);
+
+            }
+
+            if (groups[groupId]) {
+                io.to(groupId).emit("participants-updated", groups[groupId].members);
+            }
         });
 
-        socket.on('screen', function (screen) {
-            clientDb.updateClient(clientId, {
-                screenId: screen,
-            });
-            io.sockets.emit('updateClients');
+        socket.on('user-leave-group', function () {
+            if (groups[_groupId] && !userStartPrefernces) {
+                io.to(_groupId).emit("participants-updated", --groups[_groupId].members);
+            }
+        });
+
+        socket.on('user-start-prefernces', function () {
+            userStartPrefernces = true;
         });
 
         socket.on('disconnect', function () {
-            clientDb.updateClient(clientId, {
-                disconnected: Date.now(),
-            });
-            io.sockets.emit('updateClients');
+            if (groups[_groupId]) {
+                io.to(_groupId).emit("participants-updated", --groups[_groupId].members);
+            }
         });
     });
 };

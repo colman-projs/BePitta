@@ -1,2 +1,8 @@
-.single-result {
+.dish-avatar {
+    cursor: pointer;
+    border: 2px var(--yellow-500) solid;
+
+    &:hover {
+        margin-top: -1rem;
+    }
 }

@@ -32,3 +32,34 @@ a {
 ::-webkit-calendar-picker-indicator {
     filter: invert(1);
 }
+
+#__react-alert__ div div div {
+    /* width: auto !important; */
+    -webkit-box-flex: 3;
+    -webkit-flex: 3;
+    -ms-flex: 3;
+    flex: 3;
+    text-transform: initial !important;
+    font: inherit !important;
+    padding: 8px 10px;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: var(--yellow-500);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

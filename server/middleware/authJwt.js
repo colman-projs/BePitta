@@ -1,24 +1,30 @@
-const jwt = require('jsonwebtoken');
-const config = require('../config/auth.config.js');
+const auth = require('../config/auth.config.js');
+const { OAuth2Client } = require('google-auth-library');
+const client = new OAuth2Client(auth.web.client_id);
 
-verifyToken = (req, res, next) => {
-    let token = req.headers['x-access-token'];
+async function verifyToken(req, res, next) {
+    // const token = req.cookies['userCradentials']
 
-    if (!token) {
-        return res.status(403).send({ message: 'No token provided!' });
-    }
+    //  if (!token) {
+    //     return res.status(403).send({ message: 'No token provided!' });
+    // }
+    // const ticket = await client.verifyIdToken({
+    //     idToken: token,
+    //     requiredAudience: auth.web.client_id,
+    // })
 
-    jwt.verify(token, config.secret, (err, decoded) => {
-        if (err) {
-            return res.status(401).send({ message: 'Unauthorized!' });
-        }
-        req.userId = decoded.id;
-        next();
-    });
-};
+    // const payload = ticket.getPayload();
+    // const userid = payload['sub'];
 
-const authJwt = {
+    // if(userid){
+    //     req.userId = userid;
+    //     next();
+    // }else{
+    //     return res.status(401).send({ message: 'Unauthorized!' });
+    // }
+    next();
+}
+
+module.exports = {
     verifyToken,
 };
-
-module.exports = authJwt;

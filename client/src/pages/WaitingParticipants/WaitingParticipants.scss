@@ -1,0 +1,22 @@
+.waiting {
+    display: grid;
+    grid-auto-flow: row;
+    grid-gap: 2rem;
+    text-align: center;
+    place-items: center;
+    padding: 1rem;
+
+    .restaurant-logo {
+        width: 7rem;
+        height: auto;
+        margin-bottom: 1rem;
+    }
+
+    .ready-participants {
+        color: var(--yellow-500);
+    }
+
+    .participants {
+        font-weight: 700;
+    }
+}

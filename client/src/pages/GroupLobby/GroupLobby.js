@@ -12,10 +12,14 @@ import { getRestaurantById } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
 
 import './GroupLobby.scss';
+import { socket } from '../../socket/index';
+import { getGroupById } from '../../actions/groupActions';
 
 function GroupLobby() {
     const [loadingPreferences, setLoadingPreferences] = useState(false);
     const [restaurant, setRestaurant] = useState(null);
+    const [group, setGroup] = useState(null);
+    const [participants, setParticipants] = useState(0);
     const { setIsLoadingApp } = useContext(GlobalContext);
     const navigate = useNavigate();
     const alert = useAlert();
@@ -23,33 +27,55 @@ function GroupLobby() {
     let { groupId, restaurantId } = useParams();
 
     useEffect(() => {
+        socket.on('participants-updated', userCount => {
+            setParticipants(userCount);
+        });
+
+        return () => {
+            socket.emit('user-leave-group');
+        };
+    }, []);
+
+    useEffect(() => {
         const fetchRestaurant = async () => {
             setIsLoadingApp(true);
             const res = await getRestaurantById(restaurantId);
+            const grp = await getGroupById(groupId);
 
             if (!res) {
                 alert.error('Error loading restaurant details');
                 return setIsLoadingApp(false);
             }
 
+            if (!grp) {
+                alert.error('Error loading group details');
+                return setIsLoadingApp(false);
+            }
+
+            socket.emit('group-connect', groupId);
+
+            setParticipants(1);
             setRestaurant(res);
+            setGroup(grp);
             setIsLoadingApp(false);
         };
 
         if (!restaurantId) return;
 
         fetchRestaurant();
-    }, [restaurantId, alert, setIsLoadingApp]);
+    }, [groupId, restaurantId, alert, setIsLoadingApp]);
 
     const handleStart = e => {
         setLoadingPreferences(true);
 
-        const groupId = 123;
+        // const groupId = 123;
 
         if (!groupId) {
             alert.error('Error while loading prefernces page');
             return setLoadingPreferences(false);
         }
+
+        socket.emit('user-start-prefernces');
 
         navigate(`/groups/${groupId}/${restaurantId}/preferences`);
 
@@ -73,10 +99,10 @@ function GroupLobby() {
                 src={restaurant?.imageurl}
                 alt="Restaurant Logo"
             />
-            <Typography variant="h5">Group {groupId}</Typography>
+            <Typography variant="h5">Group {group?.name}</Typography>
             <Typography variant="h5">
                 Participants:
-                <i className="amount">{0}</i>
+                <i className="amount">{participants}</i>
             </Typography>
             <Button onClick={handleShareLink} endIcon={<ShareIcon />}>
                 <Typography variant="h6">Invite Friends </Typography>
