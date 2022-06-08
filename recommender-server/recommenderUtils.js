@@ -152,8 +152,6 @@ const getLimitedMatchResultSet = (match, users) => {
         }
     });
 
-    recalculateMatchUserPercentages(finalMatch);
-
     return getSortedMatch([...finalMatch]);
 };
 
@@ -196,13 +194,12 @@ const recalculateMatchUserPercentages = match => {
 };
 
 /**
- * Parse the recommendations to the final API form
+ * Format the recommendations to the final API form
  */
 const getFinalResultFromMatch = match => {
     return match.map(m => ({
         id: m.dish._id,
         match: Math.ceil(100 * m.percent),
-        matchOld: Math.ceil(100 * m.unbiasedPercent),
         users: [...m.users],
     }));
 };
@@ -217,6 +214,7 @@ const calculateScores = (users, dishes) => {
     const matches = getDishesPercentages(getMatchDishesToUsers(dishes, users));
 
     const finalMatches = getLimitedMatchResultSet(matches, users);
+    recalculateMatchUserPercentages(finalMatches);
 
     const duration = performance.now() - perfStart;
 
