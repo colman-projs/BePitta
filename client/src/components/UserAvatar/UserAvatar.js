@@ -12,10 +12,10 @@ import { cookie } from '../../actions/cookieActions';
 import { UserContext } from '../../context/UserContext';
 import './UserAvatar.scss';
 
-const StyledBadge = styled(Badge)(({ theme, isConnected }) => ({
+const StyledBadge = styled(Badge)(({ theme, connected }) => ({
     '& .MuiBadge-badge': {
-        backgroundColor: isConnected ? '#44b700' : 'var(--alerting-red)',
-        color: isConnected ? '#44b700' : 'var(--alerting-red)',
+        backgroundColor: connected ? '#44b700' : 'var(--alerting-red)',
+        color: connected ? '#44b700' : 'var(--alerting-red)',
         boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
         '&::after': {
             position: 'absolute',
@@ -81,14 +81,14 @@ export default function UserAvatar() {
         <div className="user-avatar">
             <Stack onClick={handleClick} direction="row" spacing={2}>
                 <StyledBadge
-                    isConnected={!!user}
+                    connected={user}
                     overlap="circular"
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     variant="dot"
                 >
                     <Avatar
                         alt="User"
-                        imgProps={{ referrerpolicy: 'no-referrer' }}
+                        imgProps={{ referrerPolicy: 'no-referrer' }}
                         src={user?.picture}
                     />
                 </StyledBadge>

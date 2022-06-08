@@ -10,10 +10,12 @@ import { getRestaurants } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
 
 import './GroupForm.scss';
+import { createGroup } from '../../actions/groupActions';
 
 function GroupForm() {
     const [loadingGroup, setLoadingGroup] = useState(false);
     const [restaurant, setRestaurant] = useState('');
+    const [groupName, setGroupName] = useState('');
     const [restaurants, setRestaurants] = useState([]);
     const { setIsLoadingApp } = useContext(GlobalContext);
     const navigate = useNavigate();
@@ -40,12 +42,18 @@ function GroupForm() {
         setRestaurant(e.target.value);
     };
 
-    const handleCreateGroup = e => {
+    const handleChangeGroupName = e => {
+        setGroupName(e.target.value);
+    };
+
+    const handleCreateGroup = async e => {
         e.preventDefault();
 
         setLoadingGroup(true);
 
-        const groupId = 123;
+        const group = await createGroup(restaurant, groupName);
+        console.log(group);
+        const groupId = group?._id;
 
         if (!groupId || !restaurant) {
             alert.error('Error while creating a group');
@@ -76,6 +84,15 @@ function GroupForm() {
                     </MenuItem>
                 ))}
             </TextField>
+            <TextField
+                id="group-name"
+                value={groupName}
+                onChange={handleChangeGroupName}
+                label="Group Name"
+                disabled={loadingGroup}
+                required
+                className="group-name"
+            />
             <LoadingButton
                 type="submit"
                 loading={loadingGroup}
