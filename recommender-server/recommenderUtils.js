@@ -1,13 +1,3 @@
-const defaultRec = {
-    dishes: [
-        {
-            id: '629202c76a579f0257f7aadb',
-            match: 0.92,
-            users: [1, 3],
-        },
-    ],
-};
-
 /**
  * Get the number of common tags between two lists
  */
@@ -19,6 +9,7 @@ const getIntersectingTags = (tags1, tags2) => {
  * Get the match score of a dish to a user
  */
 const getMatchDishToUser = (dish, user) => {
+    // TODO check if user liked the dish and return maximum score
     const intersection = getIntersectingTags(dish.tags, user.tags);
     const score = intersection.reduce((sum, tag) => sum + tag.weight, 0);
     const count = intersection.length;
@@ -44,9 +35,9 @@ const getMatchDishToUsers = (dish, users) => {
     return {
         score: scores.reduce((sum, match) => sum + match.score, 0),
         tagCount: scores.reduce((sum, match) => sum + match.count, 0),
-        maxPossibleScore:
-            //dish.tags.reduce((sum, t) => sum + t.weight, 0) * users.length,
-            users.flatMap(u => u.tags).reduce((sum, t) => sum + t.weight, 0),
+        maxPossibleScore: users
+            .flatMap(u => u.tags)
+            .reduce((sum, t) => sum + t.weight, 0),
         userScores: scores,
         users: new Set(),
     };
@@ -146,7 +137,6 @@ const getLimitedMatchResultSet = (match, users) => {
                 m.users.add(u.user._id + '');
 
                 finalMatch.add(m);
-                console.log('ADDED DISH FOR USER: ' + m.dish._id);
                 u.dishCount++;
             }
         });
@@ -156,7 +146,6 @@ const getLimitedMatchResultSet = (match, users) => {
     match.forEach(m => {
         if (finalMatch.size < dishTarget) {
             finalMatch.add(m);
-            console.log('ADDED DISH: ' + m.dish._id);
         }
     });
 
@@ -182,8 +171,6 @@ const calculateScores = (users, dishes /*, tags*/) => {
     const perfStart = performance.now();
 
     const matches = getDishesPercentages(getMatchDishesToUsers(dishes, users));
-
-    //return matches;
 
     const finalMatches = getLimitedMatchResultSet(matches, users);
 
