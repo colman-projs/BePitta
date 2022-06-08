@@ -18,6 +18,7 @@ const URI =
 const app = express();
 
 const http = require('http');
+const { addUserToGroup, removeUserFromGroup } = require('./controllers/group');
 const server = http.createServer(app);
 const io = require('socket.io')(server, {
     cors: {
@@ -63,6 +64,14 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
 //Set routes
 app.use(routes);
 
+const userLeaveGroup = (socket, groups, groupId, clientId) => {
+    socket.leave(groupId);
+    io.to(groupId).emit("participants-updated", --groups[groupId].members);
+
+    // save user left group in DB
+    removeUserFromGroup(groupId, clientId);
+}
+
 const onStartup = async () => {
     connectDB(URI);
 
@@ -76,13 +85,15 @@ const onStartup = async () => {
 
     io.on('connect', function (socket) {
         let _groupId = null;
+        let _clientId = null;
         let userStartPrefernces = false;
 
-        socket.on('group-connect', function (groupId) {
+        socket.on('group-connect', function (groupId, clientId) {
 
             _groupId = groupId;
+            _clientId = clientId;
 
-            if (userStartPrefernces) {
+            if (userStartPrefernces) { // When returning from preferences screen (no new user)
                 userStartPrefernces = false;
             } else {
 
@@ -94,7 +105,10 @@ const onStartup = async () => {
                     groups[groupId].members++;
                 }
 
-                socket.join(groupId);
+                socket.join(groupId); // Connect client to group room
+
+                // save user to group in DB
+                addUserToGroup(groupId, clientId);
 
             }
 
@@ -105,7 +119,7 @@ const onStartup = async () => {
 
         socket.on('user-leave-group', function () {
             if (groups[_groupId] && !userStartPrefernces) {
-                io.to(_groupId).emit("participants-updated", --groups[_groupId].members);
+                userLeaveGroup(socket, groups, _groupId, _clientId);
             }
         });
 
@@ -115,7 +129,7 @@ const onStartup = async () => {
 
         socket.on('disconnect', function () {
             if (groups[_groupId]) {
-                io.to(_groupId).emit("participants-updated", --groups[_groupId].members);
+                userLeaveGroup(socket, groups, _groupId, _clientId);
             }
         });
     });

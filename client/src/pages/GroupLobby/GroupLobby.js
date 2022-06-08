@@ -14,6 +14,7 @@ import { GlobalContext } from '../../context/GlobalContext';
 import './GroupLobby.scss';
 import { socket } from '../../socket/index';
 import { getGroupById } from '../../actions/groupActions';
+import { cookie } from '../../actions/cookieActions';
 
 function GroupLobby() {
     const [loadingPreferences, setLoadingPreferences] = useState(false);
@@ -52,7 +53,8 @@ function GroupLobby() {
                 return setIsLoadingApp(false);
             }
 
-            socket.emit('group-connect', groupId);
+            const userId = cookie.getCookie(cookie.siteCookies.userId);
+            socket.emit('group-connect', groupId, userId);
 
             setParticipants(1);
             setRestaurant(res);

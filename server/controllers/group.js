@@ -61,6 +61,20 @@ const resetGroups = async () => {
     // await Commercial.deleteMany();
 };
 
+const addUserToGroup = (groupId, userId) => {
+    Group.findOneAndUpdate({ _id: groupId }, {
+        $addToSet: { users: userId }
+    }).then((a) => { })
+        .catch(err => { });
+};
+
+const removeUserFromGroup = (groupId, userId) => {
+    Group.findOneAndUpdate({ _id: groupId }, {
+        $pull: { users: userId }
+    }).then((a) => { })
+        .catch(err => { });
+};
+
 
 module.exports = {
     getGroups,
@@ -68,4 +82,6 @@ module.exports = {
     getgroupById: getGroupById,
     deleteGroup,
     resetGroups,
+    addUserToGroup,
+    removeUserFromGroup,
 };
