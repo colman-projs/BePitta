@@ -94,7 +94,7 @@ function ManageRestaurants() {
         }
 
         alert.success('Restaurant deleted successfuly');
-        setCurrentRestaurant(null);
+        setCurrentRestaurant(emptyRestaurant);
         setId(null);
         await fetchRestaurants();
         setIsLoadingApp(false);
@@ -119,7 +119,7 @@ function ManageRestaurants() {
                     <TextField
                         select
                         label="ID"
-                        value={currentRestaurant._id}
+                        value={currentRestaurant?._id}
                         onChange={e => setId(e.target.value)}
                     >
                         {restaurants.map(option => (
