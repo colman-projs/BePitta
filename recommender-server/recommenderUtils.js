@@ -5,6 +5,26 @@ const getIntersectingTags = (tags1, tags2) => {
     return tags1.filter(t1 => tags2.some(t2 => t1.value === t2.value));
 };
 
+/*const getUserLikedDishesTags=user=>{
+    const tags =[]
+
+    user.likedDishes.flatMap(d=>d.tags).forEach(t=>{
+        const tag = tags.find(find=>find._id+''===t._id+'')
+
+        if(tag){
+            tag.count++
+        }else{
+            tags.push({
+                tag,
+                count:1
+            })
+        }
+    });
+
+    return tags.sort((a,b)=>b.count-a.count)
+
+}*/
+
 /**
  * Get if the user liked similar dishes by tags
  */
