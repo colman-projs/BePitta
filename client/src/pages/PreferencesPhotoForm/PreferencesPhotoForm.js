@@ -8,6 +8,8 @@ import TinderCard from 'react-tinder-card';
 import { getRestaurantById } from '../../actions/restaurantActions';
 import { getImagesByRestaurantId } from '../../actions/imagesActions';
 import { GlobalContext } from '../../context/GlobalContext';
+import { socket } from '../../socket/index';
+import { cookie } from '../../actions/cookieActions';
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import './PreferencesPhotoForm.scss';
@@ -51,9 +53,12 @@ function PreferencesFormPhoto() {
 
         if (!restaurantId) return;
 
+        const userId = cookie.getCookie(cookie.siteCookies.userId);
+        socket.emit('group-connect', groupId, userId);
+
         fetchRestaurantImages();
         fetchRestaurant();
-    }, [restaurantId, alert, setIsLoadingApp]);
+    }, [groupId, restaurantId, alert, setIsLoadingApp]);
 
     const handleNext = () => {
         setIsLoadingApp(true);

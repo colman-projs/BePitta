@@ -33,7 +33,7 @@ function GroupLobby() {
         });
 
         return () => {
-            socket.emit('user-leave-group');
+
         };
     }, []);
 
@@ -53,16 +53,16 @@ function GroupLobby() {
                 return setIsLoadingApp(false);
             }
 
-            const userId = cookie.getCookie(cookie.siteCookies.userId);
-            socket.emit('group-connect', groupId, userId);
-
             setParticipants(1);
             setRestaurant(res);
             setGroup(grp);
             setIsLoadingApp(false);
         };
 
-        if (!restaurantId) return;
+        if (!restaurantId || !groupId) return;
+
+        const userId = cookie.getCookie(cookie.siteCookies.userId);
+        socket.emit('group-connect', groupId, userId);
 
         fetchRestaurant();
     }, [groupId, restaurantId, alert, setIsLoadingApp]);
@@ -76,8 +76,6 @@ function GroupLobby() {
             alert.error('Error while loading prefernces page');
             return setLoadingPreferences(false);
         }
-
-        socket.emit('user-start-prefernces');
 
         navigate(`/groups/${groupId}/${restaurantId}/preferences`);
 

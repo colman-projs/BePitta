@@ -18,7 +18,7 @@ const URI =
 const app = express();
 
 const http = require('http');
-const { addUserToGroup, removeUserFromGroup } = require('./controllers/group');
+const { groupDAL } = require('./controllers/group');
 const server = http.createServer(app);
 const io = require('socket.io')(server, {
     cors: {
@@ -64,12 +64,17 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
 //Set routes
 app.use(routes);
 
-const userLeaveGroup = (socket, groups, groupId, clientId) => {
-    socket.leave(groupId);
-    io.to(groupId).emit("participants-updated", --groups[groupId].members);
+const userLeaveGroup = async (socket, groupId, clientId) => {
 
     // save user left group in DB
-    removeUserFromGroup(groupId, clientId);
+    groupDAL.removeUserFromGroup(groupId, clientId);
+    const grp = await groupDAL.getGroupById(groupId);
+    console.log(grp);
+
+    socket.leave(groupId);
+    if (grp) {
+        io.to(groupId).emit("participants-updated", grp.users.length);
+    }
 }
 
 const onStartup = async () => {
@@ -81,56 +86,32 @@ const onStartup = async () => {
         console.log(`Server is listening on port ${port}...`),
     );
 
-    let groups = {};
-
     io.on('connect', function (socket) {
         let _groupId = null;
         let _clientId = null;
-        let userStartPrefernces = false;
 
-        socket.on('group-connect', function (groupId, clientId) {
+        socket.on('group-connect', async function (groupId, clientId) {
 
             _groupId = groupId;
             _clientId = clientId;
 
-            if (userStartPrefernces) { // When returning from preferences screen (no new user)
-                userStartPrefernces = false;
-            } else {
+            // save user to group in DB
+            await groupDAL.addUserToGroup(groupId, clientId);
+            const grp = await groupDAL.getGroupById(groupId);
 
-                if (!groups[groupId]) {
-                    groups[groupId] = {
-                        members: 1
-                    }
-                } else {
-                    groups[groupId].members++;
-                }
+            socket.join(groupId); // Connect client to group room
 
-                socket.join(groupId); // Connect client to group room
-
-                // save user to group in DB
-                addUserToGroup(groupId, clientId);
-
-            }
-
-            if (groups[groupId]) {
-                io.to(groupId).emit("participants-updated", groups[groupId].members);
+            if (grp) {
+                io.to(groupId).emit("participants-updated", grp.users.length);
             }
         });
 
         socket.on('user-leave-group', function () {
-            if (groups[_groupId] && !userStartPrefernces) {
-                userLeaveGroup(socket, groups, _groupId, _clientId);
-            }
-        });
-
-        socket.on('user-start-prefernces', function () {
-            userStartPrefernces = true;
+            userLeaveGroup(socket, _groupId, _clientId);
         });
 
         socket.on('disconnect', function () {
-            if (groups[_groupId]) {
-                userLeaveGroup(socket, groups, _groupId, _clientId);
-            }
+            userLeaveGroup(socket, _groupId, _clientId);
         });
     });
 };

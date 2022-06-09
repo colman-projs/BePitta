@@ -10,6 +10,7 @@ import { getRestaurants } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
 
 import './GroupForm.scss';
+import { socket } from '../../socket/index';
 import { createGroup } from '../../actions/groupActions';
 
 function GroupForm() {
@@ -30,6 +31,8 @@ function GroupForm() {
                 alert.error('Error loading restaurants');
                 return setIsLoadingApp(false);
             }
+
+            socket.emit('user-leave-group');
 
             setRestaurants(res);
             setIsLoadingApp(false);

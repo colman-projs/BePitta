@@ -8,6 +8,8 @@ import { ArrowForwardIos as ArrowForwardIosIcon } from '@mui/icons-material';
 import { getRestaurantTagsById } from '../../actions/preferencesActions';
 import { getRestaurantById } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
+import { socket } from '../../socket/index';
+import { cookie } from '../../actions/cookieActions';
 
 import './PreferencesForm.scss';
 
@@ -54,9 +56,12 @@ function PreferencesForm() {
 
         if (!restaurantId) return;
 
+        const userId = cookie.getCookie(cookie.siteCookies.userId);
+        socket.emit('group-connect', groupId, userId);
+
         fetchRestaurantTags();
         fetchRestaurant();
-    }, [restaurantId, alert, setIsLoadingApp]);
+    }, [groupId, restaurantId, alert, setIsLoadingApp]);
 
     const handleButtonClick = tagId => {
         let tempTags = JSON.parse(JSON.stringify(tags));
