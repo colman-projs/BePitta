@@ -1,0 +1,27 @@
+tags			            weight	users	    dishes
+62a0ed2dd9671f4b7244f5f1-	1	    1 2 3       1 2 3 6 8
+62a0ed43d9671f4b7244f5f2-	1	    2 3         2 3 6 8
+62a0ed51d9671f4b7244f5f3-	3	    1 3         1 3 4 7 8
+62a0ed5ed9671f4b7244f5f4-	1	    1 2         1 2 7 8
+62a0ed68d9671f4b7244f5f5-	2	    2       	2 5 8
+
+rest:
+62a0edced9671f4b7244f5f8
+
+users:
+62a0ee8da27cb847df4f4d5d
+62a0ee96a27cb847df4f50fd
+62a0ee9ea27cb847df4f5464
+
+group:
+62a0ef04a27cb847df4f819a
+
+dishes:
+62a0ef9aa27cb847df4fc217
+62a0efbfa27cb847df4fd260
+62a0efeda27cb847df4fe69c
+62a0eff0d9671f4b7244f604
+62a0f013d9671f4b7244f605
+62a0f036d9671f4b7244f606
+62a0f079d9671f4b7244f607
+62a0f0d4d9671f4b7244f608
