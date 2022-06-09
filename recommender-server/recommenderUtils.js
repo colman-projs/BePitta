@@ -96,7 +96,7 @@ const getOptimalDishCount = users => {
 };
 
 /**
- * Get the target dish count for a user
+ * Get the target minimum dish count for a user
  */
 const getUserMinimumDishCount = user => {
     return 2;
@@ -107,7 +107,8 @@ const getUserMinimumDishCount = user => {
  */
 const getUserPassScoreTreshold = userScores => {
     return (
-        userScores.userMatchPercent > 0.75 //|| userScores.dishMatchPercent > 0.9
+        userScores.userMatchPercent > 0.7 ||
+        (userScores.dishMatchPercent > 0.9 && userScores.userMatchPercent > 0.5)
     );
 };
 
@@ -230,7 +231,7 @@ const calculateScores = (users, dishes) => {
 
     return {
         dishes: getFinalResultFromMatch(finalMatches),
-        testData: matches,
+        debugData: matches,
         algDuration: duration,
     };
 };
