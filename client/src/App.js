@@ -18,6 +18,9 @@ import { createUser } from './actions/userActions';
 import { UserContext } from './context/UserContext';
 import UserPreferences from './pages/UserPreferences';
 import WaitingParticipants from './pages/WaitingParticipants/WaitingParticipants';
+import ManageRestaurants from './pages/ManageRestaurants';
+import ManageDishes from './pages/ManageDishes';
+import ManageTags from './pages/ManageTags';
 
 import './App.scss';
 
@@ -82,6 +85,21 @@ function App() {
                             exact
                             path="/groups/:groupId/:restaurantId/results"
                             element={<ResultsPage />}
+                        />
+                        <Route
+                            exact
+                            path="/admin/restaurants"
+                            element={<ManageRestaurants />}
+                        />
+                        <Route
+                            exact
+                            path="/admin/dishes"
+                            element={<ManageDishes />}
+                        />
+                        <Route
+                            exact
+                            path="/admin/tags"
+                            element={<ManageTags />}
                         />
                         <Route path="*" element={<NotFound />} />
                     </Routes>
