@@ -5,33 +5,6 @@ const getIntersectingTags = (tags1, tags2) => {
     return tags1.filter(t1 => tags2.some(t2 => t1.value === t2.value));
 };
 
-/*const getUserLikedDishesTags=user=>{
-    const tags =[]
-
-    user.likedDishes.flatMap(d=>d.tags).forEach(t=>{
-        const tag = tags.find(find=>find._id+''===t._id+'')
-
-        if(tag){
-            tag.count++
-        }else{
-            tags.push({
-                tag,
-                count:1
-            })
-        }
-    });
-
-    return tags.sort((a,b)=>b.count-a.count)
-
-}*/
-
-/**
- * Get if the user liked similar dishes by tags
- */
-const getUserLikedSimilarDishes = (dish, user) => {
-    // TODO
-};
-
 /**
  * Get the match score of a dish to a user
  */
@@ -110,8 +83,6 @@ const getDishesPercentages = match => {
  * Calculate how many dishes should we recommend to the group
  */
 const getOptimalDishCount = users => {
-    //return 999;
-    //return Math.ceil(users.length * 1.2 + 2);
     return users.length + 3;
 };
 
@@ -189,14 +160,14 @@ const getLimitedMatchResultSet = (match, users) => {
  * Get the bias ratio for the percentages recalculation
  */
 const getPercentageUserBias = () => {
-    return 4;
+    return 3;
 };
 
 /**
  * Get the ratio between the final scoring of the dish user intersection
  */
 const getDishUserMatchBias = () => {
-    return 0.6;
+    return 0.7;
 };
 
 /**
@@ -240,19 +211,19 @@ const getFinalResultFromMatch = match => {
  * percentage and matching users
  */
 const calculateScores = (users, dishes) => {
-    const perfStart = performance.now();
+    //const perfStart = performance.now();
 
     const matches = getDishesPercentages(getMatchDishesToUsers(dishes, users));
 
     const finalMatches = getLimitedMatchResultSet(matches, users);
     recalculateMatchUserPercentages(finalMatches);
 
-    const duration = performance.now() - perfStart;
+    //const duration = performance.now() - perfStart;
 
     return {
         dishes: getFinalResultFromMatch(finalMatches),
-        debugData: matches,
-        algDuration: duration,
+        //debugData: matches,
+        //algDuration: duration,
     };
 };
 
