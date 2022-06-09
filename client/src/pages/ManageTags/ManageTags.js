@@ -121,7 +121,7 @@ function ManageTags() {
                     >
                         {tags.map(option => (
                             <MenuItem key={option._id} value={option._id}>
-                                {option.name}
+                                {option.value}
                             </MenuItem>
                         ))}
                     </TextField>
@@ -139,6 +139,7 @@ function ManageTags() {
                     name="weight"
                     value={currentTag.weight}
                     onChange={handleChangeTag}
+                    type="number"
                 />
                 <div className="actions">
                     <Button variant="contained" color="primary" type="submit">

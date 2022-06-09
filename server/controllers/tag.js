@@ -17,9 +17,9 @@ const upsertTag = async (req, res) => {
             })
             .catch(errorHandler(res));
     } else {
-        const Tag = new Tag(req.body);
+        const tag = new Tag(req.body);
 
-        Tag.save()
+        tag.save()
             .then(() => {
                 const io = getIo();
                 io.sockets.emit('updateTags');

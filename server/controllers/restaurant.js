@@ -18,9 +18,9 @@ const upsertRestaurant = async (req, res) => {
             })
             .catch(errorHandler(res));
     } else {
-        const comm = new Restaurant(req.body);
+        const res = new Restaurant(req.body);
 
-        comm.save()
+        res.save()
             .then(() => {
                 const io = getIo();
                 io.sockets.emit('updateRestaurant');
