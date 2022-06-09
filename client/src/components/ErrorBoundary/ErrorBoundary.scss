@@ -1,3 +1,19 @@
 .error-page {
+    display: flex;
+    flex-direction: column;
+    place-items: center;
     font-size: 3rem;
+    padding: 1rem;
+    text-align: center;
+
+    .refresh {
+        place-items: center;
+        margin-bottom: 1rem;
+        font-size: 2rem;
+
+        svg {
+            width: 2rem;
+            height: 2rem;
+        }
+    }
 }

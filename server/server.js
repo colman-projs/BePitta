@@ -79,33 +79,36 @@ const onStartup = async () => {
         let userStartPrefernces = false;
 
         socket.on('group-connect', function (groupId) {
-
             _groupId = groupId;
 
             if (userStartPrefernces) {
                 userStartPrefernces = false;
             } else {
-
                 if (!groups[groupId]) {
                     groups[groupId] = {
-                        members: 1
-                    }
+                        members: 1,
+                    };
                 } else {
                     groups[groupId].members++;
                 }
 
                 socket.join(groupId);
-
             }
 
             if (groups[groupId]) {
-                io.to(groupId).emit("participants-updated", groups[groupId].members);
+                io.to(groupId).emit(
+                    'participants-updated',
+                    groups[groupId].members,
+                );
             }
         });
 
         socket.on('user-leave-group', function () {
             if (groups[_groupId] && !userStartPrefernces) {
-                io.to(_groupId).emit("participants-updated", --groups[_groupId].members);
+                io.to(_groupId).emit(
+                    'participants-updated',
+                    --groups[_groupId].members,
+                );
             }
         });
 
@@ -115,7 +118,10 @@ const onStartup = async () => {
 
         socket.on('disconnect', function () {
             if (groups[_groupId]) {
-                io.to(_groupId).emit("participants-updated", --groups[_groupId].members);
+                io.to(_groupId).emit(
+                    'participants-updated',
+                    --groups[_groupId].members,
+                );
             }
         });
     });

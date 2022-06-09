@@ -21,11 +21,11 @@ ReactDOM.render(
     <React.StrictMode>
         <ThemeProvider theme={darkTheme}>
             <Provider template={AlertTemplate} {...options}>
-                <ErrorBoundary>
-                    <BrowserRouter>
+                <BrowserRouter>
+                    <ErrorBoundary>
                         <App />
-                    </BrowserRouter>
-                </ErrorBoundary>
+                    </ErrorBoundary>
+                </BrowserRouter>
             </Provider>
         </ThemeProvider>
     </React.StrictMode>,

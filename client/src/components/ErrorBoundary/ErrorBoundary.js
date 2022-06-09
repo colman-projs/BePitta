@@ -1,5 +1,6 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import { Typography, Button } from '@mui/material';
+import { Refresh as RefreshIcon } from '@mui/icons-material';
 
 import './ErrorBoundary.scss';
 
@@ -17,10 +18,23 @@ class ErrorBoundary extends React.Component {
         console.error(error, errorInfo);
     }
 
+    refresh = () => {
+        window.location.reload();
+    };
+
     render() {
         if (this.state.hasError) {
             return (
                 <div className="error-page center">
+                    <Button
+                        onClick={this.refresh}
+                        color="primary"
+                        variant="outlined"
+                        endIcon={<RefreshIcon />}
+                        className="refresh"
+                    >
+                        Refresh
+                    </Button>
                     <Typography variant="h4">
                         Oops! Something went wrong.
                     </Typography>

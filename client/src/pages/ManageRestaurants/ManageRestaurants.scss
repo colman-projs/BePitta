@@ -1,2 +1,34 @@
 .manage-restaurants {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+
+    .title {
+        margin-bottom: 1rem;
+    }
+
+    .edit-switch {
+        align-self: center;
+        margin: 1rem;
+    }
+
+    .form {
+        display: grid;
+        grid-gap: 1rem;
+        grid-auto-flow: row;
+    }
+
+    .actions {
+        display: grid;
+        grid-gap: 1rem;
+        grid-auto-flow: column;
+
+        .delete {
+            background-color: var(--alerting-red);
+
+            &:hover {
+                background-color: var(--alerting-red-hover);
+            }
+        }
+    }
 }
