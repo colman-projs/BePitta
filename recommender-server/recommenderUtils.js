@@ -6,6 +6,13 @@ const getIntersectingTags = (tags1, tags2) => {
 };
 
 /**
+ * Get if the user liked similar dishes by tags
+ */
+const getUserLikedSimilarDishes = (dish, user) => {
+    // TODO
+};
+
+/**
  * Get the match score of a dish to a user
  */
 const getMatchDishToUser = (dish, user) => {
@@ -27,6 +34,7 @@ const getMatchDishToUser = (dish, user) => {
         userLikedDish,
     };
 };
+
 /**
  * Get the match score of a dish to a list of users
  */
@@ -160,14 +168,14 @@ const getLimitedMatchResultSet = (match, users) => {
  * Get the bias ratio for the percentages recalculation
  */
 const getPercentageUserBias = () => {
-    return 3;
+    return 4;
 };
 
 /**
  * Get the ratio between the final scoring of the dish user intersection
  */
 const getDishUserMatchBias = () => {
-    return 0.8;
+    return 0.6;
 };
 
 /**
