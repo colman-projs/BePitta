@@ -24,6 +24,7 @@ const getMatchDishToUser = (dish, user) => {
         dishMatchPercent:
             score / dish.tags.reduce((sum, tag) => sum + tag.weight, 0),
         userMatchPercent: userLikedDish ? 1 : score / maxUserScore,
+        userLikedDish,
     };
 };
 /**
@@ -98,7 +99,7 @@ const getUserMinimumDishCount = user => {
  */
 const getUserPassScoreTreshold = userScores => {
     return (
-        userScores.userMatchPercent > 0.7 //|| userScores.dishMatchPercent > 0.9
+        userScores.userMatchPercent > 0.75 //|| userScores.dishMatchPercent > 0.9
     );
 };
 
@@ -158,8 +159,8 @@ const getLimitedMatchResultSet = (match, users) => {
 /**
  * Get the bias ratio for the percentages recalculation
  */
-const getPercentageUserBias = userCount => {
-    return 1 / (userCount + 2);
+const getPercentageUserBias = () => {
+    return 3;
 };
 
 /**
@@ -174,13 +175,14 @@ const getDishUserMatchBias = () => {
  * recommendation
  */
 const recalculateMatchUserPercentages = match => {
+    const chosenUserBias = getPercentageUserBias();
     const userBias = getDishUserMatchBias();
     const dishBias = 1 - userBias;
 
     match.forEach(m => {
-        const bias = getPercentageUserBias(m.users.size);
-        let userPercentage = m.percent * bias * 2;
-        let dishPercentage = m.percent * bias * 2;
+        const bias = 1 / (m.users.size + chosenUserBias);
+        let userPercentage = m.percent * bias * chosenUserBias;
+        let dishPercentage = m.percent * bias * chosenUserBias;
 
         m.users.forEach(u => {
             const userScores = m.userScores.find(s => s.user._id + '' === u);

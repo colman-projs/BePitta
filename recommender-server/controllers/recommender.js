@@ -21,9 +21,14 @@ const getRecommendations = async (req, res) => {
     const group = await Group.findById(req.params.groupId)
         .populate({
             path: 'users',
-            populate: {
-                path: 'tags',
-            },
+            populate: [
+                {
+                    path: 'tags',
+                },
+                {
+                    path: 'likedDishes',
+                },
+            ],
         })
         .exec();
     const restaurant = await Restaurant.findById(group.restaurantId)
