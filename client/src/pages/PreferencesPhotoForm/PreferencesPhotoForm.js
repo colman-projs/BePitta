@@ -13,7 +13,7 @@ import { socket } from '../../socket/index';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import './PreferencesPhotoForm.scss';
 import { UserIdContext } from '../../context/UserIdContext';
-import { getUserById, updateUserDishes } from '../../actions/userActions';
+import { updateUserDishes } from '../../actions/userActions';
 
 function PreferencesFormPhoto() {
     const { setIsLoadingApp } = useContext(GlobalContext);
@@ -88,7 +88,7 @@ function PreferencesFormPhoto() {
             likedDishes.push({ _id: id });
         }
 
-        if (PhotosCounter == dishes.length) {
+        if (PhotosCounter === dishes.length) {
             handleNext();
         }
     };
