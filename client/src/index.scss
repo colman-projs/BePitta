@@ -20,7 +20,7 @@ html {
 }
 
 #root > div {
-    max-height: calc(var(--app-height));
+    max-height: calc(var(--app-height) - 4rem);
     overflow: auto;
 }
 
