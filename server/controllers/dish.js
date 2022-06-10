@@ -1,4 +1,3 @@
-const Group = require('../models/group');
 const errorHandler = require('../globals').errorHandler;
 const { getIo } = require('../globals');
 const dish = require('../models/dish');
@@ -7,7 +6,7 @@ const upsertDish = async (req, res) => {
     if (req.body._id) {
         const filter = { _id: req.body._id };
 
-        Group.findOneAndUpdate(filter, req.body, {
+        dish.findOneAndUpdate(filter, req.body, {
             new: true,
             upsert: true,
         })
