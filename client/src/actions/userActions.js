@@ -18,8 +18,19 @@ export const createUser = () => {
 export const updateUserGoogle = async (userId, googleId) => {
     try {
         const { data } = await users.put(`/${userId}`, {
+            _id: userId,
             googleId: googleId,
         });
+
+        return data;
+    } catch (e) {
+        console.error(e);
+    }
+};
+
+export const getUserByGoogle = async (googleId) => {
+    try {
+        const { data } = await users.get(`/byGoogle/${googleId}`);
 
         return data;
     } catch (e) {

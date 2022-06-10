@@ -67,6 +67,8 @@ const router = express.Router();
 
 router.get('/', clientController.getClients);
 
+router.get('/byGoogle/:googleId', clientController.getClientByGoogleId);
+
 router.get('/:clientId', clientController.getClientById);
 
 router.post('/', clientController.createClient);
