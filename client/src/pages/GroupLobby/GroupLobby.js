@@ -10,11 +10,11 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import { getRestaurantById } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
+import { UserIdContext } from '../../context/UserIdContext';
 
 import './GroupLobby.scss';
 import { socket } from '../../socket/index';
 import { getGroupById } from '../../actions/groupActions';
-import { cookie } from '../../actions/cookieActions';
 
 function GroupLobby() {
     const [loadingPreferences, setLoadingPreferences] = useState(false);
@@ -22,13 +22,14 @@ function GroupLobby() {
     const [group, setGroup] = useState(null);
     const [participants, setParticipants] = useState(0);
     const { setIsLoadingApp } = useContext(GlobalContext);
+    const { userId } = useContext(UserIdContext);
     const navigate = useNavigate();
     const alert = useAlert();
 
     let { groupId, restaurantId } = useParams();
 
     useEffect(() => {
-        socket.on('participants-updated', userCount => {
+        socket.on('participants-updated', (userCount, readyCount) => {
             setParticipants(userCount);
         });
 
@@ -59,13 +60,12 @@ function GroupLobby() {
             setIsLoadingApp(false);
         };
 
-        if (!restaurantId || !groupId) return;
+        if (!restaurantId || !groupId || !userId) return;
 
-        const userId = cookie.getCookie(cookie.siteCookies.userId);
         socket.emit('group-connect', groupId, userId);
 
         fetchRestaurant();
-    }, [groupId, restaurantId, alert, setIsLoadingApp]);
+    }, [userId, groupId, restaurantId, alert, setIsLoadingApp]);
 
     const handleStart = e => {
         setLoadingPreferences(true);

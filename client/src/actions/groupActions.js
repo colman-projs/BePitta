@@ -1,6 +1,5 @@
 import authHeader from '../api/auth-header';
 import groups from '../api/groups';
-import { cookie } from './cookieActions';
 
 export const getGroupById = async groupId => {
     try {
@@ -24,8 +23,7 @@ export const getGroups = async () => {
     }
 };
 
-export const createGroup = async (restaurantId, groupName = "New Group") => {
-    const userId = cookie.getCookie(cookie.siteCookies.userId);
+export const createGroup = async (restaurantId, groupName = "New Group", userId) => {
     try {
         const { data } = await groups.post('/', {
             restaurantId: restaurantId,

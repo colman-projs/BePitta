@@ -12,6 +12,7 @@ import { GlobalContext } from '../../context/GlobalContext';
 import './GroupForm.scss';
 import { socket } from '../../socket/index';
 import { createGroup } from '../../actions/groupActions';
+import { UserIdContext } from '../../context/UserIdContext';
 
 function GroupForm() {
     const [loadingGroup, setLoadingGroup] = useState(false);
@@ -19,6 +20,7 @@ function GroupForm() {
     const [groupName, setGroupName] = useState('');
     const [restaurants, setRestaurants] = useState([]);
     const { setIsLoadingApp } = useContext(GlobalContext);
+    const { userId } = useContext(UserIdContext);
     const navigate = useNavigate();
     const alert = useAlert();
 
@@ -54,7 +56,7 @@ function GroupForm() {
 
         setLoadingGroup(true);
 
-        const group = await createGroup(restaurant, groupName);
+        const group = await createGroup(restaurant, groupName, userId);
         console.log(group);
         const groupId = group?._id;
 
