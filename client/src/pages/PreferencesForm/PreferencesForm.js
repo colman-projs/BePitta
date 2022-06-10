@@ -10,7 +10,7 @@ import { getRestaurantById } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
 import { socket } from '../../socket/index';
 import { UserIdContext } from '../../context/UserIdContext';
-import { updateUserTags } from '../../actions/userActions';
+import { getUserById, updateUserTags } from '../../actions/userActions';
 
 import './PreferencesForm.scss';
 
@@ -30,14 +30,25 @@ function PreferencesForm() {
         //Fetch restaurant tags
         const fetchRestaurantTags = async () => {
             setIsLoadingApp(true);
-            const tags = await getTags();
+            const tagsRes = await getTags();
 
-            if (!tags) {
+            let user = null;
+            if (userId) {
+                user = await getUserById(userId);
+            }
+
+            if (!tagsRes) {
                 alert.error('Error loading restaurant tags');
                 return setIsLoadingApp(false);
             }
 
-            setTags(tags);
+            tagsRes.forEach(tag => {
+                if (user?.tags?.some(userTag => userTag === tag._id)) {
+                    tag = { ...tag, isActive: true };
+                }
+            });
+
+            setTags(tagsRes);
 
             setIsLoadingApp(false);
         };
@@ -81,12 +92,12 @@ function PreferencesForm() {
 
         console.log(
             'Tags to save: ',
-            tags.filter(tag => tag.isActive).map(tag => tag._id),
+            tags.filter(tag => tag.Active).map(tag => tag._id),
         );
 
         const success = await updateUserTags(
             userId,
-            tags.filter(tag => tag.isActive).map(tag => tag._id),
+            tags.filter(tag => tag.Active).map(tag => tag._id),
         );
 
         if (!success) {

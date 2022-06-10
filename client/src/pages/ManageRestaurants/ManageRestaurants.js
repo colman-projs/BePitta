@@ -15,6 +15,8 @@ const emptyRestaurant = {
     name: '',
     description: '',
     imageurl: '',
+    // TODO: Add insert dishes in UI
+    dishes: [],
 };
 
 function ManageRestaurants() {
