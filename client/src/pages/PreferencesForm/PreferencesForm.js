@@ -92,12 +92,12 @@ function PreferencesForm() {
 
         console.log(
             'Tags to save: ',
-            tags.filter(tag => tag.isActive).map(tag => tag._id),
+            tags.filter(tag => tag.Active).map(tag => tag._id),
         );
 
         const success = await updateUserTags(
             userId,
-            tags.filter(tag => tag.isActive).map(tag => tag._id),
+            tags.filter(tag => tag.Active).map(tag => tag._id),
         );
 
         if (!success) {
