@@ -63,7 +63,7 @@ const updateClientTags = (req, res) => {
 };
 
 const updateClientlikedDishes = (req, res) => {
-    const filter = { _id: req.params.userId };
+    const filter = { _id: req.params.clientId };
 
     Clients.findOneAndUpdate(filter, { likedDishes: req.body.dishes })
         .then(() => {
