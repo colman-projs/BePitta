@@ -19,7 +19,10 @@ function Header() {
                 !routesWithNoBackButton.some(route =>
                     location.pathname.includes(route),
                 ) && (
-                    <IconButton onClick={() => navigate(-1)}>
+                    <IconButton
+                        className="back-button"
+                        onClick={() => navigate(-1)}
+                    >
                         <BackIcon />
                     </IconButton>
                 )}
