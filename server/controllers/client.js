@@ -20,6 +20,16 @@ const getClients = (_req, res) => {
         .catch(errorHandler(res));
 };
 
+const getClientByGoogleId = (_req, res) => {
+    Clients.findOne({
+        googleId: _req.params.googleId
+    })
+        .then(client => {
+            res.send(client);
+        })
+        .catch(errorHandler(res));
+};
+
 const updateClient = (req, res) => {
     const filter = { _id: req.body._id };
 
@@ -44,6 +54,7 @@ const updateClientTags = (req, res) => {
 };
 
 module.exports = {
+    getClientByGoogleId,
     createClient,
     getClients,
     updateClient,
