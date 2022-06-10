@@ -9,6 +9,7 @@ import './ManageDishes.scss';
 
 const emptyDish = {
     name: '',
+    // TODO: Add insert tags in UI
     tags: [],
     imageUrl: '',
     description: '',
