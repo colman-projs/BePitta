@@ -20,6 +20,14 @@ const getClients = (_req, res) => {
         .catch(errorHandler(res));
 };
 
+const getClientById = (req, res) => {
+    Clients.findById(req.params.id)
+        .then(client => {
+            res.json(client);
+        })
+        .catch(errorHandler(res));
+};
+
 const updateClient = (req, res) => {
     const filter = { _id: req.body._id };
 
@@ -48,4 +56,5 @@ module.exports = {
     getClients,
     updateClient,
     updateClientTags,
+    getClientById,
 };

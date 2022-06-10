@@ -6,7 +6,7 @@ import { Save as SaveIcon } from '@mui/icons-material';
 
 import { getTags } from '../../actions/preferencesActions';
 import { GlobalContext } from '../../context/GlobalContext';
-import { updateUserTags } from '../../actions/userActions';
+import { updateUserTags, getUserById } from '../../actions/userActions';
 import { UserIdContext } from '../../context/UserIdContext';
 
 import './UserPreferences.scss';
@@ -21,20 +21,36 @@ function UserPreferences() {
     useEffect(() => {
         const fetchTags = async () => {
             setIsLoadingApp(true);
-            const tags = await getTags();
+            let [tagsRes, user] = await Promise.all([
+                getTags(),
+                getUserById(userId),
+            ]);
 
-            if (!tags) {
+            if (!tagsRes) {
                 alert.error('Error loading preferences');
                 return setIsLoadingApp(false);
             }
 
-            setTags(tags);
+            if (!user) {
+                alert.error('Error loading user preferences');
+                return setIsLoadingApp(false);
+            }
+
+            tagsRes.forEach(tag => {
+                if (user?.tags?.some(userTag => userTag === tag._id)) {
+                    tag = { ...tag, isActive: true };
+                }
+            });
+
+            setTags(tagsRes);
 
             setIsLoadingApp(false);
         };
 
+        if (!userId) return;
+
         fetchTags();
-    }, [alert, setIsLoadingApp]);
+    }, [alert, setIsLoadingApp, userId]);
 
     const handleButtonClick = tagId => {
         let tempTags = JSON.parse(JSON.stringify(tags));

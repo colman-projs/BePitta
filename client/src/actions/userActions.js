@@ -38,3 +38,13 @@ export const updateUserTags = async (userId, tags) => {
         console.error(e);
     }
 };
+
+export const getUserById = async id => {
+    try {
+        const { data } = await users.get(`/${id}`);
+
+        return data;
+    } catch (e) {
+        console.error(e);
+    }
+};

@@ -13,6 +13,21 @@ const router = express.Router();
  *       responses:
  *           200:
  *               description: Get clients completed successfully
+ * /clients/id:
+ *   get:
+ *       summary: Get client by ID
+ *       description:
+ *       tags:
+ *       - clients
+ *       parameters:
+ *       - in: path
+ *         name: id
+ *         type: string
+ *         required: true
+ *         description: client ID
+ *       responses:
+ *           200:
+ *               description: Get client by Id completed successfully
  *   post:
  *       summary: Create a client
  *       description: need to provide the required json
@@ -51,6 +66,8 @@ const router = express.Router();
  */
 
 router.get('/', clientController.getClients);
+
+router.get('/:clientId', clientController.getClientById);
 
 router.post('/', clientController.createClient);
 
