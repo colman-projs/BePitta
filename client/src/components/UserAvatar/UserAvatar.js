@@ -18,7 +18,11 @@ import { cookie } from '../../actions/cookieActions';
 import { UserContext } from '../../context/UserContext';
 import { UserIdContext } from '../../context/UserIdContext';
 import './UserAvatar.scss';
-import { createUser, getUserByGoogle, updateUserGoogle } from '../../actions/userActions';
+import {
+    createUser,
+    getUserByGoogle,
+    updateUserGoogle,
+} from '../../actions/userActions';
 
 const StyledBadge = styled(Badge)(({ theme, connected }) => ({
     '& .MuiBadge-badge': {
@@ -53,21 +57,12 @@ export default function UserAvatar() {
     };
 
     const handleFailure = result => {
-        console.clear();
-        console.log(result);
+        console.error(result);
     };
 
     const handleSignIn = response => {
         const responsePayload = decodeJwt(response.credential);
         const googleId = responsePayload.sub;
-
-        console.group('User data');
-        console.log('ID: ' + googleId);
-        console.log('Full Name: ' + responsePayload.name);
-        console.log('Given Name: ' + responsePayload.given_name);
-        console.log('Family Name: ' + responsePayload.family_name);
-        console.log('Image URL: ' + responsePayload.picture);
-        console.log('Email: ' + responsePayload.email);
         console.groupEnd();
 
         setUser(responsePayload);
@@ -84,7 +79,7 @@ export default function UserAvatar() {
                 setUserId(user._id);
             } else {
                 // Connect google to user ID
-                updateUserGoogle(userId, googleId).then()
+                updateUserGoogle(userId, googleId);
             }
         });
     };

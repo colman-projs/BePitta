@@ -20,7 +20,8 @@ const upsertGroup = async (req, res) => {
     } else {
         const group = new Group(req.body);
 
-        group.save()
+        group
+            .save()
             .then(() => {
                 const io = getIo();
                 io.sockets.emit('updateGroups');
@@ -56,44 +57,38 @@ const deleteGroup = (req, res) => {
         .catch(errorHandler(res));
 };
 
-const resetGroups = async () => {
-    console.log('Reseting DB...');
-    // await Commercial.deleteMany();
-};
-
 const groupDAL = {
-
-    getGroupById: async (groupId) => {
+    getGroupById: async groupId => {
         return await Group.findById(groupId).populate('users').exec();
     },
 
     addUserToGroup: async (groupId, userId) => {
         try {
-            await Group.findOneAndUpdate({ _id: groupId }, {
-                $addToSet: { users: userId }
-            }).exec();
-        } catch (ex) {
-
-        }
+            await Group.findOneAndUpdate(
+                { _id: groupId },
+                {
+                    $addToSet: { users: userId },
+                },
+            ).exec();
+        } catch (ex) {}
     },
 
     removeUserFromGroup: async (groupId, userId) => {
         try {
-            await Group.findOneAndUpdate({ _id: groupId }, {
-                $pull: { users: userId }
-            }).exec();
-        } catch (ex) {
-
-        }
-    }
-}
-
+            await Group.findOneAndUpdate(
+                { _id: groupId },
+                {
+                    $pull: { users: userId },
+                },
+            ).exec();
+        } catch (ex) {}
+    },
+};
 
 module.exports = {
     getGroups,
     upsertGroup,
     getGroupById,
     deleteGroup,
-    resetGroups,
-    groupDAL
+    groupDAL,
 };

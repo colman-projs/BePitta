@@ -57,7 +57,6 @@ function GroupForm() {
         setLoadingGroup(true);
 
         const group = await createGroup(restaurant, groupName, userId);
-        console.log(group);
         const groupId = group?._id;
 
         if (!groupId || !restaurant) {
