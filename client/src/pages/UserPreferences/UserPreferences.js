@@ -4,7 +4,7 @@ import { useAlert } from 'react-alert';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Save as SaveIcon } from '@mui/icons-material';
 
-import { getRestaurantsTags } from '../../actions/preferencesActions';
+import { getTags } from '../../actions/preferencesActions';
 import { GlobalContext } from '../../context/GlobalContext';
 
 import './UserPreferences.scss';
@@ -18,7 +18,7 @@ function UserPreferences() {
     useEffect(() => {
         const fetchTags = async () => {
             setIsLoadingApp(true);
-            const tags = await getRestaurantsTags();
+            const tags = await getTags();
 
             if (!tags) {
                 alert.error('Error loading preferences');

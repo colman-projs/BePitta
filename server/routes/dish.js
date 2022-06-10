@@ -49,28 +49,12 @@ const router = express.Router();
 
 router.get('/', dishController.getDishes);
 
-router.get(
-    '/:dishId',
-      authJwt.verifyToken,
-    dishController.getdishById,
-);
+router.get('/:dishId', authJwt.verifyToken, dishController.getdishById);
 
-router.post(
-    '/',
-      authJwt.verifyToken,
-    dishController.upsertDish,
-);
+router.post('/', authJwt.verifyToken, dishController.upsertDish);
 
-router.post(
-    '/dishes',
-    //  authJwt.verifyToken,
-    dishController.getDishesByIds,
-);
+router.post('/dishes', dishController.getDishesByIds);
 
-router.delete(
-    '/:dishId',
-      authJwt.verifyToken,
-    dishController.deleteDish,
-);
+router.delete('/:dishId', authJwt.verifyToken, dishController.deleteDish);
 
 module.exports = router;

@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { ArrowForwardIos as ArrowForwardIosIcon } from '@mui/icons-material';
 
-import { getRestaurantTagsById } from '../../actions/preferencesActions';
+import { getTags } from '../../actions/preferencesActions';
 import { getRestaurantById } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
 import { socket } from '../../socket/index';
@@ -28,7 +28,7 @@ function PreferencesForm() {
         //Fetch restaurant tags
         const fetchRestaurantTags = async () => {
             setIsLoadingApp(true);
-            const tags = await getRestaurantTagsById(restaurantId);
+            const tags = await getTags();
 
             if (!tags) {
                 alert.error('Error loading restaurant tags');

@@ -5,7 +5,13 @@ import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import { useNavigate } from 'react-router';
 import { ListItemIcon, Menu, MenuItem } from '@mui/material';
-import { MeetingRoom, Restaurant } from '@mui/icons-material';
+import {
+    MeetingRoom,
+    Storefront,
+    Icecream,
+    Style,
+    Settings,
+} from '@mui/icons-material';
 import { googleLogout, GoogleLogin } from '@react-oauth/google';
 import { decodeJwt } from 'jose';
 import { cookie } from '../../actions/cookieActions';
@@ -94,40 +100,7 @@ export default function UserAvatar() {
                 </StyledBadge>
             </Stack>
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-                {user && (
-                    <MenuItem
-                        style={{ pointerEvents: 'none', cursor: 'default' }}
-                    >
-                        Hey {user.name}
-                    </MenuItem>
-                )}
-                {user && (
-                    <MenuItem
-                        onClick={() => {
-                            navigate('/user/preferences');
-                            handleClose();
-                        }}
-                    >
-                        <ListItemIcon>
-                            <Restaurant />
-                        </ListItemIcon>
-                        Preferences
-                    </MenuItem>
-                )}
-                {user ? (
-                    <MenuItem
-                        className="logout-item"
-                        onClick={() => {
-                            handleLogout();
-                            handleClose();
-                        }}
-                    >
-                        <ListItemIcon>
-                            <MeetingRoom />
-                        </ListItemIcon>
-                        Logout
-                    </MenuItem>
-                ) : (
+                {!user && (
                     <MenuItem
                         onClick={() => {
                             handleClose();
@@ -142,6 +115,73 @@ export default function UserAvatar() {
                                 useOneTap
                             />
                         </ListItemIcon>
+                    </MenuItem>
+                )}
+                {user && (
+                    <MenuItem
+                        style={{ pointerEvents: 'none', cursor: 'default' }}
+                    >
+                        Hey {user.name}
+                    </MenuItem>
+                )}
+                <MenuItem
+                    onClick={() => {
+                        navigate('/admin/restaurants');
+                        handleClose();
+                    }}
+                >
+                    <ListItemIcon>
+                        <Storefront />
+                    </ListItemIcon>
+                    Manage Restaurants
+                </MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        navigate('/admin/dishes');
+                        handleClose();
+                    }}
+                >
+                    <ListItemIcon>
+                        <Icecream />
+                    </ListItemIcon>
+                    Manage Dishes
+                </MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        navigate('/admin/tags');
+                        handleClose();
+                    }}
+                >
+                    <ListItemIcon>
+                        <Style />
+                    </ListItemIcon>
+                    Manage Tags
+                </MenuItem>
+                {user && (
+                    <MenuItem
+                        onClick={() => {
+                            navigate('/user/preferences');
+                            handleClose();
+                        }}
+                    >
+                        <ListItemIcon>
+                            <Settings />
+                        </ListItemIcon>
+                        Preferences
+                    </MenuItem>
+                )}
+                {user && (
+                    <MenuItem
+                        className="logout-item"
+                        onClick={() => {
+                            handleLogout();
+                            handleClose();
+                        }}
+                    >
+                        <ListItemIcon>
+                            <MeetingRoom />
+                        </ListItemIcon>
+                        Logout
                     </MenuItem>
                 )}
             </Menu>
