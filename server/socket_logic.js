@@ -17,6 +17,8 @@ const connectToGroup = async (socket, groupId, clientId) => {
         console.debug(`users: ${users.length}, ready: ${waitingUsers.length}`);
         io.to(groupId).emit("participants-updated", users.length, waitingUsers.length);
     }
+
+    return grp;
 }
 
 const userLeaveGroup = async (socket, groupId, clientId) => {
@@ -51,7 +53,7 @@ const setIoForUser = () => {
 
         socket.on('user-waiting', async function (groupId, clientId) {
             console.debug(`user ${clientId} is waiting for group ${groupId} to finish`);
-
+            let grp;
             if (_clientId !== clientId || _groupId !== groupId) {
                 if (_clientId && _groupId)
                     userLeaveGroup(socket, _groupId, _clientId);
@@ -59,22 +61,26 @@ const setIoForUser = () => {
                 _groupId = groupId;
                 _clientId = clientId;
 
-                if (_clientId && _groupId)
-                    connectToGroup(socket, _groupId, _clientId);
+                if (_clientId && _groupId) {
+                    grp = connectToGroup(socket, _groupId, _clientId);
+                }
             } else {
-                const grp = await groupDAL.getGroupById(_groupId);
+                grp = await groupDAL.getGroupById(_groupId);
+            }
 
-                if (grp) {
-                    const users = grp.users;
-                    const waitingUsers = grp.users.filter(u => u.isReady);
-                    console.debug(`users: ${users.length}, ready: ${waitingUsers.length}`);
-                    io.to(_groupId).emit("participants-updated", users.length, waitingUsers.length);
+            if (grp) {
+                const users = grp.users;
+                const waitingUsers = grp.users.filter(u => u.isReady);
+                console.debug(`users: ${users.length}, ready: ${waitingUsers.length}`);
+                io.to(_groupId).emit("participants-updated", users.length, waitingUsers.length);
+                if (users.length == waitingUsers.length) {
+                    // TODO: Calculate recommendation, save, and then emit('reasults-ready')
+
+                    io.to(_groupId).emit('reasults-ready');
                 }
             }
         });
 
-        // TODO: put in the correct place
-        // io.to(_groupId).emit('reasults-ready');
 
         socket.on('user-leave-group', function () {
             if (_clientId && _groupId) {
