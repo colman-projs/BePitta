@@ -69,7 +69,6 @@ function PreferencesFormPhoto() {
         }
 
         // TODO: Save user dish preferences, and then navigate to next page
-
         navigate(`/groups/${groupId}/${restaurantId}/waiting`);
 
         setIsLoadingApp(false);
