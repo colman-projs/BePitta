@@ -4,25 +4,26 @@ import { useAlert } from 'react-alert';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getRestaurantById } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
-import { socket } from '../../socket';
+import { UserIdContext } from '../../context/UserIdContext';
+import { socket } from '../../socket/index';
 
 import './WaitingParticipants.scss';
 
 function WaitingParticipants() {
     const { setIsLoadingApp } = useContext(GlobalContext);
+    const { userId } = useContext(UserIdContext);
     const [restaurant, setRestaurant] = useState(null);
-    const [participants, setParticipants] = useState([1, 2, 3, 4]);
-    const [readyParticipants, setReadyParticipants] = useState([1, 2]);
+    const [participants, setParticipants] = useState(1);
+    const [readyParticipants, setReadyParticipants] = useState(0);
     let { groupId, restaurantId } = useParams();
     const navigate = useNavigate();
     const alert = useAlert();
 
     useEffect(() => {
-        // TODO: Update ready participants
-
-        // TODO: Update total participants
-        socket.on('participants-updated', userCount => {
+        socket.on('participants-updated', (userCount, readyCount) => {
+            console.log(`recived 'users: ${userCount}, ready: ${readyCount}'`)
             setParticipants(userCount);
+            setReadyParticipants(readyCount);
         });
     }, []);
 
@@ -41,10 +42,12 @@ function WaitingParticipants() {
             setIsLoadingApp(false);
         };
 
-        if (!restaurantId) return;
+        if (!restaurantId || !groupId || !userId) return;
+
+        socket.emit('user-waiting', groupId, userId)
 
         fetchRestaurant();
-    }, [restaurantId, alert, setIsLoadingApp]);
+    }, [restaurantId, alert, setIsLoadingApp, groupId, userId]);
 
     useEffect(() => {
         const handleAllParticipantsReady = () => {
@@ -60,9 +63,8 @@ function WaitingParticipants() {
             setIsLoadingApp(false);
         };
 
-        // TODO: Check if total participants equal to ready participants
         // If not all participants are ready
-        if (participants.length !== readyParticipants.length) return;
+        if (participants !== readyParticipants) return;
 
         // Load results
         handleAllParticipantsReady();
@@ -90,9 +92,9 @@ function WaitingParticipants() {
                 Waiting for other participants:
                 <Typography variant="h5" className="participants">
                     <span className="ready-participants">
-                        {readyParticipants.length}
+                        {readyParticipants}
                     </span>
-                    /{participants.length}
+                    /{participants}
                 </Typography>
             </Typography>
             <Typography variant="h6">

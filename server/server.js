@@ -64,16 +64,34 @@ app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
 //Set routes
 app.use(routes);
 
+const connectToGroup = async (socket, groupId, clientId) => {
+
+    // save user to group in DB
+    await groupDAL.addUserToGroup(groupId, clientId);
+    const grp = await groupDAL.getGroupById(groupId);
+
+    socket.join(groupId); // Connect client to group room
+
+    if (grp) {
+        const users = grp.users;
+        const waitingUsers = grp.users.filter(u => u.isReady);
+        console.debug(`users: ${users.length}, ready: ${waitingUsers.length}`);
+        io.to(groupId).emit("participants-updated", users.length, waitingUsers.length);
+    }
+}
+
 const userLeaveGroup = async (socket, groupId, clientId) => {
 
     // save user left group in DB
     groupDAL.removeUserFromGroup(groupId, clientId);
     const grp = await groupDAL.getGroupById(groupId);
-    console.log(grp);
 
     socket.leave(groupId);
     if (grp) {
-        io.to(groupId).emit("participants-updated", grp.users.length);
+        const users = grp.users;
+        const waitingUsers = grp.users.filter(u => u.isReady);
+        console.debug(`users: ${users.length}, ready: ${waitingUsers.length}`);
+        io.to(groupId).emit("participants-updated", users.length, waitingUsers.length);
     }
 }
 
@@ -91,27 +109,49 @@ const onStartup = async () => {
         let _clientId = null;
 
         socket.on('group-connect', async function (groupId, clientId) {
+            console.debug(`user ${clientId} connect to group ${groupId}`);
 
             _groupId = groupId;
             _clientId = clientId;
+            connectToGroup(socket, _groupId, _clientId);
+        });
 
-            // save user to group in DB
-            await groupDAL.addUserToGroup(groupId, clientId);
-            const grp = await groupDAL.getGroupById(groupId);
+        socket.on('user-waiting', async function (groupId, clientId) {
+            console.debug(`user ${clientId} is waiting for group ${groupId} to finish`);
 
-            socket.join(groupId); // Connect client to group room
+            if (_clientId !== clientId || _groupId !== groupId) {
+                if (_clientId && _groupId)
+                    userLeaveGroup(socket, _groupId, _clientId);
 
-            if (grp) {
-                io.to(groupId).emit("participants-updated", grp.users.length);
+                _groupId = groupId;
+                _clientId = clientId;
+
+                if (_clientId && _groupId)
+                    connectToGroup(socket, _groupId, _clientId);
+            } else {
+                const grp = await groupDAL.getGroupById(_groupId);
+
+                if (grp) {
+                    const users = grp.users;
+                    const waitingUsers = grp.users.filter(u => u.isReady);
+                    console.debug(`users: ${users.length}, ready: ${waitingUsers.length}`);
+                    io.to(_groupId).emit("participants-updated", users.length, waitingUsers.length);
+                }
             }
         });
 
         socket.on('user-leave-group', function () {
-            userLeaveGroup(socket, _groupId, _clientId);
+            if (_clientId && _groupId) {
+                console.debug(`user ${_clientId} left group ${_groupId}`);
+                userLeaveGroup(socket, _groupId, _clientId);
+            }
         });
 
         socket.on('disconnect', function () {
-            userLeaveGroup(socket, _groupId, _clientId);
+            if (_clientId && _groupId) {
+                console.debug(`disconnecting ${_clientId} from group ${_groupId}`);
+                userLeaveGroup(socket, _groupId, _clientId);
+            }
         });
     });
 };
