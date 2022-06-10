@@ -13,9 +13,6 @@ const Client = new mongoose.Schema({
     likedDishes: {
         type: [{ type: Schema.Types.ObjectId, ref: 'dish' }],
     },
-    favoriteresturants: {
-        type: [{ type: Schema.Types.ObjectId, ref: 'restaurant' }],
-    },
 });
 
 module.exports = mongoose.model('client', Client);

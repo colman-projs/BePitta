@@ -26,3 +26,15 @@ export const updateUserGoogle = async (userId, googleId) => {
         console.error(e);
     }
 };
+
+export const updateUserTags = async (userId, tags) => {
+    try {
+        const { data } = await users.put(`/${userId}/tags`, {
+            tags,
+        });
+
+        return data;
+    } catch (e) {
+        console.error(e);
+    }
+};

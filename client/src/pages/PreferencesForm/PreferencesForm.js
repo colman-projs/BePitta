@@ -9,9 +9,10 @@ import { getTags } from '../../actions/preferencesActions';
 import { getRestaurantById } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
 import { socket } from '../../socket/index';
+import { UserIdContext } from '../../context/UserIdContext';
+import { updateUserTags } from '../../actions/userActions';
 
 import './PreferencesForm.scss';
-import { UserIdContext } from '../../context/UserIdContext';
 
 function PreferencesForm() {
     const [loadingPreferencesPhoto, setLoadingPreferencesPhoto] =
@@ -67,7 +68,7 @@ function PreferencesForm() {
         let tempTags = JSON.parse(JSON.stringify(tags));
 
         tempTags.forEach(tag => {
-            if (tag.id === tagId) tag.Active = !tag.Active;
+            if (tag._id === tagId) tag.Active = !tag.Active;
 
             tag = { ...tag, Active: tag.Active };
         });
@@ -75,10 +76,23 @@ function PreferencesForm() {
         setTags(tempTags);
     };
 
-    const handleNext = e => {
-        setIsLoadingApp(true);
+    const handleNext = async e => {
+        setLoadingPreferencesPhoto(true);
 
-        // TODO: Save user preferences in DB
+        console.log(
+            'Tags to save: ',
+            tags.filter(tag => tag.isActive).map(tag => tag._id),
+        );
+
+        const success = await updateUserTags(
+            userId,
+            tags.filter(tag => tag.isActive).map(tag => tag._id),
+        );
+
+        if (!success) {
+            alert.error('Error while updating preferences');
+            return setLoadingPreferencesPhoto(false);
+        }
 
         if (!groupId) {
             alert.error('Error while loading Like/Dislike page');
@@ -86,8 +100,7 @@ function PreferencesForm() {
         }
 
         navigate(`/groups/${groupId}/${restaurantId}/likes`);
-
-        setIsLoadingApp(false);
+        setLoadingPreferencesPhoto(false);
     };
 
     return (
@@ -111,15 +124,15 @@ function PreferencesForm() {
                         xs={2}
                         sm={2}
                         md={2}
-                        key={tag.id}
+                        key={tag._id}
                         className="GridContainer"
                     >
                         <Button
-                            id={tag.id}
+                            id={tag._id}
                             type="button"
                             variant="outlined"
                             onClick={() => {
-                                handleButtonClick(tag.id);
+                                handleButtonClick(tag._id);
                             }}
                             className={
                                 tag.Active

@@ -6,12 +6,15 @@ import { Save as SaveIcon } from '@mui/icons-material';
 
 import { getTags } from '../../actions/preferencesActions';
 import { GlobalContext } from '../../context/GlobalContext';
+import { updateUserTags } from '../../actions/userActions';
+import { UserIdContext } from '../../context/UserIdContext';
 
 import './UserPreferences.scss';
 
 function UserPreferences() {
     const [savingTags, setSavingTags] = useState(false);
     const { setIsLoadingApp } = useContext(GlobalContext);
+    const { userId } = useContext(UserIdContext);
     const [tags, setTags] = useState([]);
     const alert = useAlert();
 
@@ -49,12 +52,15 @@ function UserPreferences() {
         setSavingTags(true);
 
         console.log(
-            'Liked Tags: ',
+            'Tags to save: ',
             tags.filter(tag => tag.isActive).map(tag => tag._id),
         );
-        // TODO: Call backend function to update user preferences
-        // const success = await saveUserPreferences(tags.filter(tag=> tag.isActive).map(tag => tag._id));
-        let success = false;
+
+        const success = await updateUserTags(
+            userId,
+            tags.filter(tag => tag.isActive).map(tag => tag._id),
+        );
+
         if (!success) alert.error('Error Updating preferences');
         else alert.success('Updated preferences succesfully');
 
