@@ -30,7 +30,7 @@ function ResultsPage() {
     const [results, setResults] = useState([]);
     const [restaurant, setRestaurant] = useState(null);
     const [toggleFullResults, setToggleFullResults] = useState(false);
-    let { groupId, restaurantId } = useParams();
+    let { restaurantId } = useParams();
     const alert = useAlert();
 
     const { setIsLoadingApp } = useContext(GlobalContext);

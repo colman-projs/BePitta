@@ -26,8 +26,8 @@ function WaitingParticipants() {
         });
 
         return () => {
-            socket.removeAllListeners("participants-updated");
-            socket.removeAllListeners("reasults-ready");
+            socket.removeAllListeners('participants-updated');
+            socket.removeAllListeners('reasults-ready');
         };
     }, []);
 
@@ -48,7 +48,7 @@ function WaitingParticipants() {
 
         if (!restaurantId || !groupId || !userId) return;
 
-        socket.emit('user-waiting', groupId, userId)
+        socket.emit('user-waiting', groupId, userId);
 
         fetchRestaurant();
     }, [restaurantId, alert, setIsLoadingApp, groupId, userId]);
@@ -69,19 +69,12 @@ function WaitingParticipants() {
 
         if (!groupId || !restaurantId) return;
 
-        socket.removeAllListeners("reasults-ready");
-        socket.on("reasults-ready", () => {
+        socket.removeAllListeners('reasults-ready');
+        socket.on('reasults-ready', () => {
             // Load results
             handleAllParticipantsReady();
         });
-
-    }, [
-        groupId,
-        restaurantId,
-        alert,
-        navigate,
-        setIsLoadingApp,
-    ]);
+    }, [groupId, restaurantId, alert, navigate, setIsLoadingApp]);
 
     return (
         <div className="waiting center">
@@ -93,20 +86,26 @@ function WaitingParticipants() {
             <Typography variant="h5">
                 We have locked in your preferences!
             </Typography>
-            {participants !== readyParticipants ? <Typography variant="h6">
-                Waiting for other participants:
-                <Typography variant="h5" className="participants">
-                    <span className="ready-participants">
-                        {readyParticipants}
-                    </span>
-                    /{participants}
+            {participants !== readyParticipants ? (
+                <Typography variant="h6">
+                    Waiting for other participants:
+                    <Typography variant="h5" className="participants">
+                        <span className="ready-participants">
+                            {readyParticipants}
+                        </span>
+                        /{participants}
+                    </Typography>
                 </Typography>
-            </Typography> : <Typography variant="h5" className="participants">
-                Calulating Results...
-            </Typography>}
-            {participants !== readyParticipants && <Typography variant="h6">
-                We'll pick the best dishes for you when everyone is ready!
-            </Typography>}
+            ) : (
+                <Typography variant="h5" className="participants">
+                    Calulating Results...
+                </Typography>
+            )}
+            {participants !== readyParticipants && (
+                <Typography variant="h6">
+                    We'll pick the best dishes for you when everyone is ready!
+                </Typography>
+            )}
         </div>
     );
 }
