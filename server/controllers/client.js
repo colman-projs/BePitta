@@ -31,16 +31,17 @@ const getClientByGoogleId = (_req, res) => {
 };
 
 const getClientById = (req, res) => {
-    Clients.findById(req.params.id)
+    Clients.findOne({
+        _id: req.params.clientId,
+    })
         .then(client => {
-            res.json(client);
+            res.send(client);
         })
         .catch(errorHandler(res));
 };
 
 const updateClient = (req, res) => {
     const filter = { _id: req.body._id };
-
     Clients.findOneAndUpdate(filter, req.body, {
         new: true,
         upsert: true,
@@ -52,7 +53,7 @@ const updateClient = (req, res) => {
 };
 
 const updateClientTags = (req, res) => {
-    const filter = { _id: req.params.userId };
+    const filter = { _id: req.params.clientId };
 
     Clients.findOneAndUpdate(filter, { tags: req.body.tags })
         .then(() => {

@@ -38,9 +38,9 @@ export const getUserByGoogle = async googleId => {
     }
 };
 
-export const updateUserTags = async (userId, tags) => {
+export const updateUserTags = async (clientId, tags) => {
     try {
-        const { data } = await users.put(`/${userId}/tags`, {
+        const { data } = await users.put(`/${clientId}/tags`, {
             tags,
         });
 
@@ -50,9 +50,9 @@ export const updateUserTags = async (userId, tags) => {
     }
 };
 
-export const getUserById = async id => {
+export const getUserById = async userId => {
     try {
-        const { data } = await users.get(`/${id}`);
+        const { data } = await users.get(`/${userId}`);
 
         return data;
     } catch (e) {

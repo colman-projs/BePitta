@@ -1,16 +1,17 @@
 .group-lobby {
     display: grid;
     grid-auto-flow: row;
-    grid-gap: 2rem;
+    grid-gap: 1rem;
     text-align: center;
     padding: 2rem;
 
-    .amount {
+    .amount,
+    .group-name {
         color: var(--primary-color);
     }
 
     .restaurant-logo {
-        width: 7rem;
+        width: 6rem;
         height: auto;
         place-self: center;
     }

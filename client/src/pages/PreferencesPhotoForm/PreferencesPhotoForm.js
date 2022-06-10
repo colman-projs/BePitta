@@ -88,44 +88,38 @@ function PreferencesFormPhoto() {
     };
 
     return (
-        <div className="preferencesPhoto-form  center">
+        <div className="preferences-photo-form">
             <img
                 className="restaurant-logo"
                 src={restaurant?.imageurl}
                 alt="Restaurant Logo"
             />
-            <div>
-                {dishes &&
-                    dishes.map((image, index) => (
-                        <TinderCard
-                            className="swipe"
-                            key={image._id}
-                            preventSwipe={['up', 'down']}
-                            onSwipe={dir =>
-                                Swiped(dir, index, image._id, image.src)
-                            }
+            {dishes &&
+                dishes.map((image, index) => (
+                    <TinderCard
+                        className="swipe center"
+                        key={image.id}
+                        preventSwipe={['up', 'down']}
+                        onSwipe={dir => Swiped(dir, index, image.id, image.src)}
+                    >
+                        <div
+                            style={{
+                                backgroundImage: `url(${image.src})`,
+                            }}
+                            className="card"
                         >
-                            <div
-                                style={{
-                                    backgroundImage: `url(${image.imageUrl})`,
-                                }}
-                                className="card"
-                            >
-                                <h4 className="ImageName">{image?.name}</h4>
-                            </div>
-                        </TinderCard>
-                    ))}
-            </div>
-            <div className="footer">
-                <LoadingButton
-                    className="finish-button"
-                    variant="contained"
-                    color="primary"
-                    onClick={handleNext}
-                >
-                    <Typography variant="h7">Finish</Typography>
-                </LoadingButton>
-            </div>
+                            <h4 className="ImageName">{image?.name}</h4>
+                        </div>
+                    </TinderCard>
+                ))}
+            <LoadingButton
+                className="finish-button"
+                variant="contained"
+                color="primary"
+                onClick={handleNext}
+            >
+                <Typography variant="h7">I'm Done</Typography>
+            </LoadingButton>
         </div>
     );
 }

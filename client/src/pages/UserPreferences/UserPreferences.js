@@ -36,13 +36,18 @@ function UserPreferences() {
                 return setIsLoadingApp(false);
             }
 
+            let newTags = [];
+
             tagsRes.forEach(tag => {
+                let newTag = { ...tag };
                 if (user?.tags?.some(userTag => userTag === tag._id)) {
-                    tag = { ...tag, isActive: true };
+                    newTag = { ...tag, isActive: true };
                 }
+
+                newTags.push(newTag);
             });
 
-            setTags(tagsRes);
+            setTags(newTags);
 
             setIsLoadingApp(false);
         };
@@ -66,11 +71,6 @@ function UserPreferences() {
 
     const handleSave = async () => {
         setSavingTags(true);
-
-        console.log(
-            'Tags to save: ',
-            tags.filter(tag => tag.isActive).map(tag => tag._id),
-        );
 
         const success = await updateUserTags(
             userId,
