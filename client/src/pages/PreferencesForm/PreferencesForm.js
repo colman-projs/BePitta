@@ -42,13 +42,18 @@ function PreferencesForm() {
                 return setIsLoadingApp(false);
             }
 
+            let newTags = [];
+
             tagsRes.forEach(tag => {
+                let newTag = { ...tag };
                 if (user?.tags?.some(userTag => userTag === tag._id)) {
-                    tag = { ...tag, isActive: true };
+                    newTag = { ...tag, isActive: true };
                 }
+
+                newTags.push(newTag);
             });
 
-            setTags(tagsRes);
+            setTags(newTags);
 
             setIsLoadingApp(false);
         };
@@ -79,9 +84,9 @@ function PreferencesForm() {
         let tempTags = JSON.parse(JSON.stringify(tags));
 
         tempTags.forEach(tag => {
-            if (tag._id === tagId) tag.Active = !tag.Active;
+            if (tag._id === tagId) tag.isActive = !tag.isActive;
 
-            tag = { ...tag, Active: tag.Active };
+            tag = { ...tag, isActive: tag.isActive };
         });
 
         setTags(tempTags);
@@ -92,12 +97,12 @@ function PreferencesForm() {
 
         console.log(
             'Tags to save: ',
-            tags.filter(tag => tag.Active).map(tag => tag._id),
+            tags.filter(tag => tag.isActive).map(tag => tag._id),
         );
 
         const success = await updateUserTags(
             userId,
-            tags.filter(tag => tag.Active).map(tag => tag._id),
+            tags.filter(tag => tag.isActive).map(tag => tag._id),
         );
 
         if (!success) {
@@ -146,7 +151,7 @@ function PreferencesForm() {
                                 handleButtonClick(tag._id);
                             }}
                             className={
-                                tag.Active
+                                tag.isActive
                                     ? 'ButtonContaineractive'
                                     : 'ButtonContainer'
                             }

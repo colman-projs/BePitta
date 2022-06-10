@@ -38,9 +38,9 @@ export const getUserByGoogle = async googleId => {
     }
 };
 
-export const updateUserTags = async (userId, tags) => {
+export const updateUserTags = async (clientId, tags) => {
     try {
-        const { data } = await users.put(`/${userId}/tags`, {
+        const { data } = await users.put(`/${clientId}/tags`, {
             tags,
         });
 
