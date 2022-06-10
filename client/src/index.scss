@@ -19,6 +19,11 @@ html {
     color: white;
 }
 
+#root > div {
+    max-height: calc(var(--app-height) - 8rem);
+    overflow: auto;
+}
+
 a {
     text-decoration: none;
 }
