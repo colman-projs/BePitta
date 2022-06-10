@@ -2,14 +2,15 @@ import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { TextField, Button, Typography, Switch, MenuItem } from '@mui/material';
 import { useAlert } from 'react-alert';
 
+import { getTags } from '../../actions/preferencesActions';
 import { deleteDish, getDishes, upsertDish } from '../../actions/dishesActions';
 import { GlobalContext } from '../../context/GlobalContext';
+import MultipleSelect from '../../components/MultipleSelect/MultipleSelect';
 
 import './ManageDishes.scss';
 
 const emptyDish = {
     name: '',
-    // TODO: Add insert tags in UI
     tags: [],
     imageUrl: '',
     description: '',
@@ -19,9 +20,23 @@ function ManageDishes() {
     const [editMode, setEditMode] = useState(false);
     const [dishes, setDishes] = useState([]);
     const [currentDish, setCurrentDish] = useState(emptyDish);
+    const [tags, setTags] = useState([]);
     const [id, setId] = useState(null);
     const { setIsLoadingApp } = useContext(GlobalContext);
     const alert = useAlert();
+
+    const fetchTags = useCallback(async () => {
+        setIsLoadingApp(true);
+        const res = await getTags();
+
+        if (!res) {
+            alert.error('Error loading tags');
+            return setIsLoadingApp(false);
+        }
+
+        setTags(res);
+        setIsLoadingApp(false);
+    }, [alert, setIsLoadingApp]);
 
     const fetchDishes = useCallback(async () => {
         setIsLoadingApp(true);
@@ -38,7 +53,8 @@ function ManageDishes() {
 
     useEffect(() => {
         fetchDishes();
-    }, [fetchDishes]);
+        fetchTags();
+    }, [fetchDishes, fetchTags]);
 
     const toggleEditMode = () => {
         setCurrentDish(emptyDish);
@@ -96,6 +112,16 @@ function ManageDishes() {
         setIsLoadingApp(false);
     };
 
+    const handleChangeTags = event => {
+        const {
+            target: { value },
+        } = event;
+        setCurrentDish({
+            ...currentDish,
+            tags: typeof value === 'string' ? value.split(',') : value,
+        });
+    };
+
     return (
         <div className="manage-dishes center">
             <Typography className="title" variant="h6">
@@ -145,6 +171,12 @@ function ManageDishes() {
                     name="imageUrl"
                     value={currentDish.imageUrl}
                     onChange={handleChangeDish}
+                />
+                <MultipleSelect
+                    value={currentDish.tags}
+                    handleChange={handleChangeTags}
+                    label="Tags"
+                    options={tags}
                 />
                 <div className="actions">
                     <Button variant="contained" color="primary" type="submit">

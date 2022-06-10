@@ -8,6 +8,8 @@ import {
     upsertRestaurant,
 } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
+import { getDishes } from '../../actions/dishesActions';
+import MultipleSelect from '../../components/MultipleSelect/MultipleSelect';
 
 import './ManageRestaurants.scss';
 
@@ -15,7 +17,6 @@ const emptyRestaurant = {
     name: '',
     description: '',
     imageurl: '',
-    // TODO: Add insert dishes in UI
     dishes: [],
 };
 
@@ -23,6 +24,7 @@ function ManageRestaurants() {
     const [editMode, setEditMode] = useState(false);
     const [restaurants, setRestaurants] = useState([]);
     const [currentRestaurant, setCurrentRestaurant] = useState(emptyRestaurant);
+    const [dishes, setDishes] = useState([]);
     const [id, setId] = useState(null);
     const { setIsLoadingApp } = useContext(GlobalContext);
     const alert = useAlert();
@@ -40,9 +42,23 @@ function ManageRestaurants() {
         setIsLoadingApp(false);
     }, [alert, setIsLoadingApp]);
 
+    const fetchDishes = useCallback(async () => {
+        setIsLoadingApp(true);
+        const res = await getDishes();
+
+        if (!res) {
+            alert.error('Error loading dishes');
+            return setIsLoadingApp(false);
+        }
+
+        setDishes(res);
+        setIsLoadingApp(false);
+    }, [alert, setIsLoadingApp]);
+
     useEffect(() => {
         fetchRestaurants();
-    }, [fetchRestaurants]);
+        fetchDishes();
+    }, [fetchRestaurants, fetchDishes]);
 
     const toggleEditMode = () => {
         setCurrentRestaurant(emptyRestaurant);
@@ -102,6 +118,16 @@ function ManageRestaurants() {
         setIsLoadingApp(false);
     };
 
+    const handleChangeDishes = event => {
+        const {
+            target: { value },
+        } = event;
+        setCurrentRestaurant({
+            ...currentRestaurant,
+            dishes: typeof value === 'string' ? value.split(',') : value,
+        });
+    };
+
     return (
         <div className="manage-restaurants center">
             <Typography className="title" variant="h6">
@@ -151,6 +177,17 @@ function ManageRestaurants() {
                     name="imageurl"
                     value={currentRestaurant.imageurl}
                     onChange={handleChangeRestaurant}
+                />
+                <MultipleSelect
+                    value={currentRestaurant.dishes}
+                    handleChange={handleChangeDishes}
+                    label="Dishes"
+                    options={dishes.map(dish => {
+                        return {
+                            ...dish,
+                            value: dish.name,
+                        };
+                    })}
                 />
                 <div className="actions">
                     <Button variant="contained" color="primary" type="submit">
