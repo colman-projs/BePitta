@@ -49,7 +49,11 @@ const router = express.Router();
 
 router.get('/', groupController.getGroups);
 
-router.get('/:groupId', groupController.getgroupById);
+router.get(
+    '/:groupId',
+    // authJwt.verifyToken,
+    groupController.getGroupById,
+);
 
 router.post('/', groupController.upsertGroup);
 

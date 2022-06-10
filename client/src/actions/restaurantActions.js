@@ -22,3 +22,23 @@ export const getRestaurants = async () => {
         console.error(e);
     }
 };
+
+export const upsertRestaurant = async restaurant => {
+    try {
+        const { data } = await restaurants.post('/', restaurant);
+
+        return data;
+    } catch (e) {
+        console.error(e);
+    }
+};
+
+export const deleteRestaurant = async restaurantId => {
+    try {
+        const { data } = await restaurants.delete(`/${restaurantId}`);
+
+        return data;
+    } catch (e) {
+        console.error(e);
+    }
+};

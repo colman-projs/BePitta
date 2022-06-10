@@ -13,7 +13,7 @@ const Group = new Schema({
     },
     users: {
         type: [{ type: Schema.Types.ObjectId, ref: 'client' }],
-        required: true,
+        // required: true,
     },
     state: {
         type: String,

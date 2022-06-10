@@ -48,10 +48,18 @@ const router = express.Router();
  */
 router.get('/', restaurantController.getRestaurants);
 
-router.get('/:restaurantId', restaurantController.getRestaurantById);
+router.get(
+    '/:restaurantId',
+    authJwt.verifyToken,
+    restaurantController.getRestaurantById,
+);
 
-router.post('/', restaurantController.upsertRestaurant);
+router.post('/', authJwt.verifyToken, restaurantController.upsertRestaurant);
 
-router.delete('/:restaurantId', restaurantController.deleteRestaurant);
+router.delete(
+    '/:restaurantId',
+    authJwt.verifyToken,
+    restaurantController.deleteRestaurant,
+);
 
 module.exports = router;

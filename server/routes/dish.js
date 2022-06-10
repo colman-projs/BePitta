@@ -28,12 +28,33 @@ const router = express.Router();
  *       responses:
  *           200:
  *               description: Dish created successfully
+ * /dishes/dishes:
+ *   post:
+ *       summary: Get dishes by IDS
+ *       description: need to provide ids to get
+ *       tags:
+ *       - dishes
+ *       requestBody:
+ *           required: true
+ *           content:
+ *               application/json:
+ *                   schema:
+ *                       $ref: '#\models\schemas\restaurant.js'
+ *       responses:
+ *           200:
+ *               description: Dishes fetched successfully
  * /dishes/dishId:
  *   get:
  *       summary: Get dish by ID
  *       description: need to provide the required restaurant ID
  *       tags:
  *       - dishes
+ *       parameters:
+ *       - in: path
+ *         name: dishId
+ *         type: string
+ *         required: true
+ *         description: dish ID
  *       responses:
  *           200:
  *               description: Get dishes completed successfully
@@ -42,6 +63,12 @@ const router = express.Router();
  *       description: need to provide the required restaurant ID
  *       tags:
  *       - dishes
+ *       parameters:
+ *       - in: path
+ *         name: dishId
+ *         type: string
+ *         required: true
+ *         description: dish ID
  *       responses:
  *           200:
  *               description: Delete dish completed successfully
@@ -49,12 +76,12 @@ const router = express.Router();
 
 router.get('/', dishController.getDishes);
 
-router.get('/:dishId', dishController.getdishById);
+router.get('/:dishId', authJwt.verifyToken, dishController.getdishById);
 
-router.post('/', dishController.upsertDish);
+router.post('/', authJwt.verifyToken, dishController.upsertDish);
 
 router.post('/dishes', dishController.getDishesByIds);
 
-router.delete('/:dishId', dishController.deleteDish);
+router.delete('/:dishId', authJwt.verifyToken, dishController.deleteDish);
 
 module.exports = router;

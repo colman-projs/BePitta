@@ -1,68 +1,80 @@
 const express = require('express');
 const clientController = require('../controllers/client');
-const authJwt = require('../middleware/authJwt');
 const router = express.Router();
 
 /**
  * @swagger
- * /groups/:
+ * /clients/:
  *   get:
- *       summary: Get groups
- *       description: need to provide the refresh token in the auth header
+ *       summary: Get clients
+ *       description:
  *       tags:
- *       - groups
+ *       - clients
  *       responses:
  *           200:
- *               description: Get groups completed successfully
+ *               description: Get clients completed successfully
+ * /clients/id:
+ *   get:
+ *       summary: Get client by ID
+ *       description:
+ *       tags:
+ *       - clients
+ *       parameters:
+ *       - in: path
+ *         name: id
+ *         type: string
+ *         required: true
+ *         description: client ID
+ *       responses:
+ *           200:
+ *               description: Get client by Id completed successfully
  *   post:
- *       summary: Create a group
+ *       summary: Create a client
  *       description: need to provide the required json
  *       tags:
- *       - groups
+ *       - clients
  *       requestBody:
  *           required: true
  *           content:
  *               application/json:
  *                   schema:
- *                       $ref: '#\models\schemas\groups.js'
+ *                       $ref: '#\models\schemas\client.js'
  *       responses:
  *           200:
- *               description: group created successfully
- * /group/groupId:
- *   get:
- *       summary: Get group by ID
- *       description: need to provide the required group ID
+ *               description: client created successfully
+ * /clients/clientId:
+ *   put:
+ *       summary: Update client by ID
+ *       description: need to provide the required client ID
  *       tags:
- *       - groups
+ *       - clients
+ *       parameters:
+ *       - in: path
+ *         name: clientId
+ *         type: string
+ *         required: true
+ *         description: client ID
+ *       requestBody:
+ *           required: true
+ *           content:
+ *               application/json:
+ *                   schema:
+ *                       $ref: '#\models\schemas\client.js'
  *       responses:
  *           200:
- *               description: Get groups completed successfully
- *   delete:
- *       summary: Delete group by ID
- *       description: need to provide the required restaurant ID
- *       tags:
- *       - groups
- *       responses:
- *           200:
- *               description: Delete group completed successfully
+ *               description: Update client completed successfuly
  */
 
 router.get('/', clientController.getClients);
 
-// router.get(
-//     '/:clientId',
-//     authJwt.verifyToken,
-//     clientController.get,
-// );
+router.get('/byGoogle/:googleId', clientController.getClientByGoogleId);
 
-router.post('/', authJwt.verifyToken, clientController.createClient);
+router.get('/:clientId', clientController.getClientById);
 
-router.put('/:clientId', authJwt.verifyToken, clientController.updateClient);
+router.post('/', clientController.createClient);
 
-// router.delete(
-//     '/:groupId',
-//     authJwt.verifyToken,
-//     clientController.deleteGroup,
-// );
+router.put('/:clientId', clientController.updateClient);
+
+router.put('/:clientId/tags', clientController.updateClientTags);
 
 module.exports = router;

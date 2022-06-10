@@ -18,9 +18,9 @@ const upsertRestaurant = async (req, res) => {
             })
             .catch(errorHandler(res));
     } else {
-        const comm = new Restaurant(req.body);
+        const res = new Restaurant(req.body);
 
-        comm.save()
+        res.save()
             .then(() => {
                 const io = getIo();
                 io.sockets.emit('updateRestaurant');
@@ -50,7 +50,7 @@ const deleteRestaurant = (req, res) => {
     Restaurant.deleteOne({ _id: req.params.restaurantId })
         .then(deleteRes => {
             const io = getIo();
-            io.sockets.emit('updateCommerical');
+            io.sockets.emit('deleteRestaurant');
             res.json(deleteRes);
         })
         .catch(errorHandler(res));

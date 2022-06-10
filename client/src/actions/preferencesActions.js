@@ -1,13 +1,8 @@
-// import authHeader from '../api/auth-header';
 import tags from '../api/preferences';
-import DataModel from '../Data.json';
 
-export const getRestaurantTagsById = async restaurantId => {
+export const getTags = async () => {
     try {
-        // const { data } = await tags.get(`/${restaurantId}`, {
-        //     headers: authHeader(),
-        // });
-        const data = DataModel;
+        const { data } = await tags.get('/');
 
         return data;
     } catch (e) {
@@ -15,9 +10,19 @@ export const getRestaurantTagsById = async restaurantId => {
     }
 };
 
-export const getRestaurantsTags = async () => {
+export const upsertTag = async tag => {
     try {
-        const { data } = await tags.get('/');
+        const { data } = await tags.post('/', tag);
+
+        return data;
+    } catch (e) {
+        console.error(e);
+    }
+};
+
+export const deleteTag = async tagId => {
+    try {
+        const { data } = await tags.delete(`/${tagId}`);
 
         return data;
     } catch (e) {
