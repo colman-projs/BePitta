@@ -22,7 +22,7 @@ const getClients = (_req, res) => {
 
 const getClientByGoogleId = (_req, res) => {
     Clients.findOne({
-        googleId: _req.params.googleId
+        googleId: _req.params.googleId,
     })
         .then(client => {
             res.send(client);
@@ -31,17 +31,17 @@ const getClientByGoogleId = (_req, res) => {
 };
 
 const getClientById = (req, res) => {
-    Clients.findById(req.params.id)
+    Clients.findOne({
+        _id: req.params.clientId,
+    })
         .then(client => {
-            res.json(client);
+            res.send(client);
         })
         .catch(errorHandler(res));
 };
 
-
 const updateClient = (req, res) => {
     const filter = { _id: req.body._id };
-
     Clients.findOneAndUpdate(filter, req.body, {
         new: true,
         upsert: true,

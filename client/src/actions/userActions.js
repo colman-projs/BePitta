@@ -28,7 +28,7 @@ export const updateUserGoogle = async (userId, googleId) => {
     }
 };
 
-export const getUserByGoogle = async (googleId) => {
+export const getUserByGoogle = async googleId => {
     try {
         const { data } = await users.get(`/byGoogle/${googleId}`);
 
@@ -50,9 +50,9 @@ export const updateUserTags = async (userId, tags) => {
     }
 };
 
-export const getUserById = async id => {
+export const getUserById = async userId => {
     try {
-        const { data } = await users.get(`/${id}`);
+        const { data } = await users.get(`/${userId}`);
 
         return data;
     } catch (e) {
