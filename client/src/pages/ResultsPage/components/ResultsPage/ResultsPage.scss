@@ -11,24 +11,32 @@
     .restaurant-logo {
         width: 6rem;
         height: auto;
-        margin-bottom: 1rem;
-        margin-top: 5rem;
+        padding: 1rem;
+    }
+
+    .results-content {
+        display: flex;
+        flex-direction: column;
+        height: 55%;
     }
 
     .title {
         /* 1 pixel black shadow to left, top, right and bottom */
         text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-
         font-family: sans;
         color: yellow;
     }
 
     .half-circle {
-        width: 18rem;
-        height: 9rem; /* as the half of the width */
+        width: 16rem;
+        height: 8rem; /* as the half of the width */
         background-color: var(--yellow-500);
-        border-bottom-left-radius: 10rem; /* 100px of height + 10px of border */
-        border-bottom-right-radius: 10rem; /* 100px of height + 10px of border */
+        border-bottom-left-radius: calc(
+            8rem + 10px
+        ); /* 100px of height + 10px of border */
+        border-bottom-right-radius: calc(
+            8rem + 10px
+        ); /* 100px of height + 10px of border */
         align-self: center;
         border-bottom: 0;
         z-index: 2;
@@ -36,6 +44,5 @@
 
     .share-button {
         margin-top: 2rem;
-        margin-bottom: 2rem;
     }
 }

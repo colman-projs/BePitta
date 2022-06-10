@@ -133,27 +133,19 @@ function ResultsPage() {
                 src={restaurant?.imageurl}
                 alt="Restaurant Logo"
             />
-            {toggleFullResults ? (
-                <FullResultsList results={results} />
-            ) : (
-                <>
-                    <Typography className="title" variant="h5">
-                        Top 3 Picks for you:
-                    </Typography>
-                    <ResultsList results={results} ref={resultsRef} />
-                    <div className="half-circle" />
-                    <Button
-                        className="share-button"
-                        onClick={handleShareResults}
-                        endIcon={<ShareIcon />}
-                        variant="contained"
-                    >
-                        <Typography variant="body1">
-                            Share Your Results
+            <div className="results-content">
+                {toggleFullResults ? (
+                    <FullResultsList results={results} />
+                ) : (
+                    <>
+                        <Typography className="title" variant="h5">
+                            Top 3 Picks for you:
                         </Typography>
-                    </Button>
-                </>
-            )}
+                        <ResultsList results={results} ref={resultsRef} />
+                        <div className="half-circle" />
+                    </>
+                )}
+            </div>
             <Button
                 onClick={() => setToggleFullResults(prevState => !prevState)}
                 startIcon={
@@ -163,11 +155,19 @@ function ResultsPage() {
                         <FormatListNumberedIcon />
                     )
                 }
-                variant="outlined"
+                variant="contained"
             >
                 <Typography variant="body1">
                     {toggleFullResults ? 'Top 3 Picks' : 'Full Results List'}
                 </Typography>
+            </Button>
+            <Button
+                className="share-button"
+                onClick={handleShareResults}
+                endIcon={<ShareIcon />}
+                variant="outlined"
+            >
+                <Typography variant="body1">Share Your Results</Typography>
             </Button>
         </div>
     );
