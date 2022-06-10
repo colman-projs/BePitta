@@ -98,8 +98,6 @@ const userLeaveGroup = async (socket, groupId, clientId) => {
 const onStartup = async () => {
     connectDB(URI);
 
-    // clientDb.deleteClients();
-
     server.listen(port, () =>
         console.log(`Server is listening on port ${port}...`),
     );
@@ -139,6 +137,9 @@ const onStartup = async () => {
                 }
             }
         });
+
+        // TODO: put in the correct place
+        // io.to(_groupId).emit('reasults-ready');
 
         socket.on('user-leave-group', function () {
             if (_clientId && _groupId) {

@@ -34,7 +34,7 @@ function GroupLobby() {
         });
 
         return () => {
-
+            socket.removeAllListeners("participants-updated");
         };
     }, []);
 

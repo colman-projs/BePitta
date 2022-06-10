@@ -21,10 +21,14 @@ function WaitingParticipants() {
 
     useEffect(() => {
         socket.on('participants-updated', (userCount, readyCount) => {
-            console.log(`recived 'users: ${userCount}, ready: ${readyCount}'`)
             setParticipants(userCount);
             setReadyParticipants(readyCount);
         });
+
+        return () => {
+            socket.removeAllListeners("participants-updated");
+            socket.removeAllListeners("reasults-ready");
+        };
     }, []);
 
     useEffect(() => {
@@ -63,14 +67,15 @@ function WaitingParticipants() {
             setIsLoadingApp(false);
         };
 
-        // If not all participants are ready
-        if (participants !== readyParticipants) return;
+        if (!groupId || !restaurantId) return;
 
-        // Load results
-        handleAllParticipantsReady();
+        socket.removeAllListeners("reasults-ready");
+        socket.on("reasults-ready", () => {
+            // Load results
+            handleAllParticipantsReady();
+        });
+
     }, [
-        participants,
-        readyParticipants,
         groupId,
         restaurantId,
         alert,
@@ -88,7 +93,7 @@ function WaitingParticipants() {
             <Typography variant="h5">
                 We have locked in your preferences!
             </Typography>
-            <Typography variant="h6">
+            {participants !== readyParticipants ? <Typography variant="h6">
                 Waiting for other participants:
                 <Typography variant="h5" className="participants">
                     <span className="ready-participants">
@@ -96,10 +101,12 @@ function WaitingParticipants() {
                     </span>
                     /{participants}
                 </Typography>
-            </Typography>
-            <Typography variant="h6">
+            </Typography> : <Typography variant="h5" className="participants">
+                Calulating Results...
+            </Typography>}
+            {participants !== readyParticipants && <Typography variant="h6">
                 We'll pick the best dishes for you when everyone is ready!
-            </Typography>
+            </Typography>}
         </div>
     );
 }
