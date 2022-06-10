@@ -22,7 +22,7 @@ const getClients = (_req, res) => {
 
 const getClientByGoogleId = (_req, res) => {
     Clients.findOne({
-        googleId: _req.params.googleId
+        googleId: _req.params.googleId,
     })
         .then(client => {
             res.send(client);
@@ -37,7 +37,6 @@ const getClientById = (req, res) => {
         })
         .catch(errorHandler(res));
 };
-
 
 const updateClient = (req, res) => {
     const filter = { _id: req.body._id };
@@ -62,6 +61,16 @@ const updateClientTags = (req, res) => {
         .catch(errorHandler(res));
 };
 
+const updateClientlikedDishes = (req, res) => {
+    const filter = { _id: req.params.userId };
+
+    Clients.findOneAndUpdate(filter, { likedDishes: req.body.dishes })
+        .then(() => {
+            res.send(true);
+        })
+        .catch(errorHandler(res));
+};
+
 module.exports = {
     getClientByGoogleId,
     createClient,
@@ -69,4 +78,5 @@ module.exports = {
     updateClient,
     updateClientTags,
     getClientById,
+    updateClientlikedDishes,
 };

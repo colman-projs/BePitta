@@ -1,8 +1,8 @@
 const Restaurant = require('../models/restaurant');
 const errorHandler = require('../globals').errorHandler;
+const dishController = require('./dish.js');
 
 const { getIo } = require('../globals');
-
 const upsertRestaurant = async (req, res) => {
     if (req.body._id) {
         const filter = { _id: req.body._id };
@@ -56,9 +56,24 @@ const deleteRestaurant = (req, res) => {
         .catch(errorHandler(res));
 };
 
+const getRestaurantDishes = (req, res) => {
+    Restaurant.findById(req.params.restaurantId)
+        .then(Restaurant => {
+            dishController
+                .getDishesByIdsPerResturant(Restaurant.dishes)
+                .then(dishes => {
+                    if (dishes) {
+                        res.json(dishes);
+                    }
+                });
+        })
+        .catch(errorHandler(res));
+};
+
 module.exports = {
     getRestaurants,
     upsertRestaurant,
     getRestaurantById,
     deleteRestaurant,
+    getRestaurantDishes,
 };

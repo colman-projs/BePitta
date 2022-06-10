@@ -62,4 +62,6 @@ router.delete(
     restaurantController.deleteRestaurant,
 );
 
+router.get('/:restaurantId/dishes', restaurantController.getRestaurantDishes);
+
 module.exports = router;

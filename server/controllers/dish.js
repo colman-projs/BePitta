@@ -65,10 +65,16 @@ const deleteDish = (req, res) => {
         .catch(errorHandler(res));
 };
 
+const getDishesByIdsPerResturant = async dishIds => {
+    const allDishes = await dish.find({ _id: [...dishIds] }).exec();
+    return allDishes;
+};
+
 module.exports = {
     getDishes,
     upsertDish,
     getdishById,
     deleteDish,
     getDishesByIds,
+    getDishesByIdsPerResturant,
 };
