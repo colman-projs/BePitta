@@ -77,4 +77,6 @@ router.put('/:clientId', clientController.updateClient);
 
 router.put('/:clientId/tags', clientController.updateClientTags);
 
+router.put('/:clientId/dishes', clientController.updateClientlikedDishes);
+
 module.exports = router;

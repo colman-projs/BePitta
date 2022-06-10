@@ -42,3 +42,12 @@ export const deleteRestaurant = async restaurantId => {
         console.error(e);
     }
 };
+
+export const getRestaurantDishes = async restaurantId => {
+    try {
+        const { data } = await restaurants.get(`/${restaurantId}/dishes`);
+        return data;
+    } catch (e) {
+        console.error(e);
+    }
+};

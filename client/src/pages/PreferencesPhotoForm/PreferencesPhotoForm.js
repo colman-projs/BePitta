@@ -6,35 +6,36 @@ import { LoadingButton } from '@mui/lab';
 import TinderCard from 'react-tinder-card';
 
 import { getRestaurantById } from '../../actions/restaurantActions';
-import { getImagesByRestaurantId } from '../../actions/imagesActions';
+import { getRestaurantDishes } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
 import { socket } from '../../socket/index';
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import './PreferencesPhotoForm.scss';
 import { UserIdContext } from '../../context/UserIdContext';
+import { getUserById, updateUserDishes } from '../../actions/userActions';
 
 function PreferencesFormPhoto() {
     const { setIsLoadingApp } = useContext(GlobalContext);
     const { userId } = useContext(UserIdContext);
     const [restaurant, setRestaurant] = useState(null);
-    const [images, setImages] = useState(null);
+    const [dishes, setDishes] = useState(null);
     let { groupId, restaurantId } = useParams();
     const navigate = useNavigate();
     const alert = useAlert();
+    let likedDishes = [];
 
     useEffect(() => {
         // Fetch restaurant IMAGES
         const fetchRestaurantImages = async () => {
             setIsLoadingApp(true);
-            const images = await getImagesByRestaurantId(restaurantId);
-
-            if (!images) {
-                alert.error('Error loading restaurant images');
+            const dishes = await getRestaurantDishes(restaurantId);
+            if (!dishes) {
+                alert.error('Error loading restaurant dishes');
                 return setIsLoadingApp(false);
             }
 
-            setImages(images);
+            setDishes(dishes);
             setIsLoadingApp(false);
         };
 
@@ -60,7 +61,7 @@ function PreferencesFormPhoto() {
         fetchRestaurant();
     }, [groupId, restaurantId, alert, setIsLoadingApp, userId]);
 
-    const handleNext = () => {
+    const handleNext = async e => {
         setIsLoadingApp(true);
 
         if (!groupId || !restaurantId) {
@@ -68,15 +69,21 @@ function PreferencesFormPhoto() {
             return;
         }
 
-        // TODO: Save user dish preferences, and then navigate to next page
-        navigate(`/groups/${groupId}/${restaurantId}/waiting`);
+        console.log('Dishes to save: ', likedDishes);
 
+        const success = await updateUserDishes(userId, likedDishes);
+
+        if (!success) {
+            alert.error('Error while updating liked dishes');
+        } else {
+            navigate(`/groups/${groupId}/${restaurantId}/waiting`);
+        }
         setIsLoadingApp(false);
     };
 
     const Swiped = (direction, index, id, url) => {
         if (direction === 'right') {
-            console.log('swiped right');
+            likedDishes.push({ _id: id });
         }
     };
 
@@ -87,8 +94,8 @@ function PreferencesFormPhoto() {
                 src={restaurant?.imageurl}
                 alt="Restaurant Logo"
             />
-            {images &&
-                images.map((image, index) => (
+            {dishes &&
+                dishes.map((image, index) => (
                     <TinderCard
                         className="swipe center"
                         key={image.id}

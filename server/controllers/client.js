@@ -62,6 +62,16 @@ const updateClientTags = (req, res) => {
         .catch(errorHandler(res));
 };
 
+const updateClientlikedDishes = (req, res) => {
+    const filter = { _id: req.params.userId };
+
+    Clients.findOneAndUpdate(filter, { likedDishes: req.body.dishes })
+        .then(() => {
+            res.send(true);
+        })
+        .catch(errorHandler(res));
+};
+
 module.exports = {
     getClientByGoogleId,
     createClient,
@@ -69,4 +79,5 @@ module.exports = {
     updateClient,
     updateClientTags,
     getClientById,
+    updateClientlikedDishes,
 };

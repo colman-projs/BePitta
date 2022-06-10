@@ -59,3 +59,15 @@ export const getUserById = async userId => {
         console.error(e);
     }
 };
+
+export const updateUserDishes = async (userId, dishes) => {
+    try {
+        const { data } = await users.put(`/${userId}/dishes`, {
+            dishes,
+        });
+
+        return data;
+    } catch (e) {
+        console.error(e);
+    }
+};
