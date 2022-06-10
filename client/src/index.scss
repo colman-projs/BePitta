@@ -1,7 +1,10 @@
 :root {
     --yellow-500: #ffeb3b;
-    --alerting-red: #a03c3c;
+    --alerting-red: #a15252;
+    --alerting-red-hover: #824242;
     --primary-color: var(--yellow-500);
+    --header-height: 3rem;
+    --app-height: calc(100% - var(--header-height));
 }
 
 #root,

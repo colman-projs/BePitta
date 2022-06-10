@@ -1,44 +1,72 @@
-const Clients = require("../models/client");
+const Clients = require('../models/client');
+const { errorHandler } = require('../globals');
 
 const createClient = async (req, res) => {
-  const client = new Clients(req.body);
+    const client = new Clients(req.body);
 
-  client
-    .save()
-    .then((result) => {
-      res.json(result._id);
-    })
-    .catch((err) => console.error(err));
-
+    client
+        .save()
+        .then(result => {
+            res.json(result._id);
+        })
+        .catch(errorHandler(res));
 };
 
 const getClients = (_req, res) => {
-  Clients.find()
-    .then((clients) => {
-      res.status(200).json(clients);
+    Clients.find()
+        .then(clients => {
+            res.status(200).json(clients);
+        })
+        .catch(errorHandler(res));
+};
+
+const getClientByGoogleId = (_req, res) => {
+    Clients.findOne({
+        googleId: _req.params.googleId
     })
-    .catch((err) => console.error(err));
+        .then(client => {
+            res.send(client);
+        })
+        .catch(errorHandler(res));
 };
 
-const deleteClients = () => {
-  Clients
-    .deleteMany()
-    .catch((err) => console.error(err));
+const getClientById = (req, res) => {
+    Clients.findById(req.params.id)
+        .then(client => {
+            res.json(client);
+        })
+        .catch(errorHandler(res));
 };
 
-const updateClient = (id, data, io) => {
 
-  const client = Clients.findOneAndUpdate({ _id: id }, data, {
-    new: true,
-    runValidators: true,
-  }).then(() => {
+const updateClient = (req, res) => {
+    const filter = { _id: req.body._id };
 
-  }).catch((err) => console.error(err));
+    Clients.findOneAndUpdate(filter, req.body, {
+        new: true,
+        upsert: true,
+    })
+        .then(() => {
+            res.send(true);
+        })
+        .catch(errorHandler(res));
+};
+
+const updateClientTags = (req, res) => {
+    const filter = { _id: req.params.userId };
+
+    Clients.findOneAndUpdate(filter, { tags: req.body.tags })
+        .then(() => {
+            res.send(true);
+        })
+        .catch(errorHandler(res));
 };
 
 module.exports = {
-  createClient,
-  getClients,
-  deleteClients,
-  updateClient,
+    getClientByGoogleId,
+    createClient,
+    getClients,
+    updateClient,
+    updateClientTags,
+    getClientById,
 };

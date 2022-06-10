@@ -5,9 +5,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { ArrowForwardIos as ArrowForwardIosIcon } from '@mui/icons-material';
 
-import { getRestaurantTagsById } from '../../actions/preferencesActions';
+import { getTags } from '../../actions/preferencesActions';
 import { getRestaurantById } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
+import { socket } from '../../socket/index';
+import { UserIdContext } from '../../context/UserIdContext';
+import { getUserById, updateUserTags } from '../../actions/userActions';
 
 import './PreferencesForm.scss';
 
@@ -15,6 +18,7 @@ function PreferencesForm() {
     const [loadingPreferencesPhoto, setLoadingPreferencesPhoto] =
         useState(false);
     const { setIsLoadingApp } = useContext(GlobalContext);
+    const { userId } = useContext(UserIdContext);
     const [restaurant, setRestaurant] = useState(null);
     const [tags, setTags] = useState(null);
     const navigate = useNavigate();
@@ -26,14 +30,25 @@ function PreferencesForm() {
         //Fetch restaurant tags
         const fetchRestaurantTags = async () => {
             setIsLoadingApp(true);
-            const tags = await getRestaurantTagsById(restaurantId);
+            const tagsRes = await getTags();
 
-            if (!tags) {
+            let user = null;
+            if (userId) {
+                user = await getUserById(userId);
+            }
+
+            if (!tagsRes) {
                 alert.error('Error loading restaurant tags');
                 return setIsLoadingApp(false);
             }
 
-            setTags(tags);
+            tagsRes.forEach(tag => {
+                if (user?.tags?.some(userTag => userTag === tag._id)) {
+                    tag = { ...tag, isActive: true };
+                }
+            });
+
+            setTags(tagsRes);
 
             setIsLoadingApp(false);
         };
@@ -52,17 +67,19 @@ function PreferencesForm() {
             setIsLoadingApp(false);
         };
 
-        if (!restaurantId) return;
+        if (!restaurantId || !groupId || !userId) return;
+
+        socket.emit('group-connect', groupId, userId);
 
         fetchRestaurantTags();
         fetchRestaurant();
-    }, [restaurantId, alert, setIsLoadingApp]);
+    }, [groupId, restaurantId, alert, setIsLoadingApp, userId]);
 
     const handleButtonClick = tagId => {
         let tempTags = JSON.parse(JSON.stringify(tags));
 
         tempTags.forEach(tag => {
-            if (tag.id === tagId) tag.Active = !tag.Active;
+            if (tag._id === tagId) tag.Active = !tag.Active;
 
             tag = { ...tag, Active: tag.Active };
         });
@@ -70,10 +87,23 @@ function PreferencesForm() {
         setTags(tempTags);
     };
 
-    const handleNext = e => {
-        setIsLoadingApp(true);
+    const handleNext = async e => {
+        setLoadingPreferencesPhoto(true);
 
-        // TODO: Save user preferences in DB
+        console.log(
+            'Tags to save: ',
+            tags.filter(tag => tag.Active).map(tag => tag._id),
+        );
+
+        const success = await updateUserTags(
+            userId,
+            tags.filter(tag => tag.Active).map(tag => tag._id),
+        );
+
+        if (!success) {
+            alert.error('Error while updating preferences');
+            return setLoadingPreferencesPhoto(false);
+        }
 
         if (!groupId) {
             alert.error('Error while loading Like/Dislike page');
@@ -81,8 +111,7 @@ function PreferencesForm() {
         }
 
         navigate(`/groups/${groupId}/${restaurantId}/likes`);
-
-        setIsLoadingApp(false);
+        setLoadingPreferencesPhoto(false);
     };
 
     return (
@@ -106,15 +135,15 @@ function PreferencesForm() {
                         xs={2}
                         sm={2}
                         md={2}
-                        key={tag.id}
+                        key={tag._id}
                         className="GridContainer"
                     >
                         <Button
-                            id={tag.id}
+                            id={tag._id}
                             type="button"
                             variant="outlined"
                             onClick={() => {
-                                handleButtonClick(tag.id);
+                                handleButtonClick(tag._id);
                             }}
                             className={
                                 tag.Active

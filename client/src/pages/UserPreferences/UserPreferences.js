@@ -4,34 +4,53 @@ import { useAlert } from 'react-alert';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { Save as SaveIcon } from '@mui/icons-material';
 
-import { getRestaurantsTags } from '../../actions/preferencesActions';
+import { getTags } from '../../actions/preferencesActions';
 import { GlobalContext } from '../../context/GlobalContext';
+import { updateUserTags, getUserById } from '../../actions/userActions';
+import { UserIdContext } from '../../context/UserIdContext';
 
 import './UserPreferences.scss';
 
 function UserPreferences() {
     const [savingTags, setSavingTags] = useState(false);
     const { setIsLoadingApp } = useContext(GlobalContext);
+    const { userId } = useContext(UserIdContext);
     const [tags, setTags] = useState([]);
     const alert = useAlert();
 
     useEffect(() => {
         const fetchTags = async () => {
             setIsLoadingApp(true);
-            const tags = await getRestaurantsTags();
+            let [tagsRes, user] = await Promise.all([
+                getTags(),
+                getUserById(userId),
+            ]);
 
-            if (!tags) {
+            if (!tagsRes) {
                 alert.error('Error loading preferences');
                 return setIsLoadingApp(false);
             }
 
-            setTags(tags);
+            if (!user) {
+                alert.error('Error loading user preferences');
+                return setIsLoadingApp(false);
+            }
+
+            tagsRes.forEach(tag => {
+                if (user?.tags?.some(userTag => userTag === tag._id)) {
+                    tag = { ...tag, isActive: true };
+                }
+            });
+
+            setTags(tagsRes);
 
             setIsLoadingApp(false);
         };
 
+        if (!userId) return;
+
         fetchTags();
-    }, [alert, setIsLoadingApp]);
+    }, [alert, setIsLoadingApp, userId]);
 
     const handleButtonClick = tagId => {
         let tempTags = JSON.parse(JSON.stringify(tags));
@@ -49,12 +68,15 @@ function UserPreferences() {
         setSavingTags(true);
 
         console.log(
-            'Liked Tags: ',
+            'Tags to save: ',
             tags.filter(tag => tag.isActive).map(tag => tag._id),
         );
-        // TODO: Call backend function to update user preferences
-        // const success = await saveUserPreferences(tags.filter(tag=> tag.isActive).map(tag => tag._id));
-        let success = false;
+
+        const success = await updateUserTags(
+            userId,
+            tags.filter(tag => tag.isActive).map(tag => tag._id),
+        );
+
         if (!success) alert.error('Error Updating preferences');
         else alert.success('Updated preferences succesfully');
 

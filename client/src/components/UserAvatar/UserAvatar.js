@@ -5,12 +5,20 @@ import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import { useNavigate } from 'react-router';
 import { ListItemIcon, Menu, MenuItem } from '@mui/material';
-import { MeetingRoom, Restaurant } from '@mui/icons-material';
+import {
+    MeetingRoom,
+    Storefront,
+    Icecream,
+    Style,
+    Settings,
+} from '@mui/icons-material';
 import { googleLogout, GoogleLogin } from '@react-oauth/google';
 import { decodeJwt } from 'jose';
 import { cookie } from '../../actions/cookieActions';
 import { UserContext } from '../../context/UserContext';
+import { UserIdContext } from '../../context/UserIdContext';
 import './UserAvatar.scss';
+import { createUser, getUserByGoogle, updateUserGoogle } from '../../actions/userActions';
 
 const StyledBadge = styled(Badge)(({ theme, connected }) => ({
     '& .MuiBadge-badge': {
@@ -32,6 +40,7 @@ const StyledBadge = styled(Badge)(({ theme, connected }) => ({
 export default function UserAvatar() {
     const [anchorEl, setAnchorEl] = useState(null);
     const { user, setUser } = useContext(UserContext);
+    const { userId, setUserId } = useContext(UserIdContext);
     const open = Boolean(anchorEl);
     let navigate = useNavigate();
 
@@ -50,9 +59,10 @@ export default function UserAvatar() {
 
     const handleSignIn = response => {
         const responsePayload = decodeJwt(response.credential);
+        const googleId = responsePayload.sub;
 
         console.group('User data');
-        console.log('ID: ' + responsePayload.sub);
+        console.log('ID: ' + googleId);
         console.log('Full Name: ' + responsePayload.name);
         console.log('Given Name: ' + responsePayload.given_name);
         console.log('Family Name: ' + responsePayload.family_name);
@@ -65,6 +75,18 @@ export default function UserAvatar() {
             cookie.siteCookies.userCradentials,
             response.credential,
         );
+
+        // Check if google already assigned
+        getUserByGoogle(googleId).then(user => {
+            if (user) {
+                // Update saved user ID
+                cookie.setCookie(cookie.siteCookies.userId, user._id);
+                setUserId(user._id);
+            } else {
+                // Connect google to user ID
+                updateUserGoogle(userId, googleId).then()
+            }
+        });
     };
 
     const handleLogout = () => {
@@ -75,6 +97,11 @@ export default function UserAvatar() {
         navigate('/');
 
         cookie.clearCookie(cookie.siteCookies.userCradentials);
+        // Create temp user
+        createUser().then(uId => {
+            cookie.setCookie(cookie.siteCookies.userId, uId);
+            setUserId(uId);
+        });
     };
 
     return (
@@ -94,40 +121,7 @@ export default function UserAvatar() {
                 </StyledBadge>
             </Stack>
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-                {user && (
-                    <MenuItem
-                        style={{ pointerEvents: 'none', cursor: 'default' }}
-                    >
-                        Hey {user.name}
-                    </MenuItem>
-                )}
-                {user && (
-                    <MenuItem
-                        onClick={() => {
-                            navigate('/user/preferences');
-                            handleClose();
-                        }}
-                    >
-                        <ListItemIcon>
-                            <Restaurant />
-                        </ListItemIcon>
-                        Preferences
-                    </MenuItem>
-                )}
-                {user ? (
-                    <MenuItem
-                        className="logout-item"
-                        onClick={() => {
-                            handleLogout();
-                            handleClose();
-                        }}
-                    >
-                        <ListItemIcon>
-                            <MeetingRoom />
-                        </ListItemIcon>
-                        Logout
-                    </MenuItem>
-                ) : (
+                {!user && (
                     <MenuItem
                         onClick={() => {
                             handleClose();
@@ -142,6 +136,73 @@ export default function UserAvatar() {
                                 useOneTap
                             />
                         </ListItemIcon>
+                    </MenuItem>
+                )}
+                {user && (
+                    <MenuItem
+                        style={{ pointerEvents: 'none', cursor: 'default' }}
+                    >
+                        Hey {user.name}
+                    </MenuItem>
+                )}
+                <MenuItem
+                    onClick={() => {
+                        navigate('/admin/restaurants');
+                        handleClose();
+                    }}
+                >
+                    <ListItemIcon>
+                        <Storefront />
+                    </ListItemIcon>
+                    Manage Restaurants
+                </MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        navigate('/admin/dishes');
+                        handleClose();
+                    }}
+                >
+                    <ListItemIcon>
+                        <Icecream />
+                    </ListItemIcon>
+                    Manage Dishes
+                </MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        navigate('/admin/tags');
+                        handleClose();
+                    }}
+                >
+                    <ListItemIcon>
+                        <Style />
+                    </ListItemIcon>
+                    Manage Tags
+                </MenuItem>
+                {user && (
+                    <MenuItem
+                        onClick={() => {
+                            navigate('/user/preferences');
+                            handleClose();
+                        }}
+                    >
+                        <ListItemIcon>
+                            <Settings />
+                        </ListItemIcon>
+                        Preferences
+                    </MenuItem>
+                )}
+                {user && (
+                    <MenuItem
+                        className="logout-item"
+                        onClick={() => {
+                            handleLogout();
+                            handleClose();
+                        }}
+                    >
+                        <ListItemIcon>
+                            <MeetingRoom />
+                        </ListItemIcon>
+                        Logout
                     </MenuItem>
                 )}
             </Menu>

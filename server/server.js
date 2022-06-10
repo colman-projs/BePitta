@@ -18,6 +18,7 @@ const URI =
 const app = express();
 
 const http = require('http');
+const { groupDAL } = require('./controllers/group');
 const server = http.createServer(app);
 const io = require('socket.io')(server, {
     cors: {
@@ -26,6 +27,8 @@ const io = require('socket.io')(server, {
 });
 
 setIo(io);
+
+const { setIoForUser } = require('./socket_logic');
 
 //Set the port
 const port = 3000;
@@ -66,59 +69,11 @@ app.use(routes);
 const onStartup = async () => {
     connectDB(URI);
 
-    // clientDb.deleteClients();
-
     server.listen(port, () =>
         console.log(`Server is listening on port ${port}...`),
     );
 
-    let groups = {};
-
-    io.on('connect', function (socket) {
-        let _groupId = null;
-        let userStartPrefernces = false;
-
-        socket.on('group-connect', function (groupId) {
-
-            _groupId = groupId;
-
-            if (userStartPrefernces) {
-                userStartPrefernces = false;
-            } else {
-
-                if (!groups[groupId]) {
-                    groups[groupId] = {
-                        members: 1
-                    }
-                } else {
-                    groups[groupId].members++;
-                }
-
-                socket.join(groupId);
-
-            }
-
-            if (groups[groupId]) {
-                io.to(groupId).emit("participants-updated", groups[groupId].members);
-            }
-        });
-
-        socket.on('user-leave-group', function () {
-            if (groups[_groupId] && !userStartPrefernces) {
-                io.to(_groupId).emit("participants-updated", --groups[_groupId].members);
-            }
-        });
-
-        socket.on('user-start-prefernces', function () {
-            userStartPrefernces = true;
-        });
-
-        socket.on('disconnect', function () {
-            if (groups[_groupId]) {
-                io.to(_groupId).emit("participants-updated", --groups[_groupId].members);
-            }
-        });
-    });
+    setIoForUser();
 };
 
 onStartup();

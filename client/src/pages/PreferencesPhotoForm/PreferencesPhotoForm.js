@@ -8,12 +8,15 @@ import TinderCard from 'react-tinder-card';
 import { getRestaurantById } from '../../actions/restaurantActions';
 import { getImagesByRestaurantId } from '../../actions/imagesActions';
 import { GlobalContext } from '../../context/GlobalContext';
+import { socket } from '../../socket/index';
 
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import './PreferencesPhotoForm.scss';
+import { UserIdContext } from '../../context/UserIdContext';
 
 function PreferencesFormPhoto() {
     const { setIsLoadingApp } = useContext(GlobalContext);
+    const { userId } = useContext(UserIdContext);
     const [restaurant, setRestaurant] = useState(null);
     const [images, setImages] = useState(null);
     let { groupId, restaurantId } = useParams();
@@ -49,11 +52,13 @@ function PreferencesFormPhoto() {
             setIsLoadingApp(false);
         };
 
-        if (!restaurantId) return;
+        if (!restaurantId || !groupId || !userId) return;
+
+        socket.emit('group-connect', groupId, userId);
 
         fetchRestaurantImages();
         fetchRestaurant();
-    }, [restaurantId, alert, setIsLoadingApp]);
+    }, [groupId, restaurantId, alert, setIsLoadingApp, userId]);
 
     const handleNext = () => {
         setIsLoadingApp(true);
@@ -63,7 +68,7 @@ function PreferencesFormPhoto() {
             return;
         }
 
-        // TODO: Save user dish preferences
+        // TODO: Save user dish preferences, and then navigate to next page
 
         navigate(`/groups/${groupId}/${restaurantId}/waiting`);
 
