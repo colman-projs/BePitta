@@ -7,6 +7,7 @@ import { Button, Typography } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import { useAlert } from 'react-alert';
 import LoadingButton from '@mui/lab/LoadingButton';
+import QRCode from 'qrcode.react';
 
 import { getRestaurantById } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
@@ -34,7 +35,7 @@ function GroupLobby() {
         });
 
         return () => {
-            socket.removeAllListeners("participants-updated");
+            socket.removeAllListeners('participants-updated');
         };
     }, []);
 
@@ -99,11 +100,19 @@ function GroupLobby() {
                 src={restaurant?.imageurl}
                 alt="Restaurant Logo"
             />
-            <Typography variant="h5">Group {group?.name}</Typography>
-            <Typography variant="h5">
+            <Typography variant="h6">
+                Group <i className="group-name">{group?.name}</i>
+            </Typography>
+            <Typography variant="h6">
                 Participants:
                 <i className="amount">{participants}</i>
             </Typography>
+            <QRCode
+                id="group-qr-code"
+                value={window.location.href}
+                size={230}
+                level={'H'}
+            />
             <Button onClick={handleShareLink} endIcon={<ShareIcon />}>
                 <Typography variant="h6">Invite Friends </Typography>
             </Button>
@@ -116,7 +125,7 @@ function GroupLobby() {
                 endIcon={<PreferencesIcon />}
                 loadingPosition="end"
             >
-                <Typography variant="h6">Preferences</Typography>
+                <Typography variant="h7">Preferences</Typography>
             </LoadingButton>
         </div>
     );
