@@ -13,7 +13,7 @@ const upsertGroup = async (req, res) => {
         })
             .then(() => {
                 const io = getIo();
-                io.sockets.emit('updateRestaurant');
+                io.sockets.emit('updateGroups');
                 res.send(true);
             })
             .catch(errorHandler(res));
@@ -23,7 +23,7 @@ const upsertGroup = async (req, res) => {
         group.save()
             .then(() => {
                 const io = getIo();
-                io.sockets.emit('updateRestaurants');
+                io.sockets.emit('updateGroups');
                 res.json(group);
             })
             .catch(errorHandler(res));
@@ -61,11 +61,39 @@ const resetGroups = async () => {
     // await Commercial.deleteMany();
 };
 
+const groupDAL = {
+
+    getGroupById: async (groupId) => {
+        return await Group.findById(groupId).populate('users').exec();
+    },
+
+    addUserToGroup: async (groupId, userId) => {
+        try {
+            await Group.findOneAndUpdate({ _id: groupId }, {
+                $addToSet: { users: userId }
+            }).exec();
+        } catch (ex) {
+
+        }
+    },
+
+    removeUserFromGroup: async (groupId, userId) => {
+        try {
+            await Group.findOneAndUpdate({ _id: groupId }, {
+                $pull: { users: userId }
+            }).exec();
+        } catch (ex) {
+
+        }
+    }
+}
+
 
 module.exports = {
     getGroups,
     upsertGroup,
-    getgroupById: getGroupById,
+    getGroupById,
     deleteGroup,
     resetGroups,
+    groupDAL
 };

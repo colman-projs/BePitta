@@ -8,13 +8,16 @@ import { ArrowForwardIos as ArrowForwardIosIcon } from '@mui/icons-material';
 import { getTags } from '../../actions/preferencesActions';
 import { getRestaurantById } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
+import { socket } from '../../socket/index';
 
 import './PreferencesForm.scss';
+import { UserIdContext } from '../../context/UserIdContext';
 
 function PreferencesForm() {
     const [loadingPreferencesPhoto, setLoadingPreferencesPhoto] =
         useState(false);
     const { setIsLoadingApp } = useContext(GlobalContext);
+    const { userId } = useContext(UserIdContext);
     const [restaurant, setRestaurant] = useState(null);
     const [tags, setTags] = useState(null);
     const navigate = useNavigate();
@@ -52,11 +55,13 @@ function PreferencesForm() {
             setIsLoadingApp(false);
         };
 
-        if (!restaurantId) return;
+        if (!restaurantId || !groupId || !userId) return;
+
+        socket.emit('group-connect', groupId, userId);
 
         fetchRestaurantTags();
         fetchRestaurant();
-    }, [restaurantId, alert, setIsLoadingApp]);
+    }, [groupId, restaurantId, alert, setIsLoadingApp, userId]);
 
     const handleButtonClick = tagId => {
         let tempTags = JSON.parse(JSON.stringify(tags));

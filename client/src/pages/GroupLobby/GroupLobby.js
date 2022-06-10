@@ -10,6 +10,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 
 import { getRestaurantById } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
+import { UserIdContext } from '../../context/UserIdContext';
 
 import './GroupLobby.scss';
 import { socket } from '../../socket/index';
@@ -21,18 +22,19 @@ function GroupLobby() {
     const [group, setGroup] = useState(null);
     const [participants, setParticipants] = useState(0);
     const { setIsLoadingApp } = useContext(GlobalContext);
+    const { userId } = useContext(UserIdContext);
     const navigate = useNavigate();
     const alert = useAlert();
 
     let { groupId, restaurantId } = useParams();
 
     useEffect(() => {
-        socket.on('participants-updated', userCount => {
+        socket.on('participants-updated', (userCount, readyCount) => {
             setParticipants(userCount);
         });
 
         return () => {
-            socket.emit('user-leave-group');
+            socket.removeAllListeners("participants-updated");
         };
     }, []);
 
@@ -52,18 +54,18 @@ function GroupLobby() {
                 return setIsLoadingApp(false);
             }
 
-            socket.emit('group-connect', groupId);
-
             setParticipants(1);
             setRestaurant(res);
             setGroup(grp);
             setIsLoadingApp(false);
         };
 
-        if (!restaurantId) return;
+        if (!restaurantId || !groupId || !userId) return;
+
+        socket.emit('group-connect', groupId, userId);
 
         fetchRestaurant();
-    }, [groupId, restaurantId, alert, setIsLoadingApp]);
+    }, [userId, groupId, restaurantId, alert, setIsLoadingApp]);
 
     const handleStart = e => {
         setLoadingPreferences(true);
@@ -74,8 +76,6 @@ function GroupLobby() {
             alert.error('Error while loading prefernces page');
             return setLoadingPreferences(false);
         }
-
-        socket.emit('user-start-prefernces');
 
         navigate(`/groups/${groupId}/${restaurantId}/preferences`);
 
