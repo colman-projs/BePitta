@@ -11,6 +11,7 @@ import {
     Icecream,
     Style,
     Settings,
+    Groups,
 } from '@mui/icons-material';
 import { googleLogout, GoogleLogin } from '@react-oauth/google';
 import { decodeJwt } from 'jose';
@@ -140,6 +141,17 @@ export default function UserAvatar() {
                         Hey {user.name}
                     </MenuItem>
                 )}
+                <MenuItem
+                    onClick={() => {
+                        navigate('/');
+                        handleClose();
+                    }}
+                >
+                    <ListItemIcon>
+                        <Groups />
+                    </ListItemIcon>
+                    New Group
+                </MenuItem>
                 <MenuItem
                     onClick={() => {
                         navigate('/admin/restaurants');

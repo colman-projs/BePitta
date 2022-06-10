@@ -4,16 +4,10 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid grey;
-    padding: 0.5rem 0;
     height: var(--header-height);
 
-    .logo {
-        margin-left: auto;
-
-        img {
-            width: 5rem;
-            height: auto;
-        }
+    .user-avatar {
+        margin-right: 1rem;
+        margin-top: 1rem;
     }
 }
