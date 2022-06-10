@@ -24,6 +24,7 @@ function PreferencesFormPhoto() {
     const navigate = useNavigate();
     const alert = useAlert();
     let likedDishes = [];
+    let PhotosCounter = 0;
 
     useEffect(() => {
         // Fetch restaurant IMAGES
@@ -82,8 +83,13 @@ function PreferencesFormPhoto() {
     };
 
     const Swiped = (direction, index, id, url) => {
+        PhotosCounter++;
         if (direction === 'right') {
             likedDishes.push({ _id: id });
+        }
+
+        if (PhotosCounter == dishes.length) {
+            handleNext();
         }
     };
 
@@ -100,11 +106,13 @@ function PreferencesFormPhoto() {
                         className="swipe center"
                         key={image.id}
                         preventSwipe={['up', 'down']}
-                        onSwipe={dir => Swiped(dir, index, image.id, image.src)}
+                        onSwipe={dir =>
+                            Swiped(dir, index, image._id, image.src)
+                        }
                     >
                         <div
                             style={{
-                                backgroundImage: `url(${image.src})`,
+                                backgroundImage: `url(${image.imageUrl})`,
                             }}
                             className="card"
                         >
