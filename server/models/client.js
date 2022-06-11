@@ -11,6 +11,9 @@ const Client = new mongoose.Schema({
     likedDishes: {
         type: [{ type: Schema.Types.ObjectId, ref: 'dish' }],
     },
+    isReady: {
+        type: Boolean,
+    },
 });
 
 module.exports = mongoose.model('client', Client);
