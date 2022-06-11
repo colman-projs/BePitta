@@ -25,7 +25,7 @@ function ResultsPage() {
     const [toggleFullResults, setToggleFullResults] = useState(false);
     const [loadingRecommendations, setLoadingRecommendations] = useState(false);
     let { restaurantId, groupId } = useParams();
-    const { setIsLoadingApp } = useContext(GlobalContext);
+    const { setIsLoadingApp, isLoadingApp } = useContext(GlobalContext);
     const alert = useAlert();
 
     useEffect(() => {
@@ -129,7 +129,7 @@ function ResultsPage() {
     };
 
     const renderRecommendations = () => {
-        if (!results.length)
+        if (!results.length && !isLoadingApp)
             return (
                 <>
                     <img
