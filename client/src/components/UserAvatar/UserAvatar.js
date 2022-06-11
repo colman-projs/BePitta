@@ -64,7 +64,6 @@ export default function UserAvatar() {
     const handleSignIn = response => {
         const responsePayload = decodeJwt(response.credential);
         const googleId = responsePayload.sub;
-        console.groupEnd();
 
         setUser(responsePayload);
         cookie.setCookie(
@@ -117,7 +116,7 @@ export default function UserAvatar() {
                 </StyledBadge>
             </Stack>
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-                {!user && (
+                {!user ? (
                     <MenuItem
                         onClick={() => {
                             handleClose();
@@ -133,8 +132,7 @@ export default function UserAvatar() {
                             />
                         </ListItemIcon>
                     </MenuItem>
-                )}
-                {user && (
+                ) : (
                     <MenuItem
                         style={{ pointerEvents: 'none', cursor: 'default' }}
                     >
@@ -152,40 +150,40 @@ export default function UserAvatar() {
                     </ListItemIcon>
                     New Group
                 </MenuItem>
-                <MenuItem
-                    onClick={() => {
-                        navigate('/admin/restaurants');
-                        handleClose();
-                    }}
-                >
-                    <ListItemIcon>
-                        <Storefront />
-                    </ListItemIcon>
-                    Manage Restaurants
-                </MenuItem>
-                <MenuItem
-                    onClick={() => {
-                        navigate('/admin/dishes');
-                        handleClose();
-                    }}
-                >
-                    <ListItemIcon>
-                        <Icecream />
-                    </ListItemIcon>
-                    Manage Dishes
-                </MenuItem>
-                <MenuItem
-                    onClick={() => {
-                        navigate('/admin/tags');
-                        handleClose();
-                    }}
-                >
-                    <ListItemIcon>
-                        <Style />
-                    </ListItemIcon>
-                    Manage Tags
-                </MenuItem>
-                {user && (
+                {user && (<>
+                    <MenuItem
+                        onClick={() => {
+                            navigate('/admin/restaurants');
+                            handleClose();
+                        }}
+                    >
+                        <ListItemIcon>
+                            <Storefront />
+                        </ListItemIcon>
+                        Manage Restaurants
+                    </MenuItem>
+                    <MenuItem
+                        onClick={() => {
+                            navigate('/admin/dishes');
+                            handleClose();
+                        }}
+                    >
+                        <ListItemIcon>
+                            <Icecream />
+                        </ListItemIcon>
+                        Manage Dishes
+                    </MenuItem>
+                    <MenuItem
+                        onClick={() => {
+                            navigate('/admin/tags');
+                            handleClose();
+                        }}
+                    >
+                        <ListItemIcon>
+                            <Style />
+                        </ListItemIcon>
+                        Manage Tags
+                    </MenuItem>
                     <MenuItem
                         onClick={() => {
                             navigate('/user/preferences');
@@ -197,8 +195,6 @@ export default function UserAvatar() {
                         </ListItemIcon>
                         Preferences
                     </MenuItem>
-                )}
-                {user && (
                     <MenuItem
                         className="logout-item"
                         onClick={() => {
@@ -211,7 +207,7 @@ export default function UserAvatar() {
                         </ListItemIcon>
                         Logout
                     </MenuItem>
-                )}
+                </>)}
             </Menu>
         </div>
     );
