@@ -84,7 +84,7 @@ function ResultsPage() {
 
                 if (!currDish) return;
 
-                dishRes.percentage = currDish.match * 100;
+                dishRes.percentage = currDish.match;
             });
 
             setResults(dishesRes);
