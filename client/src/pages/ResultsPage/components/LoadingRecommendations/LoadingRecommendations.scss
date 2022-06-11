@@ -1,0 +1,18 @@
+.loading-recommendations {
+    .logo {
+        margin-bottom: 1rem;
+        width: 7rem;
+        height: auto;
+        animation: spin 2s linear infinite;
+        border-radius: 50%;
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+}

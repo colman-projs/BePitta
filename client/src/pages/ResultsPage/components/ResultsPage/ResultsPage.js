@@ -14,6 +14,7 @@ import { GlobalContext } from '../../../../context/GlobalContext';
 import FullResultsList from '../FullResultsList/FullResultsList';
 import { getRestaurantById } from '../../../../actions/restaurantActions';
 import { getRecommendations } from '../../../../actions/recommenderActions';
+import LoadingRecommendations from '../LoadingRecommendations/LoadingRecommendations';
 
 import './ResultsPage.scss';
 
@@ -23,24 +24,25 @@ function ResultsPage() {
     const [results, setResults] = useState([]);
     const [restaurant, setRestaurant] = useState(null);
     const [toggleFullResults, setToggleFullResults] = useState(false);
+    const [loadingRecommendations, setLoadingRecommendations] = useState(false);
     let { restaurantId, groupId } = useParams();
     const { setIsLoadingApp } = useContext(GlobalContext);
     const alert = useAlert();
 
     useEffect(() => {
         const fetchRecommendations = async () => {
-            setIsLoadingApp(true);
+            setLoadingRecommendations(true);
 
             const dishesRecommendations = await getRecommendations(groupId);
 
-            if (!dishesRecommendations) {
+            if (!dishesRecommendations?.dishes) {
                 alert.error('Error loading recommendations');
                 return setIsLoadingApp(false);
             }
 
-            setDishes(dishesRecommendations);
+            setDishes(dishesRecommendations.dishes);
 
-            setIsLoadingApp(false);
+            setLoadingRecommendations(false);
         };
 
         if (!groupId) return;
@@ -90,6 +92,8 @@ function ResultsPage() {
             setIsLoadingApp(false);
         };
 
+        if (!dishes.length) return;
+
         fetchDishesByIds();
     }, [setIsLoadingApp, alert, dishes]);
 
@@ -125,49 +129,77 @@ function ResultsPage() {
         });
     };
 
+    const renderRecommendations = () => {
+        if (!results.length)
+            return (
+                <>
+                    <img
+                        className="restaurant-logo"
+                        src={restaurant?.imageurl}
+                        alt="Restaurant Logo"
+                    />
+                    <Typography variant="h6">
+                        We couldn't pick any recommendations for you
+                    </Typography>
+                </>
+            );
+
+        return (
+            <>
+                <img
+                    className="restaurant-logo"
+                    src={restaurant?.imageurl}
+                    alt="Restaurant Logo"
+                />
+                <div className="results-content">
+                    {toggleFullResults ? (
+                        <FullResultsList results={results} />
+                    ) : (
+                        <>
+                            <Typography className="title" variant="h5">
+                                Top Picks For You:
+                            </Typography>
+                            <ResultsList results={results} ref={resultsRef} />
+                            <div className="half-circle" />
+                        </>
+                    )}
+                </div>
+                <Button
+                    onClick={() =>
+                        setToggleFullResults(prevState => !prevState)
+                    }
+                    startIcon={
+                        toggleFullResults ? (
+                            <StarIcon />
+                        ) : (
+                            <FormatListNumberedIcon />
+                        )
+                    }
+                    variant="contained"
+                >
+                    <Typography variant="body1">
+                        {toggleFullResults ? 'Top Picks' : 'Full Results List'}
+                    </Typography>
+                </Button>
+                <Button
+                    className="share-button"
+                    onClick={handleShareResults}
+                    endIcon={<ShareIcon />}
+                    variant="outlined"
+                >
+                    <Typography variant="body1">Share Your Results</Typography>
+                </Button>
+            </>
+        );
+    };
+
     return (
         <div className="results-page">
-            <img
-                className="restaurant-logo"
-                src={restaurant?.imageurl}
-                alt="Restaurant Logo"
-            />
-            <div className="results-content">
-                {toggleFullResults ? (
-                    <FullResultsList results={results} />
-                ) : (
-                    <>
-                        <Typography className="title" variant="h5">
-                            Top 3 Picks for you:
-                        </Typography>
-                        <ResultsList results={results} ref={resultsRef} />
-                        <div className="half-circle" />
-                    </>
-                )}
-            </div>
-            <Button
-                onClick={() => setToggleFullResults(prevState => !prevState)}
-                startIcon={
-                    toggleFullResults ? (
-                        <StarIcon />
-                    ) : (
-                        <FormatListNumberedIcon />
-                    )
-                }
-                variant="contained"
-            >
-                <Typography variant="body1">
-                    {toggleFullResults ? 'Top 3 Picks' : 'Full Results List'}
-                </Typography>
-            </Button>
-            <Button
-                className="share-button"
-                onClick={handleShareResults}
-                endIcon={<ShareIcon />}
-                variant="outlined"
-            >
-                <Typography variant="body1">Share Your Results</Typography>
-            </Button>
+            {loadingRecommendations ? (
+                <LoadingRecommendations />
+            ) : (
+                renderRecommendations()
+            )}
         </div>
     );
 }
