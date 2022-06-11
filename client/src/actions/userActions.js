@@ -60,10 +60,11 @@ export const getUserById = async userId => {
     }
 };
 
-export const updateUserDishes = async (userId, dishes) => {
+export const updateUserDishes = async (userId, dishes, prefDone = false) => {
     try {
         const { data } = await users.put(`/${userId}/dishes`, {
             dishes,
+            prefDone
         });
 
         return data;

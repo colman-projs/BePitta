@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useRef } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { useAlert } from 'react-alert';
 import { Button, Typography } from '@mui/material';
@@ -84,7 +84,7 @@ function ResultsPage() {
 
                 if (!currDish) return;
 
-                dishRes.percentage = currDish.match * 100;
+                dishRes.percentage = currDish.match;
             });
 
             setResults(dishesRes);

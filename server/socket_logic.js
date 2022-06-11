@@ -1,5 +1,6 @@
 const { getIo } = require('./globals');
 const { groupDAL } = require('./controllers/group');
+const { updateUsersNotReadyByGroup } = require('./controllers/client');
 
 const io = getIo();
 
@@ -16,6 +17,10 @@ const participantsUpdated = (groupId, users) => {
 
     if (users.length == waitingUsers.length) {
         // TODO: Calculate recommendation, save, and then emit('reasults-ready')
+
+        // Update all users to isReady false
+        updateUsersNotReadyByGroup(groupId);
+
         io.to(groupId).emit('reasults-ready');
     }
 };
