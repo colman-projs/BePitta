@@ -1,6 +1,5 @@
 const express = require('express');
 const recommenderController = require('../controllers/recommender');
-const authJwt = require('../middleware/authJwt');
 const router = express.Router();
 
 /**
@@ -11,6 +10,12 @@ const router = express.Router();
  *       description: Get the recommendation for a group
  *       tags:
  *       - Recommender
+ *       parameters:
+ *       - in: path
+ *         name: groupId
+ *         type: string
+ *         required: true
+ *         description: group ID
  *       responses:
  *           200:
  *               description: Get recommendation completed successfully
@@ -18,10 +23,6 @@ const router = express.Router();
  *               description: The request is invalid
  */
 
-router.get(
-    '/:groupId',
-    //authJwt.verifyToken,
-    recommenderController.getRecommendation,
-);
+router.get('/:groupId', recommenderController.getRecommendation);
 
 module.exports = router;

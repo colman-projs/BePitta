@@ -13,16 +13,9 @@ import { getDishesByIds } from '../../../../actions/dishesActions';
 import { GlobalContext } from '../../../../context/GlobalContext';
 import FullResultsList from '../FullResultsList/FullResultsList';
 import { getRestaurantById } from '../../../../actions/restaurantActions';
+import { getRecommendations } from '../../../../actions/recommenderActions';
 
 import './ResultsPage.scss';
-
-const dishesBenda = [
-    {
-        id: '629202c76a579f0257f7aadb',
-        match: 0.92,
-        users: [1, 3],
-    },
-];
 
 function ResultsPage() {
     const resultsRef = useRef();
@@ -30,16 +23,30 @@ function ResultsPage() {
     const [results, setResults] = useState([]);
     const [restaurant, setRestaurant] = useState(null);
     const [toggleFullResults, setToggleFullResults] = useState(false);
-    let { restaurantId } = useParams();
+    let { restaurantId, groupId } = useParams();
+    const { setIsLoadingApp } = useContext(GlobalContext);
     const alert = useAlert();
 
-    const { setIsLoadingApp } = useContext(GlobalContext);
-
     useEffect(() => {
-        // TODO: Call calculating algorithem to calculate final results
-        // await getFinalResults(groupId)
-        setDishes(dishesBenda);
-    }, []);
+        const fetchRecommendations = async () => {
+            setIsLoadingApp(true);
+
+            const dishesRecommendations = await getRecommendations(groupId);
+
+            if (!dishesRecommendations) {
+                alert.error('Error loading recommendations');
+                return setIsLoadingApp(false);
+            }
+
+            setDishes(dishesRecommendations);
+
+            setIsLoadingApp(false);
+        };
+
+        if (!groupId) return;
+
+        fetchRecommendations();
+    }, [groupId, alert, setIsLoadingApp]);
 
     useEffect(() => {
         // Fetch restaurant details
@@ -79,15 +86,7 @@ function ResultsPage() {
                 dishRes.percentage = currDish.match * 100;
             });
 
-            setResults([
-                ...dishesRes,
-                ...dishesRes,
-                ...dishesRes,
-                ...dishesRes,
-                ...dishesRes,
-                ...dishesRes,
-                ...dishesRes,
-            ]);
+            setResults(dishesRes);
             setIsLoadingApp(false);
         };
 
