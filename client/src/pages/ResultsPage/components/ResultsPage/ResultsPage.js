@@ -19,7 +19,6 @@ import LoadingRecommendations from '../LoadingRecommendations/LoadingRecommendat
 import './ResultsPage.scss';
 
 function ResultsPage() {
-    const resultsRef = useRef();
     const [dishes, setDishes] = useState([]);
     const [results, setResults] = useState([]);
     const [restaurant, setRestaurant] = useState(null);
@@ -159,7 +158,7 @@ function ResultsPage() {
                             <Typography className="title" variant="h5">
                                 Top Picks For You:
                             </Typography>
-                            <ResultsList results={results} ref={resultsRef} />
+                            <ResultsList results={results} />
                             <div className="half-circle" />
                         </>
                     )}

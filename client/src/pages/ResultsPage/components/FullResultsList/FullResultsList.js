@@ -9,7 +9,7 @@ function FullResultsList({ results }) {
             {results
                 .sort((r1, r2) => r2.percentage - r1.percentage)
                 .map(result => (
-                    <SingleResultFull {...result} />
+                    <SingleResultFull key={result._id} {...result} />
                 ))}
         </div>
     );
