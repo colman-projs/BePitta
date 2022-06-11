@@ -2,49 +2,56 @@
     display: flex;
     flex-direction: column;
     text-align: center;
+    margin-top: 6rem;
 
     .restaurant-logo {
-        width: 7rem;
+        width: 6rem;
+        height: auto;
+        place-self: center;
+        margin-bottom: 3rem;
+    }
+
+    .title {
+        margin-bottom: 1rem;
+    }
+
+    .GridContainer {
+        // width: 1rem;
         height: auto;
         place-self: center;
     }
 
-    .GridContainer {
-        width : 1rem;
-        height : auto;
-        place-self: center;
-    }
-
-    .Grid{
-        width: 10rem;
+    .Grid {
+        width: 16rem;
         place-self: center;
     }
 
     .ButtonContainer {
-        width : 4rem;
+        font-size: 1.25rem;
+        text-align: center;
+        width: 6rem;
         display: inline-block;
         border-radius: 1rem;
         opacity: 0.3;
-        :hover{
-            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 12px 20px 0 rgba(0,0,0,0.19);
+        :hover {
+            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2),
+                0 12px 20px 0 rgba(0, 0, 0, 0.19);
         }
-      
     }
 
-    .ButtonContaineractive{
-           opacity: 1;
-           width : 4rem;
-           display: inline-block;
-           border-radius: 1rem;
-       }
+    .ButtonContaineractive {
+        font-size: 1.25rem;
+        text-align: center;
+        opacity: 1;
+        width: 6rem;
+        display: inline-block;
+        border-radius: 1rem;
+    }
 
-       .next-button {
+    .next-button {
         margin-top: 1rem;
         font-weight: bold;
-        padding: 1rem;
-        height: 1.5rem;
-        width: 5rem;
         align-self: center;
+        font-size: 1.5rem;
     }
 }
-

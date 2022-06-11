@@ -115,14 +115,15 @@ function PreferencesForm() {
     };
 
     return (
-        <div className="preferences-form center">
+        <div className="preferences-form">
             <img
                 className="restaurant-logo"
                 src={restaurant?.imageurl}
                 alt="Restaurant Logo"
             />
-            <Typography variant="h5">Preferences:</Typography>
-
+            <Typography className="title" variant="h5">
+                Preferences:
+            </Typography>
             <Grid
                 container
                 spacing={{ xs: 1, md: 1 }}

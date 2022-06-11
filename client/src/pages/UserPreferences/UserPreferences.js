@@ -85,7 +85,9 @@ function UserPreferences() {
 
     return (
         <div className="user-preferences-form center">
-            <Typography variant="h5">My Preferences:</Typography>
+            <Typography className="title" variant="h5">
+                My Preferences:
+            </Typography>
             <Grid
                 container
                 spacing={{ xs: 1, md: 1 }}
