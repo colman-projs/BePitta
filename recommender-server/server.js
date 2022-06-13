@@ -51,13 +51,10 @@ const specs = swaggerJsDoc(options);
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
 
 //Set routes
-
 app.use(routes);
 
 const onStartup = async () => {
     connectDB(URI);
-
-    // clientDb.deleteClients();
 
     server.listen(port, () =>
         console.log(`Recommender server is listening on port ${port}...`),

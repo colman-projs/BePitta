@@ -1,7 +1,10 @@
+require('../models/client');
+require('../models/dish');
+require('../models/tag');
 const errorHandler = require('../globals').errorHandler;
-
 const Group = require('../models/group');
 const Restaurant = require('../models/restaurant');
+
 const { calculateScores } = require('../recommenderUtils');
 
 const getRecommendations = async (req, res) => {
