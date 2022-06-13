@@ -36,7 +36,7 @@ function ResultsPage() {
 
             if (!dishesRecommendations?.dishes) {
                 alert.error('Error loading recommendations');
-                return setIsLoadingApp(false);
+                return setLoadingRecommendations(false);
             }
 
             setDishes(dishesRecommendations.dishes);
