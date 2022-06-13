@@ -125,7 +125,7 @@ function GroupLobby() {
                 loadingPosition="end"
                 className="preferneces-button"
             >
-                <Typography variant="h7">Preferences</Typography>
+                Preferences
             </LoadingButton>
         </div>
     );

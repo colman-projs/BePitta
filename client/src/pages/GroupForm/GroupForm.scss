@@ -11,7 +11,12 @@
     .create-group-button {
         margin-top: 1rem;
         font-weight: bold;
-        padding: 1.5rem;
+        padding: 1rem;
+        font-size: 1.5rem;
+
+        svg {
+            font-size: 1.5rem;
+        }
     }
 
     .group-name {

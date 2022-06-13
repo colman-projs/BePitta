@@ -1,4 +1,4 @@
-import { MenuItem, TextField, Typography } from '@mui/material';
+import { MenuItem, TextField } from '@mui/material';
 import { Group as GroupIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import React, { useContext, useEffect, useState } from 'react';
@@ -8,11 +8,11 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import LogoWithText from '../../assets/images/LogoWithText.png';
 import { getRestaurants } from '../../actions/restaurantActions';
 import { GlobalContext } from '../../context/GlobalContext';
-
-import './GroupForm.scss';
 import { socket } from '../../socket/index';
 import { createGroup } from '../../actions/groupActions';
 import { UserIdContext } from '../../context/UserIdContext';
+
+import './GroupForm.scss';
 
 function GroupForm() {
     const [loadingGroup, setLoadingGroup] = useState(false);
@@ -106,7 +106,7 @@ function GroupForm() {
                 endIcon={<GroupIcon />}
                 loadingPosition="end"
             >
-                <Typography variant="h6">New Group</Typography>
+                New Group
             </LoadingButton>
         </form>
     );

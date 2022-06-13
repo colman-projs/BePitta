@@ -86,10 +86,13 @@ function PreferencesFormPhoto() {
         setIsLoadingApp(false);
     };
 
-    const Swiped = (direction, index, id, url) => {
-        PhotosCounter++;
-        if (direction === 'right') {
+    const Swiped = (dir, id) => {
+        if (dir === 'right') {
             likedDishes.push({ _id: id });
+        }
+
+        if (dir === 'right' || dir === 'left') {
+            PhotosCounter++;
         }
 
         if (PhotosCounter === dishes.length) {
@@ -106,14 +109,12 @@ function PreferencesFormPhoto() {
             />
             <div className="cards">
                 {dishes &&
-                    dishes.map((image, index) => (
+                    dishes.map(image => (
                         <TinderCard
                             className="swipe"
                             key={image.id}
                             preventSwipe={['up', 'down']}
-                            onSwipe={dir =>
-                                Swiped(dir, index, image._id, image.src)
-                            }
+                            onSwipe={dir => Swiped(dir, image._id)}
                         >
                             <div
                                 style={{
