@@ -76,7 +76,7 @@ function PreferencesFormPhoto() {
 
         console.log('Dishes to save: ', likedDishes);
 
-        const success = await updateUserDishes(userId, likedDishes);
+        const success = await updateUserDishes(userId, likedDishes, true);
 
         if (!success) {
             alert.error('Error while updating liked dishes');

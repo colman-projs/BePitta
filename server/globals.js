@@ -12,7 +12,10 @@ const getIo = () => {
 
 const errorHandler = res => err => {
     console.error(err);
-    if (err instanceof mongoose.Error.ValidationError) {
+    if (
+        err instanceof mongoose.Error.ValidationError ||
+        err instanceof mongoose.Error.CastError
+    ) {
         res.status(400);
     } else {
         res.status(500);

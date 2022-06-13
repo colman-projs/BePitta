@@ -5,14 +5,14 @@ const RECOMMENDER_SERVER_URL =
 
 const getRecommendation = async (req, res) => {
     try {
-        const recommendation = await axios.get(
+        const rec = await axios.get(
             `${RECOMMENDER_SERVER_URL}/recommender/${req.params.groupId}`,
         );
 
-        res.set('Content-Type', 'application/json');
-        res.send(recommendation.data);
+        res.type('json');
+        res.send(rec.data);
     } catch (e) {
-        res.sendStatus(500);
+        res.status(e.response?.status || 500).send(e.response?.data);
     }
 };
 

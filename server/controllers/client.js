@@ -1,5 +1,6 @@
 const Clients = require('../models/client');
 const { errorHandler } = require('../globals');
+const { groupDAL } = require('./group');
 
 const createClient = async (req, res) => {
     const client = new Clients(req.body);
@@ -65,12 +66,22 @@ const updateClientTags = (req, res) => {
 const updateClientlikedDishes = (req, res) => {
     const filter = { _id: req.params.clientId };
 
-    Clients.findOneAndUpdate(filter, { likedDishes: req.body.dishes })
+    Clients.findOneAndUpdate(filter, { likedDishes: req.body.dishes, isReady: req.body.prefDone })
         .then(() => {
             res.send(true);
         })
         .catch(errorHandler(res));
 };
+
+const updateUsersNotReadyByGroup = async (groupId) => {
+    try {
+        const group = await groupDAL.getGroupById(groupId);
+
+        Clients.updateMany({
+            "_id": { $in: group.users.map(u => u._id) }
+        }, { isReady: false }).exec();
+    } catch (ex) { }
+}
 
 module.exports = {
     getClientByGoogleId,
@@ -80,4 +91,5 @@ module.exports = {
     updateClientTags,
     getClientById,
     updateClientlikedDishes,
+    updateUsersNotReadyByGroup,
 };
