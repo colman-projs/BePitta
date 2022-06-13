@@ -15,4 +15,11 @@
         height: auto;
         place-self: center;
     }
+
+    .preferneces-button {
+        font-weight: bold;
+        svg {
+            font-size: 1.5rem;
+        }
+    }
 }

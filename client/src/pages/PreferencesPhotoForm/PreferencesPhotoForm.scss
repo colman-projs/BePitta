@@ -1,6 +1,8 @@
 .preferences-photo-form {
     display: flex;
     flex-direction: column;
+    max-height: 100% !important;
+    height: 100% !important;
 
     .restaurant-logo {
         width: 6rem;
@@ -11,8 +13,13 @@
 
     .finish-button {
         align-self: center;
-        position: absolute;
-        bottom: 6rem;
+        margin-top: auto;
+        margin-bottom: 1.5rem;
+        font-weight: bold;
+
+        svg {
+            font-size: 1.5rem;
+        }
     }
 
     .swipe {
@@ -20,6 +27,11 @@
         position: absolute;
         padding: 1rem;
         margin-top: 2rem;
+    }
+
+    .cards {
+        display: flex;
+        justify-content: center;
     }
 
     .card {
@@ -53,5 +65,33 @@
         color: white;
         position: absolute;
         bottom: 0;
+    }
+
+    .actions {
+        padding-top: 13rem;
+        display: flex;
+        margin-top: auto;
+        justify-content: space-between;
+        width: 6rem;
+        align-self: center;
+
+        .like {
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+            background-color: white;
+            color: rgb(118, 199, 141);
+
+            &:hover {
+                color: rgb(100, 168, 119);
+            }
+        }
+
+        .dislike {
+            box-shadow: 2px 8px 15px rgba(0, 0, 0, 0.4);
+            background-color: white;
+            color: var(--alerting-red);
+            &:hover {
+                color: var(--alerting-red-hover);
+            }
+        }
     }
 }

@@ -118,12 +118,12 @@ function GroupLobby() {
             </Button>
             <LoadingButton
                 loading={loadingPreferences}
-                className="create-group-button"
                 variant="contained"
                 color="primary"
                 onClick={handleStart}
                 endIcon={<PreferencesIcon />}
                 loadingPosition="end"
+                className="preferneces-button"
             >
                 <Typography variant="h7">Preferences</Typography>
             </LoadingButton>
