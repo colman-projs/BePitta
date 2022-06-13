@@ -18,7 +18,6 @@ const URI =
 const app = express();
 
 const http = require('http');
-const { groupDAL } = require('./controllers/group');
 const server = http.createServer(app);
 const io = require('socket.io')(server, {
     cors: {

@@ -10,13 +10,12 @@ const Dish = new Schema({
         type: String,
         required: true,
     },
-    tags: {
-        type: [{ type: Schema.Types.ObjectId, ref: 'tag' }],
-        required: true,
-    },
     imageUrl: {
         type: String,
         required: true,
+    },
+    tags: {
+        type: [{ type: Schema.Types.ObjectId, ref: 'tag' }],
     },
 });
 

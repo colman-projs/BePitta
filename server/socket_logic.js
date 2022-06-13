@@ -16,8 +16,6 @@ const participantsUpdated = (groupId, users) => {
     );
 
     if (users.length == waitingUsers.length) {
-        // TODO: Calculate recommendation, save, and then emit('reasults-ready')
-
         // Update all users to isReady false
         updateUsersNotReadyByGroup(groupId);
 

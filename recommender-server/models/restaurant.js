@@ -10,14 +10,12 @@ const Restaurant = new Schema({
         type: String,
         required: true,
     },
-    imageUrl: {
+    imageurl: {
         type: String,
         required: true,
-        validate: m => m.length <= 5,
     },
     dishes: {
         type: [{ type: Schema.Types.ObjectId, ref: 'dish' }],
-        required: true,
     },
 });
 
