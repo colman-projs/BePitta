@@ -23,7 +23,7 @@ function PreferencesFormPhoto() {
     const { setIsLoadingApp } = useContext(GlobalContext);
     const { userId } = useContext(UserIdContext);
     const [restaurant, setRestaurant] = useState(null);
-    const [dishes, setDishes] = useState(null);
+    const [dishes, setDishes] = useState([]);
     let { groupId, restaurantId } = useParams();
     const navigate = useNavigate();
     const alert = useAlert();
@@ -86,12 +86,20 @@ function PreferencesFormPhoto() {
         setIsLoadingApp(false);
     };
 
-    const Swiped = (dir, id) => {
+    const Swiped = (dir, id = null) => {
+        let currentDishId = id;
+        if (!currentDishId)
+            currentDishId = dishes.reverse()[PhotosCounter]?._id;
+
+        if (!currentDishId) return;
         if (dir === 'right') {
-            likedDishes.push({ _id: id });
+            likedDishes.push({ _id: currentDishId });
         }
 
         if (dir === 'right' || dir === 'left') {
+            setDishes(prevDishes =>
+                prevDishes.filter(dish => dish._id !== currentDishId),
+            );
             PhotosCounter++;
         }
 
@@ -128,10 +136,16 @@ function PreferencesFormPhoto() {
                     ))}
             </div>
             <div className="actions">
-                <IconButton className="dislike button">
+                <IconButton
+                    className="dislike button"
+                    onClick={() => Swiped('left')}
+                >
                     <DislikeIcon />
                 </IconButton>
-                <IconButton className="like button">
+                <IconButton
+                    className="like button"
+                    onClick={() => Swiped('right')}
+                >
                     <LikeIcon />
                 </IconButton>
             </div>
