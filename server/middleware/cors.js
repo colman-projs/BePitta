@@ -1,15 +1,16 @@
 const cors = function (req, res, next) {
     const allowedOrigins = [
-        'http://localhost:3002',
-        'http://localhost:3001',
-        'http://localhost:3000',
+        // 'http://localhost:3002',
+        // 'http://localhost:3001',
+        // 'http://localhost:3000',
+        '*',
     ];
     const origin = req.headers.origin;
 
-    if (allowedOrigins.includes(origin)) {
-        // Website you wish to allow to connect
-        res.setHeader('Access-Control-Allow-Origin', origin);
-    }
+    //if (allowedOrigins.includes(origin)) {
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    //}
 
     // Request methods you wish to allow
     res.setHeader(

@@ -128,13 +128,13 @@ function ManageDishes() {
                 Dishes Management
             </Typography>
             <span className="edit-switch">
-                Edit Mode
+                Create Mode
                 <Switch
                     color="primary"
                     onChange={toggleEditMode}
                     value={editMode}
                 />
-                Create Mode
+                Edit Mode
             </span>
             <form className="form" onSubmit={handleSubmit}>
                 {editMode && (
